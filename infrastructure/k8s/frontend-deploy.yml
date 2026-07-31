@@ -17,10 +17,10 @@ spec:
         service: frontend
     spec:
       containers:
-        - name: backend
-          image: gitlab.wps.de:5001/wps/ddd-schulung-musterloesung/kinosoft/frontend:1.0.0
+        - name: frontend
+          image: gitlab.wps.de:5001/wps/ddd-schulung-musterloesung/kinosoft/frontend:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8080
       imagePullSecrets:
         - name: wps-container-registry
 

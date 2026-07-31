@@ -3,10 +3,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {
   Geldbetrag,
+  Kartenbestellung,
   Kinokarte,
   Preisanfrage,
   Saalplan,
   Vorstellung,
+  Verkaufsvorgang,
   Zahlungsstatus,
   Zahlungsvorgang,
   ZusammenhaengendePlaetze
@@ -19,6 +21,8 @@ export class KartenverkaufService {
   private http = inject(HttpClient);
 
   private kartenverkaufUrl: string = '/api/kartenverkauf';
+
+  private vorgaengeUrl: string = `${this.kartenverkaufUrl}/verkaufsvorgaenge`;
 
   public holeVorstellung(vorstellungId: string): Observable<Vorstellung> {
     return this.http.get<Vorstellung>(`${this.kartenverkaufUrl}/vorstellungen/${vorstellungId}`);
@@ -41,17 +45,20 @@ export class KartenverkaufService {
     return this.http.post<Geldbetrag>(`${this.kartenverkaufUrl}/preisanfrage`, preisanfrage);
   }
 
-  public starteZahlungsvorgang(vorstellungId: string, plaetze: ZusammenhaengendePlaetze): Observable<Zahlungsvorgang> {
-    const preisanfrage: Preisanfrage = {vorstellungId, plaetze};
-    return this.http.post<Zahlungsvorgang>(`${this.kartenverkaufUrl}/zahlung`, preisanfrage);
+  public starteVerkaufsvorgang(vorstellungId: string, plaetze: ZusammenhaengendePlaetze): Observable<Verkaufsvorgang> {
+    const bestellung: Kartenbestellung = {vorstellungId, plaetze};
+    return this.http.post<Verkaufsvorgang>(`${this.vorgaengeUrl}`, bestellung);
   }
 
-  public bestaetigeZahlung(auftragsnummer: string): Observable<Zahlungsstatus> {
-    return this.http.post<Zahlungsstatus>(`${this.kartenverkaufUrl}/zahlung/${auftragsnummer}/bestaetigen`, {});
+  public starteZahlungsvorgang(auftragsnummer: string): Observable<Zahlungsvorgang> {
+    return this.http.post<Zahlungsvorgang>(`${this.vorgaengeUrl}/${auftragsnummer}/zahlungsvorgaenge`, null);
   }
 
-  public erstelleKinokarten(auftragsnummer: string, vorstellungId: string, plaetze: ZusammenhaengendePlaetze): Observable<Kinokarte[]> {
-    const preisanfrage: Preisanfrage = {vorstellungId, plaetze};
-    return this.http.post<Kinokarte[]>(this.kartenverkaufUrl + '/kinokarten/' + auftragsnummer, preisanfrage);
+  public holeZahlungsStatus(auftragsnummer: string): Observable<Zahlungsstatus> {
+    return this.http.get<Zahlungsstatus>(`${this.vorgaengeUrl}/${auftragsnummer}/zahlungsstatus`);
+  }
+
+  public holeKinokarten(auftragsnummer: string): Observable<Kinokarte[]> {
+    return this.http.get<Kinokarte[]>(`${this.vorgaengeUrl}/${auftragsnummer}/kinokarten`);
   }
 }

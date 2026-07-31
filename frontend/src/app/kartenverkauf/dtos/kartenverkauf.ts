@@ -44,11 +44,23 @@ export interface Preisanfrage {
   plaetze: ZusammenhaengendePlaetze,
 }
 
-export interface Zahlungsvorgang {
+export interface Kartenbestellung {
+  vorstellungId: string,
+  plaetze: ZusammenhaengendePlaetze,
+}
+
+export interface Verkaufsvorgang {
   auftragsnummer: string,
   vorstellungId: string,
   plaetze: ZusammenhaengendePlaetze,
+  gesamtpreis: Geldbetrag,
+}
+
+export interface Zahlungsvorgang {
+  id: string,
+  anlauf: number,
   betrag: Geldbetrag,
+  status: string,
 }
 
 export interface Zahlungsstatus {

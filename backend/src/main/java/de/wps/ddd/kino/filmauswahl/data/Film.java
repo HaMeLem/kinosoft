@@ -44,7 +44,10 @@ public class Film {
     private String hauptdarsteller;
     private String regie;
     private String sprache;
+    // Lesende Bequemlichkeits-Assoziation für die Programm-Abfrage (join fetch). Den Fremdschlüssel
+    // filmId schreibt das gleichnamige Basisfeld auf Vorstellung; deshalb ist die Assoziation hier
+    // schreibgeschützt (sonst würde die Spalte filmId doppelt gemappt).
     @OneToMany
-    @JoinColumn(name = "filmId")
+    @JoinColumn(name = "filmId", insertable = false, updatable = false)
     private List<Vorstellung> vorstellungen;
 }

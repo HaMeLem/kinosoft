@@ -1,16 +1,20 @@
 package de.wps.ddd.kino.kartenverkauf.adapters.web.mappers;
 
 import de.wps.ddd.kino.kartenverkauf.adapters.primary.web.mappers.KartenDtoMapper;
+import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Auftragsnummer;
 import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Kinokarte;
+import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.KinokarteId;
 import de.wps.ddd.kino.kartenverkauf.application.domain.sitzplatzvergabe.PlatzNummer;
 import de.wps.ddd.kino.kartenverkauf.application.domain.sitzplatzvergabe.ReiheNummer;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Beginn;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Film;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Saal;
+import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.VorstellungId;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +24,9 @@ class KartenDtoMapperTest {
 
     private Kinokarte kinokarte(int reihe, int platz) {
         return new Kinokarte(
-                null,
+                KinokarteId.neu(),
+                Auftragsnummer.neueAuftragsnummer(),
+                new VorstellungId(UUID.fromString("090c173a-3636-4980-865a-1ec859eb4f90")),
                 new Film("The Fast and the Curious"),
                 new Beginn(LocalDateTime.parse("2025-03-23T14:30")),
                 new Saal("kleiner Saal"),

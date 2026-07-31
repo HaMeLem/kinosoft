@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Backend: build (mvnw clean package)",
+      "detail": "Baut und testet das Backend (benoetigt JDK 25 lokal). Das Frontend baut npm separat.",
+      "type": "shell",
+      "command": "./mvnw clean package",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Backend: run (spring-boot:run)",
+      "detail": "Startet das Spring-Boot-Backend auf Port 8080.",
+      "type": "shell",
+      "command": "./mvnw spring-boot:run",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "group": "none",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend: dev server (npm start)",
+      "detail": "Startet den Angular-Dev-Server auf Port 4200 (Proxy /api -> :8080).",
+      "type": "shell",
+      "command": "npm start",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "group": "none",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Run all (Docker only)",
+      "detail": "Baut und startet die gesamte Anwendung in Containern (nur Docker noetig).",
+      "type": "shell",
+      "command": "docker compose up --build",
+      "group": "none",
+      "problemMatcher": []
+    }
+  ]
+}

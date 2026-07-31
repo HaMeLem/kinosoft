@@ -1,0 +1,5 @@
+# Haelt den Docker-Build-Context (backend/) schlank.
+target
+.idea
+*.iml
+.DS_Store

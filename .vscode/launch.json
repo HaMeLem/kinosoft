@@ -1,0 +1,15 @@
+{
+  // Startkonfiguration fuer das Backend. Benoetigt das "Extension Pack for Java"
+  // (siehe .vscode/extensions.json). Der Angular-Dev-Server wird ueber die
+  // Task "Frontend: dev server (npm start)" gestartet (siehe tasks.json).
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Backend (Spring Boot)",
+      "request": "launch",
+      "mainClass": "de.wps.ddd.kino.Application",
+      "projectName": "backend"
+    }
+  ]
+}

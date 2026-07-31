@@ -1,10 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="backend" type="SpringBootApplicationConfigurationType"
-                   factoryName="Spring Boot">
-        <module name="backend"/>
-        <option name="SPRING_BOOT_MAIN_CLASS" value="de.wps.ddd.kino.Application"/>
-        <method v="2">
-            <option name="Make" enabled="true"/>
-        </method>
-    </configuration>
+  <configuration default="false" name="backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="backend" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.wps.ddd.kino.Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
 </component>

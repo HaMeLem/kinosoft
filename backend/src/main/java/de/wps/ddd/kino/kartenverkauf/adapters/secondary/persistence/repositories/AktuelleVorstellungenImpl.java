@@ -2,6 +2,9 @@ package de.wps.ddd.kino.kartenverkauf.adapters.secondary.persistence.repositorie
 
 import de.wps.ddd.kino.common.error.RessourceNichtGefunden;
 import de.wps.ddd.kino.kartenverkauf.adapters.secondary.persistence.mappers.VorstellungEntityMapper;
+import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Beginn;
+import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Film;
+import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Saal;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Vorstellung;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.VorstellungId;
 import de.wps.ddd.kino.kartenverkauf.application.ports.secondary.AktuelleVorstellungen;
@@ -9,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -29,5 +33,16 @@ public class AktuelleVorstellungenImpl implements AktuelleVorstellungen {
         var vorstellung = vorstellungRepository.findById(vorstellungId.uuid());
         RessourceNichtGefunden.wenn(vorstellung.isEmpty(), "Vorstellung zu " + vorstellungId + " existiert nicht");
         return vorstellungMapper.toDomain(vorstellung.get());
+    }
+
+    @Override
+    public Optional<Vorstellung> finde(Film film, Saal saal, Beginn beginn) {
+        return vorstellungRepository.findByFilmAndSaalAndBeginn(film.name(), saal.name(), beginn.zeitpunkt())
+                .map(vorstellungMapper::toDomain);
+    }
+
+    @Override
+    public void speichere(Vorstellung vorstellung) {
+        vorstellungRepository.save(vorstellungMapper.toEntity(vorstellung));
     }
 }

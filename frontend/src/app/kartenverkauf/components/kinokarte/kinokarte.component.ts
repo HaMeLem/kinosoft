@@ -1,6 +1,6 @@
 import {Component, DestroyRef, inject, OnInit, output, input, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Kinokarte, Zahlungsvorgang} from '../../dtos/kartenverkauf';
+import {Kinokarte, Verkaufsvorgang} from '../../dtos/kartenverkauf';
 import {KartenverkaufService} from '../../services/kartenverkauf.service';
 import {DatePipe} from '@angular/common';
 
@@ -16,7 +16,7 @@ export class KinokarteComponent implements OnInit {
   private kartenverkaufService = inject(KartenverkaufService);
   private destroyRef = inject(DestroyRef);
 
-  readonly zahlungsbestaetigung = input.required<Zahlungsvorgang>();
+  readonly zahlungsbestaetigung = input.required<Verkaufsvorgang>();
 
   readonly onKinokartenGedruckt = output<Kinokarte[]>();
 
@@ -26,7 +26,7 @@ export class KinokarteComponent implements OnInit {
 
   ngOnInit(): void {
     const z = this.zahlungsbestaetigung();
-    this.kartenverkaufService.erstelleKinokarten(z.auftragsnummer, z.vorstellungId, z.plaetze)
+    this.kartenverkaufService.holeKinokarten(z.auftragsnummer)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data: Kinokarte[]) => this.kinokarten.set(data));
   }

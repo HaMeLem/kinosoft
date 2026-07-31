@@ -1,0 +1,67 @@
+{
+  // Dev Container für KinoSoft: enthält JDK 25, Node 24 und Git.
+  // So lässt sich das Projekt entwickeln, ohne JDK/Node/Maven global auf dem
+  // Host zu installieren - benötigt werden nur Docker und eine unterstützte
+  // IDE (VS Code "Reopen in Container" oder IntelliJ Remote Development ->
+  // Dev Containers) bzw. die devcontainer-CLI.
+  //
+  // Maven wird bewusst NICHT als Feature installiert: das Projekt bringt den
+  // Maven-Wrapper (./mvnw) mit. Das Node-Feature wird für das Frontend
+  // gebraucht - es wird Node-nativ gebaut/getestet (npm run build / test:ci)
+  // und liefert den Angular-Dev-Server (npm start).
+  "name": "KinoSoft (JDK 25 + Node 24)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "25",
+      "jdkDistro": "tem"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    }
+  },
+  // Weitergeleitete Ports: 8080 Backend (inkl. H2-Konsole /h2-console),
+  // 4200 Angular-Dev-Server, 8081 Frontend via docker compose.
+  "forwardPorts": [8080, 4200, 8081],
+  "portsAttributes": {
+    "8080": { "label": "Backend (Spring Boot / H2-Konsole)" },
+    "4200": { "label": "Frontend (Angular Dev-Server)" },
+    "8081": { "label": "Frontend (docker compose)" }
+  },
+  // Das Frontend-node_modules bekommt ein Container-eigenes Volume. Ohne dies
+  // würde der Bind-Mount des Projekts die auf dem Host installierten,
+  // plattformspezifischen Binaries (z. B. @rollup/rollup-darwin-arm64) in den
+  // Linux-Container spiegeln - ng serve schlägt dann fehl mit
+  // "Cannot find module @rollup/rollup-linux-arm64-gnu". Das Volume isoliert
+  // Host- und Container-node_modules, sodass jede Plattform ihre eigenen
+  // Binaries behält (wichtig für Teilnehmende auf macOS/Windows/Linux).
+  //
+  // Analog bekommt .idea ein Container-eigenes Volume: der Bind-Mount würde
+  // sonst die IntelliJ-Projektkonfig zwischen Host und Container teilen. IntelliJ
+  // schreibt in .idea/compiler.xml einen absoluten Lombok-Jar-Pfad aus dem
+  // jeweiligen .m2 (Host: /Users/.../.m2, Container: /home/vscode/.m2). Bei
+  // geteilter .idea überschreibt jeder Reimport den Pfad der anderen Umgebung ->
+  // Lombok wird dort nicht mehr erkannt (flaky). Das Volume trennt beide Konfigs.
+  "mounts": [
+    "source=kinosoft-frontend-node-modules,target=${containerWorkspaceFolder}/frontend/node_modules,type=volume",
+    "source=kinosoft-idea,target=${containerWorkspaceFolder}/.idea,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot-dev-pack",
+        "angular.ng-template",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  // Einmalig beim Erstellen des Containers:
+  //  1. Die Volumes (node_modules, .idea) dem Container-User übereignen. Volumes
+  //     gehören initial root; ohne chown schlägt npm ci mit EACCES fehl und
+  //     IntelliJ kann nicht in .idea schreiben.
+  //  2. Backend-Abhängigkeiten in den Maven-Cache laden (nicht fatal, s. o.).
+  //  3. Frontend-Abhängigkeiten plattformrichtig IM Container installieren, damit
+  //     der Angular-Dev-Server (npm start) sofort läuft.
+  "postCreateCommand": "sudo chown -R \"$(id -u):$(id -g)\" frontend/node_modules .idea && (cd backend && ./mvnw -q dependency:go-offline -DskipTests || true) && (cd frontend && npm ci)"
+}

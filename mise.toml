@@ -1,0 +1,18 @@
+# Toolchain fuer KinoSoft (Mac / Linux / Windows WSL2), verwaltet mit mise.
+#
+# Installation von mise:
+#   macOS:        brew install mise
+#   Linux/WSL2:   siehe https://mise.jdx.dev/getting-started.html
+#
+# Danach im Projektverzeichnis:
+#   mise install     # installiert die unten gepinnten Versionen (JDK 25 + Node 24)
+# Mit eingerichtetem Shell-Hook aktiviert mise die Versionen automatisch beim
+# Betreten des Verzeichnisses (siehe mise-Doku "activate").
+#
+# Maven wird nicht benoetigt (Projekt nutzt den Wrapper ./mvnw). Node wird fuer
+# das Frontend gebraucht: zum Bauen/Testen (npm run build / test:ci) und fuer den
+# Angular-Dev-Server (npm start). Das Frontend wird Node-nativ gebaut, nicht ueber
+# Maven.
+[tools]
+java = "temurin-25.0.3"
+node = "24"

@@ -1,5 +1,6 @@
 package de.wps.ddd.kino.filmauswahl.service;
 
+import de.wps.ddd.kino.IntegrationTestMitWochenplan;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
-class ProgrammServiceIntegrationTest {
+class ProgrammServiceIntegrationTest extends IntegrationTestMitWochenplan {
 
     @Autowired
     private ProgrammService programmService;

@@ -9,5 +9,7 @@ public interface SaalplanStapel {
 
     Saalplan holeSaalplan(VorstellungId vorstellungId);
 
+    boolean existiertSaalplan(VorstellungId vorstellungId);
+
     void legeZurueck(Saalplan saalplan);
 }

@@ -50,24 +50,55 @@ sind. Durch Klick auf eine Vorstellung gelangt man zum Kartenverkauf. Dieser umf
 
 ## Bauen und Starten der Anwendung
 
-Das gesamte System inklusive der Docker Images kann über Maven gebaut werden:
+Die Anwendung läuft plattformübergreifend (macOS, Linux, Windows via WSL2). Je nach Ziel gibt es drei Wege — eine
+ausführliche Anleitung inklusive IDE-Hinweisen (IntelliJ IDEA, VS Code, Eclipse/STS) und Troubleshooting steht in
+[docs/ENTWICKLUNGSUMGEBUNG.md](docs/ENTWICKLUNGSUMGEBUNG.md).
+
+| Weg | Ziel | Voraussetzung |
+|-----|------|---------------|
+| **A – Nur ausführen** | Anwendung ansehen/benutzen | **nur Docker** |
+| **B – Devcontainer** | Entwickeln ohne globale Installation | **Docker + IDE** |
+| **C – Lokal entwickeln** | Entwickeln mit lokaler Toolchain | **JDK 25 + Node 24** (Maven bringt der `./mvnw`-Wrapper mit) |
+
+### A – Nur ausführen (nur Docker)
+
+Baut Backend und Frontend im Container und startet beides — es wird **kein** JDK, Node oder Maven auf dem Host benötigt:
 
 ```bash
-./mvnw clean package
-```
-
-Dieser Befehl baut das Spring Boot Backend, das Angular Frontend (mit dem frontend-maven-plugin) und erstellt Docker
-Images für beide Komponenten (mit dem jib-maven-plugin und fabric8-docker-maven-plugin). Die Container können nun mit
-Docker Compose gestartet werden:
-
-```bash
-docker compose up -d
+docker compose up --build
 ```
 
 Die Anwendung ist dann verfügbar unter: http://localhost:8081
 
-Sollte die Anwendung über eine Entwicklungsumgebung gebaut und gestartet werden, ist die UI verfügbar
-unter: http://localhost:4200
+Statt Docker funktioniert auch Podman (`podman compose up --build`) — die Images sind
+rootless-tauglich. Details und der Devcontainer-Hinweis stehen in
+[docs/ENTWICKLUNGSUMGEBUNG.md](docs/ENTWICKLUNGSUMGEBUNG.md).
+
+### B – Entwickeln im Devcontainer (nur Docker + IDE)
+
+Das Projekt enthält einen Dev Container (`.devcontainer/`) mit JDK 25 und Node 24. In VS Code über
+*Dev Containers: Reopen in Container*, in IntelliJ über *Remote Development → Dev Containers*. Details in
+[docs/ENTWICKLUNGSUMGEBUNG.md](docs/ENTWICKLUNGSUMGEBUNG.md).
+
+### C – Lokal entwickeln (JDK 25 + Node 24)
+
+Lokal werden ein **JDK 25** (Backend) und **Node 24** (Frontend) benötigt. Am einfachsten via
+[mise](https://mise.jdx.dev) (`brew install mise`, dann `mise install` – das Projekt enthält eine `mise.toml`,
+die beide Versionen pinnt), alternativ [SDKMAN](https://sdkman.io) / [Eclipse Temurin](https://adoptium.net) fürs
+JDK. Maven kommt über den Wrapper `./mvnw`; das Angular-Frontend wird Node-nativ mit `npm` gebaut. Backend und
+Frontend bauen und testen (ohne Docker):
+
+```bash
+# Backend (Build + Unit-Tests); ./mvnw verify für Integrationstests
+cd backend && ./mvnw clean package
+
+# Frontend (Build + Tests)
+cd frontend && npm ci && npm run build && npm run test:ci
+```
+
+**Docker-Images werden dabei nicht erzeugt** (das übernimmt `docker compose build`, siehe Weg A). Für die
+Entwicklung lassen sich Backend (`cd backend && ./mvnw spring-boot:run`, Port 8080) und Frontend-Dev-Server
+(`cd frontend && npm start`, Port 4200) getrennt starten; die UI ist dann verfügbar unter: http://localhost:4200
 
 ## Technologien
 
@@ -87,7 +118,7 @@ Das Frontend basiert u.a. auf folgenden Technologien:
 - DaisyUI
 
 Die vollständige SBOM (Software Bill of Materials) wird bei Bedarf erzeugt – im Backend mit
-`./mvnw -pl backend cyclonedx:makeAggregateBom` (nach `backend/target/.bom/bom.json` bzw. `bom.xml`), im Frontend mit
+`cd backend && ./mvnw cyclonedx:makeAggregateBom` (nach `backend/target/.bom/bom.json` bzw. `bom.xml`), im Frontend mit
 `cd frontend && npm run sbom` (nach `frontend/dist/.bom/bom.json`). In der CI werden die SBOMs bei jedem Commit auf
 `main` automatisch in der `sbom`-Stage erzeugt und anschließend nach Dependency Track hochgeladen.
 

@@ -16,12 +16,19 @@ public class SaalplanStapelImpl implements SaalplanStapel {
     private final SaalplanRepository saalplanRepository;
     private final SaalplanEntityMapper saalplanMapper;
 
+    @Override
     public Saalplan holeSaalplan(VorstellungId vorstellungId) {
         SaalplanEntity saalplanEntity = saalplanRepository.findByVorstellungUUID(vorstellungId.uuid());
         RessourceNichtGefunden.wenn(saalplanEntity == null, "Saalplan zu Vorstellung " + vorstellungId + " existiert nicht");
         return saalplanMapper.toDomain(saalplanEntity);
     }
 
+    @Override
+    public boolean existiertSaalplan(VorstellungId vorstellungId) {
+        return saalplanRepository.findIdByVorstellungUUID(vorstellungId.uuid()).isPresent();
+    }
+
+    @Override
     public void legeZurueck(Saalplan saalplan) {
         Integer saalplanEntityId = saalplanRepository.findIdByVorstellungUUID(saalplan.getVorstellungId().uuid()).orElse(null);
         SaalplanEntity saalplanEntity = saalplanMapper.toEntity(saalplan, saalplanEntityId);

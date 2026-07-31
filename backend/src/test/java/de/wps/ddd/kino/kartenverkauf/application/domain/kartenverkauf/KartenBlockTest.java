@@ -34,19 +34,42 @@ class KartenBlockTest {
         var p1 = new PlatzId(new ReiheNummer(4), new PlatzNummer(1));
         var p2 = new PlatzId(new ReiheNummer(4), new PlatzNummer(2));
         var gewaehltePlaetze = new ZusammenhaengendePlaetze(List.of(p1, p2));
+        var auftragsnummer = Auftragsnummer.neueAuftragsnummer();
 
         // act
-        var karten = kartenBlock.erstelleKarten(vorstellung, gewaehltePlaetze);
+        var karten = kartenBlock.erstelleKarten(auftragsnummer, vorstellung, gewaehltePlaetze);
 
         // assert
         assertThat(karten).hasSize(2);
         assertThat(karten).allSatisfy(karte -> {
-            assertThat(karte.getId()).isNull();
+            assertThat(karte.getId()).isNotNull();
+            assertThat(karte.getAuftragsnummer()).isEqualTo(auftragsnummer);
+            assertThat(karte.getVorstellungId()).isEqualTo(vorstellung.getId());
             assertThat(karte.getFilm()).isEqualTo(vorstellung.getFilm());
             assertThat(karte.getBeginn()).isEqualTo(vorstellung.getBeginn());
             assertThat(karte.getSaal()).isEqualTo(vorstellung.getSaal());
             assertThat(karte.getReihe()).isEqualTo(new ReiheNummer(4));
         });
         assertThat(karten).extracting(karte -> karte.getPlatz().nummer()).containsExactly(1, 2);
+    }
+
+    @Test
+    void erstelleKarten_vergibtJeKarteEineEigeneKinokarteId() {
+        // arrange
+        var vorstellung = new Vorstellung(
+                new VorstellungId(UUID.fromString("090c173a-3636-4980-865a-1ec859eb4f90")),
+                new Saal("kleiner Saal"),
+                new Beginn(LocalDateTime.parse("2025-03-23T14:30")),
+                new Film("The Fast and the Curious"),
+                VorstellungKategorie.Standard);
+        var gewaehltePlaetze = new ZusammenhaengendePlaetze(List.of(
+                new PlatzId(new ReiheNummer(4), new PlatzNummer(1)),
+                new PlatzId(new ReiheNummer(4), new PlatzNummer(2))));
+
+        // act
+        var karten = kartenBlock.erstelleKarten(Auftragsnummer.neueAuftragsnummer(), vorstellung, gewaehltePlaetze);
+
+        // assert
+        assertThat(karten).extracting(Kinokarte::getId).doesNotHaveDuplicates();
     }
 }

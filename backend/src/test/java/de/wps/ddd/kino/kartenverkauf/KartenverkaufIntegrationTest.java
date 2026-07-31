@@ -1,32 +1,34 @@
 package de.wps.ddd.kino.kartenverkauf;
 
+import de.wps.ddd.kino.IntegrationTestMitWochenplan;
+import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Auftragsnummer;
 import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Geldbetrag;
 import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.KartenBlock;
+import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Kinokarte;
 import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Preisberechnung;
+import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Verkaufsvorgang;
+import de.wps.ddd.kino.kartenverkauf.application.domain.kartenverkauf.Zahlungsstatus;
 import de.wps.ddd.kino.kartenverkauf.application.domain.sitzplatzvergabe.Platzanzahl;
 import de.wps.ddd.kino.kartenverkauf.application.domain.sitzplatzvergabe.ZusammenhaengendePlaetze;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Beginn;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Film;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Saal;
 import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.VorstellungId;
-import de.wps.ddd.kino.kartenverkauf.application.domain.zahlung.ZahlungEingegangen;
-import de.wps.ddd.kino.kartenverkauf.application.domain.zahlung.Zahlungsstatus;
-import de.wps.ddd.kino.kartenverkauf.application.ports.primary.Zahlung;
 import de.wps.ddd.kino.kartenverkauf.application.ports.secondary.AktuelleVorstellungen;
 import de.wps.ddd.kino.kartenverkauf.application.ports.secondary.SaalplanStapel;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class KartenverkaufIntegrationTest {
+class KartenverkaufIntegrationTest extends IntegrationTestMitWochenplan {
 
     @Autowired
     private AktuelleVorstellungen vorstellungen;
@@ -38,9 +40,6 @@ class KartenverkaufIntegrationTest {
     private Preisberechnung preisberechnung;
 
     @Autowired
-    private Zahlung zahlung;
-
-    @Autowired
     private KartenBlock kinokartenblock;
 
     // Basiert auf Domain Story 1: Kinokarten an der Kasse verkaufen
@@ -48,7 +47,7 @@ class KartenverkaufIntegrationTest {
     void kartenverkauf() {
 
         // 1. Kinobesucher sucht Vorstellung in Wochenplan aus → Vorstellung ausgesucht
-        var vorstellungId = new VorstellungId(UUID.fromString("090c173a-3636-4980-865a-1ec859eb4f90"));
+        var vorstellungId = vorstellungId("The Fast and the Curious", "kleiner Saal", LocalDateTime.of(2025, 3, 23, 14, 30));
         var vorstellung = vorstellungen.holeVorstellung(vorstellungId);
         assertThat(vorstellung.getFilm()).isEqualTo(new Film("The Fast and the Curious"));
         assertThat(vorstellung.getSaal()).isEqualTo(new Saal("kleiner Saal"));
@@ -77,10 +76,7 @@ class KartenverkaufIntegrationTest {
         var gesamtbetrag = preisberechnung.ermittlePreis(vorstellung, saalplan, gewaehltePlaetze);
         assertThat(gesamtbetrag).isEqualTo(Geldbetrag.euro(50, 0));
 
-        var auftragsnummer = zahlung.starteZahlungsvorgang(gesamtbetrag, vorstellungId, gewaehltePlaetze);
-        assertThat(zahlung.status(auftragsnummer)).isEqualTo(Zahlungsstatus.Ausstehend);
-        zahlung.verarbeite(new ZahlungEingegangen(auftragsnummer));
-        assertThat(zahlung.status(auftragsnummer)).isEqualTo(Zahlungsstatus.Eingegangen);
+        var auftragsnummer = zahleGeldbetrag(vorstellungId, gewaehltePlaetze, gesamtbetrag);
 
         // 7. Kassenmitarbeiter markiert verkaufte Plätze im Saalplan → Plätze als verkauft markiert
         saalplan.markiereAlsVerkauft(gewaehltePlaetze);
@@ -90,7 +86,7 @@ class KartenverkaufIntegrationTest {
         saalplanStapel.legeZurueck(saalplan);
 
         // 9. Kassenmitarbeiter beschriftet Kinokarten → Kinokarten ausgestellt
-        var kinokarten = kinokartenblock.erstelleKarten(vorstellung, gewaehltePlaetze);
+        var kinokarten = kinokartenblock.erstelleKarten(auftragsnummer, vorstellung, gewaehltePlaetze);
         assertThat(kinokarten).hasSize(platzanzahl.value());
         assertThat(kinokarten).allSatisfy(kinokarte -> {
             assertThat(kinokarte.getFilm()).isEqualTo(vorstellung.getFilm());
@@ -101,7 +97,22 @@ class KartenverkaufIntegrationTest {
         assertThat(kinokarten).extracting(k -> k.getPlatz().nummer()).containsExactly(1, 2, 3, 4);
 
         // 10. Kassenmitarbeiter übergibt fertige Kinokarten → Kinokarten übergeben/verkauft
-        // TODO KinokartenVerkauftEvent, Kinokarten persistieren
+        assertThat(kinokarten).allSatisfy(kinokarte -> {
+            assertThat(kinokarte.getAuftragsnummer()).isEqualTo(auftragsnummer);
+            assertThat(kinokarte.getVorstellungId()).isEqualTo(vorstellungId);
+        });
+        assertThat(kinokarten).extracting(Kinokarte::getId).doesNotHaveDuplicates();
+    }
+
+    private static @NonNull Auftragsnummer zahleGeldbetrag(VorstellungId vorstellungId, ZusammenhaengendePlaetze gewaehltePlaetze, Geldbetrag geldbetrag) {
+        var verkaufsvorgang = Verkaufsvorgang.starte(vorstellungId, gewaehltePlaetze, geldbetrag);
+        var zahlungsvorgang = verkaufsvorgang.starteZahlungsvorgang();
+        assertThat(zahlungsvorgang.getBetrag()).isEqualTo(geldbetrag);
+        assertThat(zahlungsvorgang.getStatus()).isEqualTo(Zahlungsstatus.Ausstehend);
+
+        verkaufsvorgang.zahlungEingegangen(zahlungsvorgang.getId());
+        assertThat(zahlungsvorgang.getStatus()).isEqualTo(Zahlungsstatus.Eingegangen);
+        return verkaufsvorgang.getAuftragsnummer();
     }
 
 }

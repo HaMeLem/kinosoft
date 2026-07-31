@@ -5,35 +5,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>de.wps.ddd.kino</groupId>
-        <artifactId>kinosoft</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.6</version>
+        <relativePath/> <!-- aus dem Repository beziehen -->
     </parent>
 
+    <groupId>de.wps.ddd.kino</groupId>
     <artifactId>backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>KinoSoft</name>
+    <description>Musterlösung für die Kino-Fallstudie</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>25</java.version>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
-        <spring-boot.version>4.0.6</spring-boot.version>
-        <lombok.version>1.18.46</lombok.version>
+        <spring-modulith.version>2.0.7</spring-modulith.version>
         <jmolecules.version>2.0.1</jmolecules.version>
         <jmolecules-archunit.version>0.33.0</jmolecules-archunit.version>
         <archunit.version>1.4.2</archunit.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <jib.version>3.5.1</jib.version>
-        <jib.console>plain</jib.console>
         <cyclonedx.version>2.9.1</cyclonedx.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
+                <groupId>org.springframework.modulith</groupId>
+                <artifactId>spring-modulith-bom</artifactId>
+                <version>${spring-modulith.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -53,6 +52,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-starter-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-events-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -62,6 +69,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -74,7 +86,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -111,17 +122,17 @@
     <build>
         <plugins>
 
+            <!-- Erzeugt in der package-Phase das ausführbare Fat-JAR (repackage-Goal
+                 ist über den spring-boot-starter-parent an package gebunden). -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
             </plugin>
 
-            <!-- Unit-Tests (test-Phase): Integrationstests ausschließen -->
+            <!-- Unit-Tests (test-Phase): Integrationstests ausschließen. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
@@ -133,7 +144,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <includes>
                         <include>**/*IntegrationTest.java</include>
@@ -152,37 +162,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.15.0</version>
                 <configuration>
-                    <parameters>true</parameters>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-
-            <!-- Docker image generation -->
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>${jib.version}</version>
-                <executions>
-                    <execution>
-                        <id>build-backend-image</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>dockerBuild</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <to>
-                        <image>${project.parent.artifactId}/${project.artifactId}</image>
-                    </to>
                 </configuration>
             </plugin>
 

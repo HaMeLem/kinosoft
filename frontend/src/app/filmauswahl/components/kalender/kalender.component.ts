@@ -22,7 +22,7 @@ export class KalenderComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
 
-  readonly today: Date = startOfDay(new Date("2025-03-19"));
+  readonly today: Date = startOfDay(new Date());
 
   readonly selectableDates = signal<Date[]>([this.today]);
 

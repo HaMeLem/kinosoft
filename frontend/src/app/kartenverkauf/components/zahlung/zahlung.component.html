@@ -1,21 +1,42 @@
 <div class="card card-border m-4 shadow-md bg-gray-50">
   <div class="card-body items-center">
-    @if (fertig() && zahlungsvorgang(); as z) {
+    @if (fertig() && verkaufsvorgang(); as v) {
       <p class="italic">Sie haben folgenden Betrag bezahlt:</p>
       <p class="card-title">
-        {{ z.betrag.betrag | geldbetrag }} {{ z.betrag.waehrung }}
+        {{ v.gesamtpreis.betrag | geldbetrag }} {{ v.gesamtpreis.waehrung }}
       </p>
+    } @else if (verarbeitung()) {
+      <p class="italic">Zahlung wird verarbeitet …</p>
+      <div class="loading loading-dots loading-md"></div>
     } @else {
       <p class="italic">Zu zahlender Betrag:</p>
       @if (gesamtbetrag(); as g) {
         <p class="card-title">
           {{ g.betrag | geldbetrag }} {{ g.waehrung }}
         </p>
-        <div class="card-actions">
-          <button class="btn btn-sm btn-primary" (click)="oeffneZahlungDialog()">
-            Weiter zur Zahlung
-          </button>
-        </div>
+        @if (abgebrochen()) {
+          <p class="text-error">
+            Die Zahlung wurde abgebrochen. Bitte versuchen Sie es erneut — gerne auch mit einem
+            anderen Zahlungsmittel. Ihre Auswahl und der Preis bleiben bestehen.
+          </p>
+        }
+        @if (zahlungLaeuft()) {
+          <p class="italic">
+            Der Zahlungsvorgang läuft noch. Ein neuer Versuch ist erst möglich, wenn dieser bezahlt
+            oder abgebrochen wurde.
+          </p>
+          <div class="card-actions">
+            <button class="btn btn-sm btn-primary" (click)="zahlungFortsetzen()">
+              Zahlung fortsetzen
+            </button>
+          </div>
+        } @else {
+          <div class="card-actions">
+            <button class="btn btn-sm btn-primary" (click)="bezahlen()">
+              {{ abgebrochen() ? 'Erneut versuchen' : 'Weiter zur Zahlung' }}
+            </button>
+          </div>
+        }
       } @else {
         <div class="loading loading-dots loading-sm"></div>
       }
@@ -26,6 +47,7 @@
   <app-zahlungdialog
     #zahlungDialog
     class="w-full"
-    (onDialogGeschlossen)="zahlungDialogGeschlossen($event)"
+    (bezahlt)="zahlungBezahlt()"
+    (abgebrochen)="zahlungAbgebrochen()"
   />
 

@@ -8,6 +8,8 @@ stages:
   image: maven:3.9.11-eclipse-temurin-25
   artifacts:
     expire_in: 3 hours
+  before_script:
+    - cd backend
   cache:
     - key: m2_cache
       paths:
@@ -65,7 +67,7 @@ build:backend:
   extends: .backend
   stage: build
   script:
-    - mvn $MAVEN_CLI_OPTS -pl backend compile
+    - mvn $MAVEN_CLI_OPTS compile
   artifacts:
     paths:
       - backend/target/
@@ -85,7 +87,7 @@ test:backend:
   dependencies:
     - build:backend
   script:
-    - mvn $MAVEN_CLI_OPTS -pl backend verify -Djib.skip=true
+    - mvn $MAVEN_CLI_OPTS verify
   artifacts:
     when: always
     reports:
@@ -112,7 +114,7 @@ sbom-generation:backend:
     - .on-main-or-tag
   stage: sbom-generation
   script:
-    - mvn $MAVEN_CLI_OPTS -pl backend cyclonedx:makeAggregateBom
+    - mvn $MAVEN_CLI_OPTS cyclonedx:makeAggregateBom
   artifacts:
     paths:
       - backend/target/.bom/

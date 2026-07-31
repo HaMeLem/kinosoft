@@ -1,6 +1,7 @@
 package de.wps.ddd.kino.kartenverkauf.adapters.persistence.repositories;
 
 
+import de.wps.ddd.kino.IntegrationTestMitWochenplan;
 import de.wps.ddd.kino.common.error.RessourceNichtGefunden;
 import de.wps.ddd.kino.kartenverkauf.application.domain.sitzplatzvergabe.Platz;
 import de.wps.ddd.kino.kartenverkauf.application.domain.sitzplatzvergabe.PlatzId;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,15 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class SaalplanStapelIntegrationTest {
+class SaalplanStapelIntegrationTest extends IntegrationTestMitWochenplan {
 
     @Autowired
     private SaalplanStapel saalplanStapel;
 
-    private final VorstellungId vorstellungId = new VorstellungId(UUID.fromString("f142de00-f3ec-4a42-9493-d406b3062b4a"));
-
     @Test
     void holeSaalplan_bekannteVorstellung_liefertSaalplan() {
+        // arrange
+        var vorstellungId = vorstellungId("Star Boars", "kleiner Saal", LocalDateTime.of(2025, 3, 18, 15, 30));
+
         // act
         var saalplan = saalplanStapel.holeSaalplan(vorstellungId);
 
@@ -57,6 +60,7 @@ class SaalplanStapelIntegrationTest {
     @Test
     void legeZurueck_geaenderterSaalplan() {
         // arrange
+        var vorstellungId = vorstellungId("Star Boars", "kleiner Saal", LocalDateTime.of(2025, 3, 18, 15, 30));
         var saalplan = saalplanStapel.holeSaalplan(vorstellungId);
         var platzId = new PlatzId(new ReiheNummer(2), new PlatzNummer(3));
         assertThat(saalplan.platz(platzId).istVerkauft()).isFalse();

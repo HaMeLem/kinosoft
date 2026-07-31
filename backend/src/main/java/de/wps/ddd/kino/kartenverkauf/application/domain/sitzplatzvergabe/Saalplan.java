@@ -41,6 +41,21 @@ public class Saalplan {
     }
 
     /**
+     * Erzeugt einen leeren Saalplan für die Bestuhlung eines Saals: alle Plätze frei, die vordere
+     * Hälfte der Reihen Parkett, die hintere Loge.
+     */
+    public static Saalplan leer(VorstellungId vorstellungId, int reihen, int plaetzeProReihe) {
+        var plaetze = new ArrayList<Platz>(reihen * plaetzeProReihe);
+        for (int reihe = 1; reihe <= reihen; reihe++) {
+            var kategorie = reihe <= reihen / 2 ? PlatzKategorie.Parkett : PlatzKategorie.Loge;
+            for (int platz = 1; platz <= plaetzeProReihe; platz++) {
+                plaetze.add(new Platz(new PlatzId(new ReiheNummer(reihe), new PlatzNummer(platz)), kategorie, false));
+            }
+        }
+        return new Saalplan(vorstellungId, plaetze);
+    }
+
+    /**
      * @param anzahlPlaetze die Anzahl der gewünschten freien zusammenhängenden Plätze
      * @return die ersten freien zusammenhängenden Plätze startend von der hintersten Reihe oder eine leere Liste, wenn es keine anzahlPlaetze zusammenhängenden Plätze gibt
      */

@@ -21,4 +21,14 @@ public class VorstellungEntityMapper {
                 VorstellungKategorie.valueOf(entity.getKategorie())
         );
     }
+
+    public VorstellungEntity toEntity(Vorstellung vorstellung) {
+        return new VorstellungEntity(
+                vorstellung.getId().uuid(),
+                vorstellung.getBeginn().zeitpunkt(),
+                vorstellung.getSaal().name(),
+                vorstellung.getFilm().name(),
+                vorstellung.getKategorie().name()
+        );
+    }
 }

@@ -1,6 +1,6 @@
 import {Component, computed, input, signal, viewChild} from '@angular/core';
 import {VorstellungComponent} from '../vorstellung/vorstellung.component';
-import {Kinokarte, Vorstellung, Zahlungsvorgang, ZusammenhaengendePlaetze} from '../../dtos/kartenverkauf';
+import {Kinokarte, Verkaufsvorgang, Vorstellung, ZusammenhaengendePlaetze} from '../../dtos/kartenverkauf';
 import {PlatzanzahlComponent} from '../platzanzahl/platzanzahl.component';
 import {SaalplanComponent} from '../saalplan/saalplan.component';
 import {ZahlungComponent} from '../zahlung/zahlung.component';
@@ -28,7 +28,7 @@ export class KartenverkaufComponent {
   readonly gewaehlteVorstellung = signal<Vorstellung | undefined>(undefined);
   readonly gewaehltePlatzanzahl = signal<number | undefined>(undefined);
   readonly gewaehltePlaetze = signal<ZusammenhaengendePlaetze | undefined>(undefined);
-  readonly zahlungsbestaetigung = signal<Zahlungsvorgang | undefined>(undefined);
+  readonly zahlungsbestaetigung = signal<Verkaufsvorgang | undefined>(undefined);
   readonly erhalteneKinokarten = signal<Kinokarte[] | undefined>(undefined);
 
   readonly platzanzahlComponent = viewChild.required<PlatzanzahlComponent>('platzanzahlComponent');
@@ -65,7 +65,7 @@ export class KartenverkaufComponent {
     this.gewaehltePlaetze.set(plaetze);
   }
 
-  zahlungBestaetigt(zahlungsbestaetigung: Zahlungsvorgang) {
+  zahlungBestaetigt(zahlungsbestaetigung: Verkaufsvorgang) {
     this.zahlungsbestaetigung.set(zahlungsbestaetigung);
   }
 

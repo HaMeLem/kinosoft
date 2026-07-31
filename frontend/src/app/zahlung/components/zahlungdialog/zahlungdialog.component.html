@@ -1,0 +1,43 @@
+<dialog #zahlungDialogModal class="modal">
+  <div class="modal-box">
+    @if (!verarbeitung()) {
+      <form method="dialog">
+        <button class="btn btn-md btn-circle btn-ghost btn-error absolute right-2 top-2">✕</button>
+      </form>
+    }
+    <h3 class="text-lg font-bold">Zahlung</h3>
+    @if (verarbeitung()) {
+      <p class="italic">Zahlung wird verarbeitet …</p>
+      <div class="loading loading-dots loading-md"></div>
+    } @else if (fehler()) {
+      <p class="text-error">Die Zahlung konnte nicht verarbeitet werden. Bitte schließen und erneut versuchen.</p>
+    } @else if (zahlung(); as z) {
+      <div>
+        <p class="italic">Zu zahlender Betrag</p>
+        <b>{{ z.betragInCent | geldbetrag }} EUR</b>
+        <fieldset class="flex flex-col gap-2">
+          <p class="italic">Wie möchten Sie zahlen?</p>
+
+          <div class="flex flex-row gap-2">
+            <input type="radio" name="zahlungsart" id="kreditkarte" value="Kreditkarte" class="radio radio-sm"
+                   checked="checked"/>
+            <label for="kreditkarte">Kreditkarte</label>
+          </div>
+          <div class="flex flex-row gap-2">
+            <input type="radio" name="zahlungsart" id="bezahlkumpel" value="Bezahlkumpel" class="radio radio-sm">
+            <label for="bezahlkumpel">Bezahlkumpel</label>
+          </div>
+          <div class="flex flex-row gap-2">
+            <input type="radio" name="zahlungsart" id="pearpay" value="Pear Pay" class="radio radio-sm">
+            <label for="pearpay">Pear Pay</label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-action">
+        <button class="btn btn-primary" (click)="bestaetige()">Zahlung bestätigen</button>
+      </div>
+    } @else {
+      <div class="loading loading-dots loading-sm"></div>
+    }
+  </div>
+</dialog>

@@ -5,6 +5,29 @@ Alle erwähnenswerten Änderungen an KinoSoft werden hier festgehalten.
 Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 die Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [0.2.0] – 2026-07-31
+
+Zwei neue Bounded Contexts (**Zahlung**, **Wochenplanung**) mit event-getriebener Integration
+über Spring Modulith sowie eine Neustrukturierung der Build- und Entwicklungsumgebung.
+
+### Hinzugefügt
+
+- **Spring Modulith** eingeführt: strukturiert die Anwendung in fachliche Module (Bounded Contexts)
+  mit geprüften, zyklenfreien Abhängigkeiten
+- Bounded Context **Zahlung**: eigenständiger, zustandsbehafteter (simulierter) Zahlungsdienstleister
+- Bounded Context **Wochenplanung**: Source of Truth des Wochenplans für Filmauswahl und Kartenverkauf
+- Integrationsmuster: Kartenverkauf ↔ Zahlung event-getrieben; Wochenplanung fächert per Benachrichtigungs-Event +
+  Query-back an beide Consumer aus
+- Aggregat `Verkaufsvorgang`: bündelt Vorstellung, Plätze, Gesamtpreis und Zahlungsvorgang und stellt dazu
+  genau einmal Kinokarten aus, gemeldet als `KinokartenVerkauft`
+- Architektur-Annotationen `@Gateway` und `@DomainCommand` in `common.architecture`
+
+### Geändert
+
+- Statische `data.sql` entfernt: Filmauswahl und Kartenverkauf werden zur Laufzeit aus der Wochenplanung gefüllt
+- Demodaten folgen der aktuellen Woche statt eines fixen Referenzdatums
+- Build entflochten: `backend/` eigenständiges Maven-Projekt, Frontend überall Node-nativ mit `npm` gebaut
+
 ## [0.1.2] – 2026-06-12
 
 Ausbau der Backend-Testabdeckung und kleinere Korrekturen.

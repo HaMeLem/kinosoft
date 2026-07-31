@@ -1,0 +1,11 @@
+{
+  // Empfohlene Erweiterungen fuer die Arbeit an KinoSoft in VS Code.
+  // VS Code bietet diese beim Oeffnen des Projekts zur Installation an.
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-spring-boot-dev-pack",
+    "angular.ng-template",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode-remote.remote-containers"
+  ]
+}

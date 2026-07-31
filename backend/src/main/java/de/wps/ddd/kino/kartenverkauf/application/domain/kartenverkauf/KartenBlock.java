@@ -10,9 +10,14 @@ import java.util.List;
 @Factory
 @Component
 public class KartenBlock {
-    public List<Kinokarte> erstelleKarten(Vorstellung vorstellung, ZusammenhaengendePlaetze gewaehltePlaetze) {
+    public List<Kinokarte> erstelleKarten(
+            Auftragsnummer auftragsnummer,
+            Vorstellung vorstellung,
+            ZusammenhaengendePlaetze gewaehltePlaetze) {
         return gewaehltePlaetze.plaetze().stream().map(platzId -> new Kinokarte(
-                null,
+                KinokarteId.neu(),
+                auftragsnummer,
+                vorstellung.getId(),
                 vorstellung.getFilm(),
                 vorstellung.getBeginn(),
                 vorstellung.getSaal(),

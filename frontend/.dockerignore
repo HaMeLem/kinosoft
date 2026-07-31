@@ -1,0 +1,5 @@
+# Haelt den Docker-Build-Context (frontend/, fuer Dockerfile) schlank.
+node_modules
+dist
+.angular
+.DS_Store
