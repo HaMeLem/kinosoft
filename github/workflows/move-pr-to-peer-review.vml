@@ -15,13 +15,14 @@ permissions:
 
 jobs:
   move-related-issue:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     env:
       GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
       PROJECT_OWNER: HaMeLem
       PROJECT_NUMBER: "2"
-      TARGET_STATUS: "In Peer-Review"
+      TARGET_STATUS: "In peer-review"
       PR_BODY: ${{ github.event.pull_request.body }}
       REPOSITORY: ${{ github.repository }}
 
