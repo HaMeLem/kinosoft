@@ -1,0 +1,73 @@
+name: Pull Request nach Peer-Review verschieben
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+      - edited
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  move-related-issue:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+      PROJECT_OWNER: HaMeLem
+      PROJECT_NUMBER: "2"
+      TARGET_STATUS: "In Peer-Review"
+      PR_BODY: ${{ github.event.pull_request.body }}
+      REPOSITORY: ${{ github.repository }}
+
+    steps:
+      - name: Zugehöriges Issue finden und verschieben
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Analysiere Pull-Request-Text ..."
+
+          # Erwartetes Format:
+          # Lösung für US1
+          #
+          # Erlaubt sind auch:
+          # Lösung für: US1
+          # Lösung für #US1
+          issue_key="$(
+            printf '%s' "${PR_BODY:-}" \
+              | grep -oiE 'Lösung[[:space:]]+für[[:space:]]*:?[[:space:]]*#?[A-Za-z]+[0-9]+' \
+              | head -n 1 \
+              | grep -oEi '[A-Za-z]+[0-9]+$' \
+              | tr '[:lower:]' '[:upper:]' \
+              || true
+          )"
+
+          if [[ -z "$issue_key" ]]; then
+            echo "Kein Verweis wie 'Lösung für US1' im Pull-Request gefunden."
+            exit 0
+          fi
+
+          echo "Gefundener Schlüssel: $issue_key"
+
+          echo "Suche offenes Issue mit '$issue_key' im Titel ..."
+
+          matching_issues="$(
+            gh api --paginate \
+              "/repos/${REPOSITORY}/issues?state=open&per_page=100" \
+              --jq --arg key "$issue_key" '
+                .[]
+                | select(.pull_request == null)
+                | select(
+                    (.title | ascii_downcase)
+                    | contains($key | ascii_downcase)
+                  )
+                | [
+                    (.number | tostring),
+                    .id,
+                    .node_id,
