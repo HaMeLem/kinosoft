@@ -61,7 +61,7 @@ jobs:
           matching_issues="$(
             gh api --paginate \
               "/repos/${REPOSITORY}/issues?state=open&per_page=100" \
-              --jq --arg key "$issue_key" '
+              | jq -r --arg key "$issue_key" '
                 .[]
                 | select(.pull_request == null)
                 | select(
@@ -75,8 +75,7 @@ jobs:
                     .title
                   ]
                 | @tsv
-              ' \
-              || true
+              '
           )"
 
           if [[ -z "${matching_issues:-}" ]]; then
