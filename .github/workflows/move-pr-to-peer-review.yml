@@ -1,0 +1,231 @@
+name: Pull Request nach Peer-Review verschieben
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+      - edited
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  move-related-issue:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+      PROJECT_OWNER: HaMeLem
+      PROJECT_NUMBER: "2"
+      TARGET_STATUS: "In peer-review"
+      PR_BODY: ${{ github.event.pull_request.body }}
+      REPOSITORY: ${{ github.repository }}
+
+    steps:
+      - name: Zugehöriges Issue finden und verschieben
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Analysiere Pull-Request-Text ..."
+
+          # Erwartetes Format:
+          # Lösung für US1
+          #
+          # Erlaubt sind auch:
+          # Lösung für: US1
+          # Lösung für #US1
+          issue_key="$(
+            printf '%s' "${PR_BODY:-}" \
+              | grep -oiE 'Lösung[[:space:]]+für[[:space:]]*:?[[:space:]]*#?[A-Za-z]+[0-9]+' \
+              | head -n 1 \
+              | grep -oEi '[A-Za-z]+[0-9]+$' \
+              | tr '[:lower:]' '[:upper:]' \
+              || true
+          )"
+
+          if [[ -z "$issue_key" ]]; then
+            echo "Kein Verweis wie 'Lösung für US1' im Pull-Request gefunden."
+            exit 0
+          fi
+
+          echo "Gefundener Schlüssel: $issue_key"
+
+          echo "Suche offenes Issue mit '$issue_key' im Titel ..."
+
+          matching_issues="$(
+            gh api --paginate \
+              "/repos/${REPOSITORY}/issues?state=open&per_page=100" \
+              --jq --arg key "$issue_key" '
+                .[]
+                | select(.pull_request == null)
+                | select(
+                    (.title | ascii_downcase)
+                    | contains($key | ascii_downcase)
+                  )
+                | [
+                    (.number | tostring),
+                    .id,
+                    .node_id,
+                    .title
+                  ]
+                | @tsv
+              ' \
+              || true
+          )"
+
+          if [[ -z "${matching_issues:-}" ]]; then
+            echo "Kein passendes offenes Issue für '$issue_key' gefunden."
+            exit 0
+          fi
+
+          issue_count="$(printf '%s\n' "$matching_issues" | sed '/^$/d' | wc -l | tr -d '[:space:]')"
+          if [[ "$issue_count" -gt 1 ]]; then
+            echo "Mehrere passende Issues gefunden, verwende das erste Ergebnis."
+          fi
+
+          first_match="$(printf '%s\n' "$matching_issues" | sed -n '1p')"
+          IFS=$'\t' read -r issue_number issue_id issue_node_id issue_title <<<"$first_match"
+
+          echo "Gefundenes Issue: #$issue_number - $issue_title"
+
+          project_id="$(
+            gh api graphql \
+              -f query='
+                query($owner: String!, $number: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $number) { id }
+                  }
+                  organization(login: $owner) {
+                    projectV2(number: $number) { id }
+                  }
+                }
+              ' \
+              -F owner="$PROJECT_OWNER" \
+              -F number="$PROJECT_NUMBER" \
+              --jq '.data.user.projectV2.id // .data.organization.projectV2.id'
+          )"
+
+          if [[ -z "${project_id:-}" ]]; then
+            echo "Projekt ${PROJECT_OWNER}/${PROJECT_NUMBER} nicht gefunden."
+            exit 1
+          fi
+
+          item_id="$(
+            gh api graphql \
+              -f query='
+                query($issueId: ID!, $projectId: ID!) {
+                  node(id: $issueId) {
+                    ... on Issue {
+                      projectItems(first: 100) {
+                        nodes {
+                          id
+                          project { id }
+                        }
+                      }
+                    }
+                  }
+                }
+              ' \
+              -F issueId="$issue_node_id" \
+              -F projectId="$project_id" \
+              --jq --arg projectId "$project_id" '
+                .data.node.projectItems.nodes[]
+                | select(.project.id == $projectId)
+                | .id
+              ' \
+              | head -n 1 \
+              || true
+          )"
+
+          if [[ -z "${item_id:-}" ]]; then
+            echo "Issue ist noch nicht im Projekt, füge es hinzu."
+            item_id="$(
+              gh api graphql \
+                -f query='
+                  mutation($projectId: ID!, $contentId: ID!) {
+                    addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                      item { id }
+                    }
+                  }
+                ' \
+                -F projectId="$project_id" \
+                -F contentId="$issue_node_id" \
+                --jq '.data.addProjectV2ItemById.item.id'
+            )"
+          fi
+
+          status_field_data="$(
+            gh api graphql \
+              -f query='
+                query($projectId: ID!, $fieldName: String!, $optionName: String!) {
+                  node(id: $projectId) {
+                    ... on ProjectV2 {
+                      fields(first: 100) {
+                        nodes {
+                          ... on ProjectV2SingleSelectField {
+                            id
+                            name
+                            options {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ' \
+              -F projectId="$project_id" \
+              -F fieldName="Status" \
+              -F optionName="$TARGET_STATUS" \
+              --jq --arg fieldName "Status" --arg optionName "$TARGET_STATUS" '
+                .data.node.fields.nodes[]
+                | select(.name == $fieldName)
+                | [ .id, (.options[] | select(.name == $optionName) | .id) ]
+                | @tsv
+              ' \
+              | head -n 1 \
+              || true
+          )"
+
+          if [[ -z "${status_field_data:-}" ]]; then
+            echo "Status-Feld oder Option '$TARGET_STATUS' im Projekt nicht gefunden."
+            exit 1
+          fi
+
+          IFS=$'\t' read -r status_field_id status_option_id <<<"$status_field_data"
+
+          gh api graphql \
+            -f query='
+              mutation(
+                $projectId: ID!,
+                $itemId: ID!,
+                $fieldId: ID!,
+                $optionId: String!
+              ) {
+                updateProjectV2ItemFieldValue(
+                  input: {
+                    projectId: $projectId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: { singleSelectOptionId: $optionId }
+                  }
+                ) {
+                  projectV2Item { id }
+                }
+              }
+            ' \
+            -F projectId="$project_id" \
+            -F itemId="$item_id" \
+            -F fieldId="$status_field_id" \
+            -F optionId="$status_option_id" \
+            >/dev/null
+
+          echo "Issue #$issue_number erfolgreich auf '$TARGET_STATUS' gesetzt."
