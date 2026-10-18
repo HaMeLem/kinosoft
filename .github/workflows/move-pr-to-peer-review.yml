@@ -59,14 +59,14 @@ jobs:
           echo "Suche offenes Issue mit '$issue_key' im Titel ..."
 
           matching_issues="$(
-            gh api --paginate \
+            gh api --paginate --slurp \
               "/repos/${REPOSITORY}/issues?state=open&per_page=100" \
-              --jq --arg key "$issue_key" '
-                .[]
+              | jq -r --arg key "$issue_key" '
+                .[][]
                 | select(.pull_request == null)
                 | select(
-                    (.title | ascii_downcase)
-                    | contains($key | ascii_downcase)
+                    ((.title | ascii_downcase)
+                    | test("(^|[^a-z0-9])" + ($key | ascii_downcase) + "([^a-z0-9]|$)"))
                   )
                 | [
                     (.number | tostring),
@@ -75,8 +75,7 @@ jobs:
                     .title
                   ]
                 | @tsv
-              ' \
-              || true
+              '
           )"
 
           if [[ -z "${matching_issues:-}" ]]; then
