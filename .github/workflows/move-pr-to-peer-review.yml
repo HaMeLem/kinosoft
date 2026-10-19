@@ -100,14 +100,11 @@ jobs:
                   user(login: $owner) {
                     projectV2(number: $number) { id }
                   }
-                  organization(login: $owner) {
-                    projectV2(number: $number) { id }
-                  }
                 }
               ' \
               -F owner="$PROJECT_OWNER" \
               -F number="$PROJECT_NUMBER" \
-              --jq '.data.user.projectV2.id // .data.organization.projectV2.id'
+              --jq '.data.user.projectV2.id'
           )"
 
           if [[ -z "${project_id:-}" ]]; then
