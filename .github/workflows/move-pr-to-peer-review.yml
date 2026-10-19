@@ -115,7 +115,7 @@ jobs:
           item_id="$(
             gh api graphql \
               -f query='
-                query($issueId: ID!, $projectId: ID!) {
+                query($issueId: ID!) {
                   node(id: $issueId) {
                     ... on Issue {
                       projectItems(first: 100) {
@@ -129,14 +129,12 @@ jobs:
                 }
               ' \
               -F issueId="$issue_node_id" \
-              -F projectId="$project_id" \
-              --jq --arg projectId "$project_id" '
+              | jq -r --arg projectId "$project_id" '
                 .data.node.projectItems.nodes[]
                 | select(.project.id == $projectId)
                 | .id
               ' \
-              | head -n 1 \
-              || true
+              | head -n 1
           )"
 
           if [[ -z "${item_id:-}" ]]; then
@@ -159,7 +157,7 @@ jobs:
           status_field_data="$(
             gh api graphql \
               -f query='
-                query($projectId: ID!, $fieldName: String!, $optionName: String!) {
+                query($projectId: ID!) {
                   node(id: $projectId) {
                     ... on ProjectV2 {
                       fields(first: 100) {
@@ -179,16 +177,13 @@ jobs:
                 }
               ' \
               -F projectId="$project_id" \
-              -F fieldName="Status" \
-              -F optionName="$TARGET_STATUS" \
-              --jq --arg fieldName "Status" --arg optionName "$TARGET_STATUS" '
+              | jq -r --arg fieldName "Status" --arg optionName "$TARGET_STATUS" '
                 .data.node.fields.nodes[]
                 | select(.name == $fieldName)
                 | [ .id, (.options[] | select(.name == $optionName) | .id) ]
                 | @tsv
               ' \
-              | head -n 1 \
-              || true
+              | head -n 1
           )"
 
           if [[ -z "${status_field_data:-}" ]]; then
