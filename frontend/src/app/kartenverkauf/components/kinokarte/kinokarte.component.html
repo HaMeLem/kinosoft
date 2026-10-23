@@ -15,7 +15,11 @@
                 <p>Reihe {{ kinokarte.reihe }} Platz {{ kinokarte.platz }}</p>
               </div>
               <figure class="mr-4">
-                <img class="h-32 w-32" src="assets/qr-code.png" alt="https://www.wps.de"/>
+                <qrcode 
+                  [qrdata]=datenImQrCode(kinokarte)
+                  [width]="256" 
+                  [errorCorrectionLevel]="'M'">
+                </qrcode>
               </figure>
             </div>
           </div>

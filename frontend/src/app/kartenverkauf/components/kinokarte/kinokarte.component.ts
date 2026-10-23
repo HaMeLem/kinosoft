@@ -1,5 +1,6 @@
 import {Component, DestroyRef, inject, OnInit, output, input, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { QRCodeComponent } from 'angularx-qrcode';
 import {Kinokarte, Verkaufsvorgang} from '../../dtos/kartenverkauf';
 import {KartenverkaufService} from '../../services/kartenverkauf.service';
 import {DatePipe} from '@angular/common';
@@ -7,11 +8,13 @@ import {DatePipe} from '@angular/common';
 @Component({
   selector: 'app-kinokarte',
   imports: [
-    DatePipe
+    DatePipe, QRCodeComponent
 ],
+  providers: [DatePipe],
   templateUrl: './kinokarte.component.html',
   styleUrl: './kinokarte.component.css'
 })
+
 export class KinokarteComponent implements OnInit {
   private kartenverkaufService = inject(KartenverkaufService);
   private destroyRef = inject(DestroyRef);
@@ -37,5 +40,12 @@ export class KinokarteComponent implements OnInit {
 
   toggleStacked() {
     this.stacked.update(value => !value);
+  }
+
+  // gibt einen String mit den Ticketdaten fuer den QR-Code zurueck
+  private datePipe = inject(DatePipe);
+  datenImQrCode(kinokarte: Kinokarte): string {
+    const beginnFormatiert = this.datePipe.transform(kinokarte.beginn, 'dd.MM.yyyy HH:mm') || '';
+    return `Film: ${kinokarte.film}\nFilmbeginn: ${beginnFormatiert}\nSaal: ${kinokarte.saal}\nReihe: ${kinokarte.reihe}\nReihe: ${kinokarte.platz}`;
   }
 }
