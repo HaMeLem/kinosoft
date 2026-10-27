@@ -1,4 +1,4 @@
-package de.wps.ddd.kino.einlass.domain;
+package de.wps.ddd.kino.einlasskontrolle.domain;
 
 import lombok.Getter;
 import org.jmolecules.ddd.annotation.AggregateRoot;
@@ -31,6 +31,10 @@ public class Kinokarte
         this.saal = saal;
         this.filmvorstellung = filmvorstellung;
         this.eingelassen = false;
+    }
+
+    public void entwerten() {
+        this.eingelassen = true;
     }
 
 }
