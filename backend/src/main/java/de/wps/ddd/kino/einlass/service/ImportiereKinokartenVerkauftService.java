@@ -37,7 +37,8 @@ KartenId, Reihe, Sitzplatz in Value Objekte umgewandelt */
                     new Sitzplatz(karte.platz()),
                     saal,
                     vorstellungId);
-/* jedes Aggregat wird an kinokartenRepository übergeben, um es zu speichern  PASSIERT AKTUELL NOCH NICHT*/
+/* jedes Aggregat wird an kinokartenRepository übergeben, da noch keine Implementierung von kinokartenRepository existiert, passiert das
+SPEICHERN AKTUELL NOCH NICHT*/
             kinokartenRepository.speichere(kinokarte);
         }
     }
