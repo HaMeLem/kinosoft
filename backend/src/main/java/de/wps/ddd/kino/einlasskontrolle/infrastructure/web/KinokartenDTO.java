@@ -1,4 +1,4 @@
-package de.wps.ddd.kino.einlass.infrastructure.web;
+package de.wps.ddd.kino.einlasskontrolle.infrastructure.web;
 
 public record KinokartenDTO(
         int saal,

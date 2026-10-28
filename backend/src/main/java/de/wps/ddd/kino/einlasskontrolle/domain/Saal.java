@@ -5,8 +5,8 @@ import org.jmolecules.ddd.annotation.ValueObject;
 @ValueObject
 public enum Saal
 {
-    SAAL_1(1),
-    SAAL_2(2);
+    KLEINER_SAAL(1),
+    GROSSER_SAAL(2);
 
     private final int wert;
 
