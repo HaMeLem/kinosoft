@@ -24,4 +24,3 @@ export class Login {
     this.fehlermeldung = 'Die Demo-Anmeldung ist noch nicht eingerichtet.';
   }
 }
-
