@@ -12,6 +12,7 @@ public class Filmvorstellung
     private final VorstellungsId id;
     private final GeplanteStartzeit start;
     private final GeplanteEndzeit ende;
+    private final EinlassVorlauf einlassVorlauf;
 
     public Filmvorstellung(
             VorstellungsId id,
@@ -22,5 +23,6 @@ public class Filmvorstellung
         this.id = id;
         this.start = start;
         this.ende = ende;
+        this.einlassVorlauf = EinlassVorlauf.EINLASS_VORLAUF_MINUTEN;
     }
 }
