@@ -1,0 +1,103 @@
+.login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(5rem, 18vh, 10rem) 24px 40px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 360px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.login-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #202326;
+}
+
+.login-header p {
+  margin: 4px 0 0;
+  font-size: 18px;
+  color: #888888;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #202326;
+}
+
+.form-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #202326;
+}
+
+.form-field input:focus {
+  outline: 2px solid #202326;
+  outline-offset: 2px;
+}
+
+.login-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  background-color: #202326;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #393d41;
+}
+
+.login-button:focus-visible {
+  outline: 2px solid #202326;
+  outline-offset: 3px;
+}
+
+/* Fehlermeldung beim Login */
+.error-message {
+  margin: 0;
+  padding: 12px;
+  background-color: #fce8e8;
+  color: #a12b2b;
+  border: 1px solid #efb7b7;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
