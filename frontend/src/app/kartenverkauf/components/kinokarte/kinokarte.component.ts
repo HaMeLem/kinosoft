@@ -43,9 +43,7 @@ export class KinokarteComponent implements OnInit {
   }
 
   // gibt einen String mit den Ticketdaten fuer den QR-Code zurueck
-  private datePipe = inject(DatePipe);
   datenImQrCode(kinokarte: Kinokarte): string {
-    const beginnFormatiert = this.datePipe.transform(kinokarte.beginn, 'dd.MM.yyyy HH:mm') || '';
-    return `Film: ${kinokarte.film}\nFilmbeginn: ${beginnFormatiert}\nSaal: ${kinokarte.saal}\nReihe: ${kinokarte.reihe}\nReihe: ${kinokarte.platz}`;
+    return `${kinokarte.id}`;
   }
 }
