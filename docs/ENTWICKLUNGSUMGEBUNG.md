@@ -184,8 +184,8 @@ cd frontend && npm start
 ```
 
 - UI (Entwicklung): <http://localhost:4200>
-- H2-Konsole: <http://localhost:8080/h2-console>
-  (JDBC-URL `jdbc:h2:mem:testdb`, Benutzer `sa`, kein Passwort)
+- PostgreSQL: Wird über `docker compose up postgres` gestartet und ist unter
+  `localhost:5432` erreichbar (Datenbank `kinosoft`, Benutzer `postgres`).
 
 ### Tests
 

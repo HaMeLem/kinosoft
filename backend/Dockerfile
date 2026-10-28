@@ -30,8 +30,8 @@ WORKDIR /app
 COPY --from=build /workspace/target/*.jar app.jar
 
 # Als nicht-privilegierten Nutzer laufen (kein root im Container). Das JAR wird
-# nur gelesen; die H2-DB liegt in-memory, daher werden keine beschreibbaren
-# Verzeichnisse benoetigt. Port 8080 ist unprivilegiert (>1024).
+# nur gelesen; die Datenbank läuft als separater PostgreSQL-Container. Port 8080
+# ist unprivilegiert (>1024).
 RUN groupadd --system spring \
  && useradd --system --gid spring --no-create-home spring
 USER spring:spring
