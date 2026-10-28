@@ -1,4 +1,4 @@
-package de.wps.ddd.kino.einlass.domain;
+package de.wps.ddd.kino.einlasskontrolle.domain;
 
 import org.jmolecules.ddd.annotation.ValueObject;
 

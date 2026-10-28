@@ -1,6 +1,6 @@
-package de.wps.ddd.kino.einlass.infrastructure.web;
+package de.wps.ddd.kino.einlasskontrolle.infrastructure.web;
 
-import de.wps.ddd.kino.einlass.domain.KinokartenId;
+import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

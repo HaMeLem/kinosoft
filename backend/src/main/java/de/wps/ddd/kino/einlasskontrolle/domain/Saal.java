@@ -1,4 +1,4 @@
-package de.wps.ddd.kino.einlass.domain;
+package de.wps.ddd.kino.einlasskontrolle.domain;
 
 import org.jmolecules.ddd.annotation.ValueObject;
 
@@ -12,13 +12,12 @@ public enum Saal
 */
 
 
-    KLEINER_SAAL("kleiner Saal", 1),
-    GROSSER_SAAL("großer Saal", 2);
-    
+    KLEINER_SAAL(1),
+    GROSSER_SAAL(2);
 
     private final int wert;
 
-    Saal(int wert)
+    Saal( int wert)
     {
         this.wert = wert;
     }
@@ -27,4 +26,5 @@ public enum Saal
     {
         return wert;
     }
+
 }
