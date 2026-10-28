@@ -1,6 +1,6 @@
 package de.wps.ddd.kino.einlasskontrolle.domain;
 
-public interface Wochenplan
+public interface FilmvorstellungenRepository
 {
     void fuegeVorstellungHinzu(Filmvorstellung filmvorstellung);
     Filmvorstellung holeVorstellung(VorstellungsId vorstellungsId);
