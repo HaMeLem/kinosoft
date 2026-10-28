@@ -1,4 +1,4 @@
-package de.wps.ddd.kino.einlass.service;
+package de.wps.ddd.kino.einlasskontrolle.application;
 
 import java.util.List;
 import java.util.UUID;

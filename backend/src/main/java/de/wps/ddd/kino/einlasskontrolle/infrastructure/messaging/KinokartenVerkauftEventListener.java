@@ -1,7 +1,7 @@
-package de.wps.ddd.kino.einlass.infrastructure.messaging;
+package de.wps.ddd.kino.einlasskontrolle.infrastructure.messaging;
 
-import de.wps.ddd.kino.einlass.service.ImportiereKinokartenVerkauftService;
-import de.wps.ddd.kino.einlass.service.VerkaufteKinokarten;
+import de.wps.ddd.kino.einlasskontrolle.application.ImportiereKinokartenVerkauftService;
+import de.wps.ddd.kino.einlasskontrolle.application.VerkaufteKinokarten;
 import de.wps.ddd.kino.kartenverkauf.KinokartenVerkauftDto;
 import lombok.RequiredArgsConstructor;
 
