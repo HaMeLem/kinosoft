@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.jmolecules.ddd.annotation.Identity;
 
+import java.time.LocalDateTime;
+
 @AggregateRoot
 @Getter
 public class Kinokarte
@@ -14,7 +16,7 @@ public class Kinokarte
     private final Sitzplatz sitzplatz;
     private final Saal saal;
     private final VorstellungsId filmvorstellung;
-    private boolean eingelassen;
+    private Entwertungszeitpunkt entwertungszeitpunkt;
 
 
     public Kinokarte(
@@ -30,11 +32,11 @@ public class Kinokarte
         this.sitzplatz = sitzplatz;
         this.saal = saal;
         this.filmvorstellung = filmvorstellung;
-        this.eingelassen = false;
+        this.entwertungszeitpunkt = null;
     }
 
     public void entwerten() {
-        this.eingelassen = true;
+        this.entwertungszeitpunkt = new Entwertungszeitpunkt(LocalDateTime.now());
     }
 
 }
