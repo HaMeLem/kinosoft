@@ -1,0 +1,257 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+  color: #202326;
+}
+
+/* Mobile Ansicht entsprechend dem Figma-Wireframe */
+.scanner-page {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Kopfbereich */
+.scanner-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-bottom: 1px solid #e8e8e8;
+  box-sizing: border-box;
+}
+
+.scanner-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scanner-logo strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.scanner-logo span {
+  font-size: 11px;
+  color: #8a8a8a;
+}
+
+.logout-button {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 7px;
+  color: #202326;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-button:focus-visible {
+  outline: 2px solid #202326;
+  outline-offset: 2px;
+}
+
+/* Scanner-Inhalt */
+.scanner-content {
+  padding: 22px 24px;
+}
+
+.scanner-content h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.scanner-description {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #888888;
+}
+
+/* Kamerabereich */
+.camera-preview {
+  width: 100%;
+  aspect-ratio: 5 / 6;
+  position: relative;
+  background-color: #e6e7e8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Scanrahmen */
+.scan-frame {
+  position: absolute;
+  top: 20%;
+  left: 18%;
+  width: 64%;
+  height: 46%;
+}
+
+.corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  border-color: #4a5053;
+  border-style: solid;
+  border-width: 0;
+}
+
+.top-left {
+  top: 0;
+  left: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+}
+
+.top-right {
+  top: 0;
+  right: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+}
+
+.bottom-left {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+}
+
+.bottom-right {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+}
+
+.camera-placeholder {
+  position: absolute;
+  bottom: 16px;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #999999;
+}
+
+
+/* Hintergrund hinter dem Bestätigungsfenster */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+/* Bestätigungsfenster */
+.logout-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* X oben rechts */
+.logout-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  color: #888888;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Logout-Symbol */
+.logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  background-color: #fce8e8;
+  color: #d64c4c;
+  border-radius: 12px;
+  font-size: 26px;
+}
+
+/* Bestätigungsfrage */
+.logout-dialog h2 {
+  margin: 0 0 24px;
+  color: #202326;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Beide Buttons */
+.logout-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.logout-cancel,
+.logout-confirm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.logout-cancel {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #202326;
+}
+
+.logout-confirm {
+  background-color: #d94b4b;
+  border: 1px solid #d94b4b;
+  color: #ffffff;
+}
+
+.logout-cancel:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-confirm:hover {
+  background-color: #bd3838;
+}
+

@@ -1,0 +1,99 @@
+<main class="scanner-page">
+
+  <header class="scanner-header">
+    <div class="scanner-logo">
+      <strong>KinoSoft</strong>
+      <span>Intern</span>
+    </div>
+
+    <button
+      class="logout-button"
+      type="button"
+      aria-label="Abmelden"
+      title="Abmelden"
+      (click)="abmeldungAnzeigen()"
+    >
+
+    <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M10 17l5-5-5-5" />
+        <path d="M15 12H3" />
+        <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+      </svg>
+    </button>
+  </header>
+
+  <section class="scanner-content">
+    <h1>QR-Code scannen</h1>
+    <p class="scanner-description">
+      Ticket in den Rahmen halten.
+    </p>
+
+    <div class="camera-preview">
+      <div class="scan-frame" aria-hidden="true">
+        <span class="corner top-left"></span>
+        <span class="corner top-right"></span>
+        <span class="corner bottom-left"></span>
+        <span class="corner bottom-right"></span>
+      </div>
+
+      <p class="camera-placeholder">
+        Kameravorschau
+      </p>
+    </div>
+  </section>
+
+  @if (abmeldungOffen()) {
+    <div class="logout-overlay">
+      <section
+        class="logout-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-title"
+      >
+        <button
+          type="button"
+          class="logout-close"
+          aria-label="Fenster schließen"
+          (click)="abmeldungSchliessen()"
+        >
+          ×
+        </button>
+
+        <div class="logout-icon" aria-hidden="true">
+          ⇥
+        </div>
+
+        <h2 id="logout-title">
+          Möchtest du dich wirklich ausloggen?
+        </h2>
+
+        <div class="logout-actions">
+          <button
+            type="button"
+            class="logout-cancel"
+            (click)="abmeldungSchliessen()"
+          >
+            Nein, abbrechen
+          </button>
+
+          <a href="/" class="logout-confirm">
+            Ja, ausloggen
+          </a>
+        </div>
+      </section>
+    </div>
+  }
+
+
+</main>
+
