@@ -1,0 +1,316 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  font-family: Arial, sans-serif;
+  color: #202326;
+}
+
+.ergebnis-page {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.ergebnis-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e8e8e8;
+  box-sizing: border-box;
+  background-color: #ffffff;
+}
+
+.ergebnis-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ergebnis-logo strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ergebnis-logo span {
+  font-size: 11px;
+  color: #777777;
+}
+
+.ergebnis-content {
+  min-height: calc(100dvh - 64px);
+  padding: 48px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.erfolg-ansicht {
+  background-color: #e6f3e9;
+}
+
+.fehler-ansicht {
+  background-color: #f7e8e8;
+}
+
+/* Gleiche Höhe für die Informationen, damit beide Buttons gleich positioniert sind. */
+.ergebnis-information {
+  width: 100%;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.erfolg-symbol,
+.fehler-symbol {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  font-size: 48px;
+  font-weight: 400;
+}
+
+.erfolg-symbol {
+  color: #376846;
+}
+
+.fehler-symbol {
+  color: #a12b2b;
+}
+
+.ergebnis-content h1 {
+  max-width: 250px;
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.erfolg-ansicht h1 {
+  color: #376846;
+}
+
+.fehler-ansicht h1 {
+  color: #a12b2b;
+}
+
+.ergebnis-beschreibung {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #52645a;
+}
+
+.ticket-details,
+.fehlermeldung {
+  width: 100%;
+  padding: 20px 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.ticket-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticket-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 16px;
+}
+
+.ticket-detail span::after {
+  content: ":";
+}
+
+.ticket-detail strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.fehlermeldung strong {
+  font-size: 16px;
+  color: #202326;
+}
+
+.fehlermeldung p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #555555;
+  line-height: 1.5;
+}
+
+.weiter-button {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.erfolg-ansicht .weiter-button {
+  background-color: #376846;
+}
+
+.fehler-ansicht .weiter-button {
+  background-color: #a12b2b;
+}
+
+.erfolg-ansicht .weiter-button:hover {
+  background-color: #285337;
+}
+
+.fehler-ansicht .weiter-button:hover {
+  background-color: #812126;
+}
+
+.weiter-button:focus-visible {
+  outline: 3px solid #202326;
+  outline-offset: 3px;
+}
+
+/* Logout-Button wie auf der Scanner-Seite */
+.ergebnis-header {
+  position: relative;
+}
+
+.logout-button {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 7px;
+  color: #202326;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-button:focus-visible {
+  outline: 2px solid #202326;
+  outline-offset: 2px;
+}
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+/* Bestätigungsfenster */
+.logout-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* X oben rechts */
+.logout-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  color: #888888;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Logout-Symbol */
+.logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  background-color: #fce8e8;
+  color: #d64c4c;
+  border-radius: 12px;
+  font-size: 26px;
+}
+
+/* Bestätigungsfrage */
+.logout-dialog h2 {
+  margin: 0 0 24px;
+  color: #202326;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Beide Buttons */
+.logout-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.logout-cancel,
+.logout-confirm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.logout-cancel {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #202326;
+}
+
+.logout-confirm {
+  background-color: #d94b4b;
+  border: 1px solid #d94b4b;
+  color: #ffffff;
+}

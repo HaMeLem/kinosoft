@@ -1,0 +1,146 @@
+<main class="ergebnis-page">
+
+  <header class="ergebnis-header">
+    <div class="ergebnis-logo">
+      <strong>KinoSoft</strong>
+      <span>Intern</span>
+    </div>
+
+    <button
+      class="logout-button"
+      type="button"
+      aria-label="Abmelden"
+      title="Abmelden"
+      (click)="abmeldungAnzeigen()"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M10 17l5-5-5-5" />
+        <path d="M15 12H3" />
+        <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+      </svg>
+    </button>
+  </header>
+
+
+  @if (ergebnis(); as daten) {
+    @if (daten.typ === 'erfolg') {
+      <section class="ergebnis-content erfolg-ansicht">
+
+        <div class="ergebnis-information">
+          <div class="erfolg-symbol" aria-hidden="true">
+            ✓
+          </div>
+
+          <h1>Einlass erlaubt</h1>
+
+          <p class="ergebnis-beschreibung">
+            Kinokarte erfolgreich entwertet
+          </p>
+
+          <div class="ticket-details">
+            <div class="ticket-detail">
+              <span>Saal</span>
+              <strong>{{ daten.saal }}</strong>
+            </div>
+
+            <div class="ticket-detail">
+              <span>Reihe</span>
+              <strong>{{ daten.reihe }}</strong>
+            </div>
+
+            <div class="ticket-detail">
+              <span>Platz</span>
+              <strong>{{ daten.sitzplatz }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <a href="/scanner" class="weiter-button">
+          Weiter zum Scanner
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </section>
+    } @else {
+      <section class="ergebnis-content fehler-ansicht">
+
+        <div class="ergebnis-information">
+          <div class="fehler-symbol" aria-hidden="true">
+            ✕
+          </div>
+
+          <h1 class="fehler-titel">
+            Einlass nicht erlaubt
+          </h1>
+
+          <div class="fehlermeldung" role="alert">
+            <strong>{{ daten.titel }}</strong>
+
+            @if (daten.beschreibung) {
+              <p>{{ daten.beschreibung }}</p>
+            }
+          </div>
+        </div>
+
+        <a href="/scanner" class="weiter-button">
+          Weiter zum Scanner
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </section>
+    }
+  }
+
+  @if (abmeldungOffen()) {
+    <div class="logout-overlay">
+      <section
+        class="logout-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-title"
+      >
+        <button
+          type="button"
+          class="logout-close"
+          aria-label="Fenster schließen"
+          (click)="abmeldungSchliessen()"
+        >
+          ×
+        </button>
+
+        <div class="logout-icon" aria-hidden="true">
+          ⇥
+        </div>
+
+        <h2 id="logout-title">
+          Möchtest du dich wirklich ausloggen?
+        </h2>
+
+        <div class="logout-actions">
+          <button
+            type="button"
+            class="logout-cancel"
+            (click)="abmeldungSchliessen()"
+          >
+            Nein, abbrechen
+          </button>
+
+          <a href="/" class="logout-confirm">
+            Ja, ausloggen
+          </a>
+        </div>
+      </section>
+    </div>
+  }
+
+</main>
