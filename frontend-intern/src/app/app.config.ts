@@ -4,6 +4,8 @@ import {
   provideZoneChangeDetection
 } from '@angular/core';
 
+import { provideHttpClient } from '@angular/common/http';
+
 import {
   provideRouter,
   withComponentInputBinding
@@ -15,7 +17,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    // Übergibt die Daten unserer Vorschau-Routen an die Ergebnis-Komponente.
-    provideRouter(routes, withComponentInputBinding())
+    provideRouter(routes, withComponentInputBinding()),
+    provideHttpClient()
   ]
 };
