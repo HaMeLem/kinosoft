@@ -1,4 +1,5 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { ErgebnisZustand } from '../services/ergebnis-zustand';
 
 export type EinlassErgebnis =
   | {
@@ -20,7 +21,7 @@ export type EinlassErgebnis =
   styleUrl: './ergebnis.css',
 })
 export class Ergebnis {
-  readonly ergebnis = input<EinlassErgebnis | null>(null);
+  readonly angezeigtesErgebnis = inject(ErgebnisZustand).ergebnis;
 
   readonly abmeldungOffen = signal(false);
 

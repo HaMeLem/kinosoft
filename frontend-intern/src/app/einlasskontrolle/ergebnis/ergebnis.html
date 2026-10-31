@@ -31,8 +31,7 @@
     </button>
   </header>
 
-
-  @if (ergebnis(); as daten) {
+  @if (angezeigtesErgebnis(); as daten) {
     @if (daten.typ === 'erfolg') {
       <section class="ergebnis-content erfolg-ansicht">
 

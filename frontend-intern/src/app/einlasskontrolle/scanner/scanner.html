@@ -46,10 +46,27 @@
         <span class="corner bottom-right"></span>
       </div>
 
-      <p class="camera-placeholder">
-        Kameravorschau
-      </p>
+      <video
+        #cameraVideo
+        class="camera-video"
+        autoplay
+        muted
+        playsinline
+        aria-label="Kameravorschau zum Scannen von QR-Codes"
+      ></video>
     </div>
+
+    @if (kameraFehler()) {
+      <p class="kamera-fehler" role="alert">
+        {{ kameraFehler() }}
+      </p>
+    }
+
+    @if (pruefungLaeuft()) {
+      <p class="scan-status" role="status">
+        Kinokarte wird geprüft ...
+      </p>
+    }
   </section>
 
   @if (abmeldungOffen()) {
@@ -93,7 +110,6 @@
       </section>
     </div>
   }
-
 
 </main>
 

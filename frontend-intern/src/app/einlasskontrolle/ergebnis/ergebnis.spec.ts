@@ -1,24 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Ergebnis } from './ergebnis';
+import { ErgebnisZustand } from '../services/ergebnis-zustand';
 
 describe('Ergebnis', () => {
   let fixture: ComponentFixture<Ergebnis>;
+  let ergebnisZustand: ErgebnisZustand;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Ergebnis],
     }).compileComponents();
 
+    ergebnisZustand = TestBed.inject(ErgebnisZustand);
     fixture = TestBed.createComponent(Ergebnis);
   });
 
   it('soll bei Erfolg Saal, Reihe und Platz anzeigen', () => {
-    fixture.componentRef.setInput('ergebnis', {
+    ergebnisZustand.setzeErgebnis({
       typ: 'erfolg',
       saal: 2,
       reihe: 5,
       sitzplatz: 8,
     });
+
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
@@ -35,11 +39,12 @@ describe('Ergebnis', () => {
   });
 
   it('soll bei Ablehnung die Fehlermeldung anzeigen', () => {
-    fixture.componentRef.setInput('ergebnis', {
+    ergebnisZustand.setzeErgebnis({
       typ: 'fehler',
       titel: 'Bereits entwertet',
       beschreibung: 'Diese Kinokarte wurde bereits entwertet.',
     });
+
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
@@ -54,12 +59,13 @@ describe('Ergebnis', () => {
   });
 
   it('soll den Logout-Dialog öffnen und schließen', () => {
-    fixture.componentRef.setInput('ergebnis', {
+    ergebnisZustand.setzeErgebnis({
       typ: 'erfolg',
       saal: 2,
       reihe: 5,
       sitzplatz: 8,
     });
+
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
