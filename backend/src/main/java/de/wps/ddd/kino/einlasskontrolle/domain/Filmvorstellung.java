@@ -4,6 +4,11 @@ import lombok.Getter;
 import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.jmolecules.ddd.annotation.Identity;
 
+/**
+ * Repräsentiert eine Filmvorstellung innerhalb der Einlasskontrolle.
+ * Übernimmt die Vorstellungs-ID und die geplanten Zeiten aus der Wochenplanung.
+ * Der Einlassvorlauf wird durch die Einlasskontrolle selbst festgelegt.
+ */
 @AggregateRoot
 @Getter
 public class Filmvorstellung
