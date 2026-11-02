@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EinlassService {
+public class EinlasskontrolleService {
 
     private final KinokartenRepository kinokartenRepository;
     private final VorstellungenRepository vorstellungenRepository;
     private final Clock clock;
 
-    public EinlassService(
+    public EinlasskontrolleService(
             KinokartenRepository kinokartenRepository,
             VorstellungenRepository vorstellungenRepository,
             Clock clock
