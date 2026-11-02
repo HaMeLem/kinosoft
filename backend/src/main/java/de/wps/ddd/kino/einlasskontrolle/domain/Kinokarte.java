@@ -37,8 +37,22 @@ public class Kinokarte
         this.entwertungszeitpunkt = null;
     }
 
-public Einlassentscheidung entwerten(Vorstellung vorstellung, LocalDateTime jetzt)
-{
+    // Baut eine bereits existierende Kinokarte aus ihrem gespeicherten Zustand wieder auf.
+    // Diese Methode ist ausschließlich für die Persistenzschicht gedacht (z. B. das Repository, das eine Karte aus der Datenbank lädt). Sie ist nötig, weil der normale
+    // Konstruktor eine Karte immer als "noch nicht entwertet" anlegt. Eine Karte, die
+    // bereits benutzt wurde, könnte man damit nicht wiederherstellen, und die Regel
+    // BEREITS_ENTWERTET würde nie greifen.
+    // Nur für die Rekonstruktion aus der Persistenz (z. B. aus der Datenbank)
+    public static Kinokarte rekonstruiere(KinokartenId id, Reihe reihe, Sitzplatz sitzplatz,
+                                          Saal saal, VorstellungsId vorstellung,
+                                          Entwertungszeitpunkt entwertungszeitpunkt) {
+        Kinokarte karte = new Kinokarte(id, reihe, sitzplatz, saal, vorstellung);
+        karte.entwertungszeitpunkt = entwertungszeitpunkt;
+        return karte;
+    }
+
+    public Einlassentscheidung entwerten(Vorstellung vorstellung, LocalDateTime jetzt)
+    {
     // Regel 1: Karte gehört zu einer anderen Vorstellung
     if (!gehoertZu(vorstellung)) {
         return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG);
@@ -57,17 +71,17 @@ public Einlassentscheidung entwerten(Vorstellung vorstellung, LocalDateTime jetz
 
     // Alles in Ordnung: Karte entwerten und Platz mitteilen
     this.entwertungszeitpunkt = new Entwertungszeitpunkt(jetzt);
-    return new Einlassentscheidung.Erlaubt(saal, reihe, sitzplatz);
-}
+        return new Einlassentscheidung.Erlaubt(saal, reihe, sitzplatz);
+    }
 
-/**
- * Prüft, ob die Karte zur übergebenen Vorstellung gehört.
- *
- * Verglichen wird über die fachliche UUID (getUuid), nicht über die technische
- * Datenbank-ID (getId, Long) der Vorstellung.
- */
-private boolean gehoertZu(Vorstellung vorstellung)
-{
-    return filmvorstellung.id().equals(vorstellung.getUuid());
-}
+    /**
+    * Prüft, ob die Karte zur übergebenen Vorstellung gehört.
+    *
+    * Verglichen wird über die fachliche UUID (getUuid), nicht über die technische
+    * Datenbank-ID (getId, Long) der Vorstellung.
+    */
+    private boolean gehoertZu(Vorstellung vorstellung)
+    {
+        return filmvorstellung.id().equals(vorstellung.getUuid());
+    }
 }
