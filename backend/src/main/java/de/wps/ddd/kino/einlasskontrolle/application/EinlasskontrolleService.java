@@ -2,57 +2,54 @@ package de.wps.ddd.kino.einlasskontrolle.application;
 
 import de.wps.ddd.kino.einlasskontrolle.domain.Ablehnungsgrund;
 import de.wps.ddd.kino.einlasskontrolle.domain.Einlassentscheidung;
+import de.wps.ddd.kino.einlasskontrolle.domain.Filmvorstellung;
+import de.wps.ddd.kino.einlasskontrolle.domain.FilmvorstellungenRepository;
 import de.wps.ddd.kino.einlasskontrolle.domain.Kinokarte;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenId;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenRepository;
-import de.wps.ddd.kino.filmauswahl.data.Vorstellung;
+import de.wps.ddd.kino.einlasskontrolle.domain.VorstellungsId;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 public class EinlasskontrolleService {
 
     private final KinokartenRepository kinokartenRepository;
-    private final VorstellungenRepository vorstellungenRepository;
+    private final FilmvorstellungenRepository filmvorstellungenRepository;
     private final Clock clock;
 
     public EinlasskontrolleService(
             KinokartenRepository kinokartenRepository,
-            VorstellungenRepository vorstellungenRepository,
+            FilmvorstellungenRepository filmvorstellungenRepository,
             Clock clock
     ) {
         this.kinokartenRepository = kinokartenRepository;
-        this.vorstellungenRepository = vorstellungenRepository;
+        this.filmvorstellungenRepository = filmvorstellungenRepository;
         this.clock = clock;
     }
 
     public Kinokarte kinokarteValidierenUndEntwerten(KinokartenId kinokartenId) {
 
-    // Kinokarte suchen
-    Optional<Kinokarte> gefunden = kinokartenRepository.finde(kinokartenId);
+        // Kinokarte suchen
+        Kinokarte kinokarte = kinokartenRepository.finde(kinokartenId)
+                .orElseThrow(() -> new IllegalStateException("Kinokarte wurde nicht gefunden."));
 
-    if (gefunden.isEmpty()) {
-        throw new IllegalStateException("Kinokarte wurde nicht gefunden.");
+        // Vorstellung der Kinokarte ermitteln
+        VorstellungsId vorstellungsId = kinokarte.getFilmvorstellung();
+
+        // Einlass prüfen
+        Einlassentscheidung entscheidung = pruefeEinlass(kinokartenId, vorstellungsId);
+
+        if (entscheidung instanceof Einlassentscheidung.Abgelehnt abgelehnt) {
+            throw new IllegalStateException(abgelehnt.grund().meldung());
+        }
+
+        // Entwertete Kinokarte zurückgeben
+        return kinokartenRepository.finde(kinokartenId).orElseThrow();
     }
 
-    Kinokarte kinokarte = gefunden.get();
-
-    // Vorstellung der Kinokarte ermitteln
-    UUID vorstellungsUuid = kinokarte.getFilmvorstellung().id();
-    // Einlass prüfen
-    Einlassentscheidung entscheidung = pruefeEinlass(kinokartenId, vorstellungsUuid);
-
-    if (entscheidung instanceof Einlassentscheidung.Abgelehnt abgelehnt) {
-        throw new IllegalStateException(abgelehnt.grund().meldung());
-    }
-
-    // Entwertete Kinokarte zurückgeben
-    return kinokartenRepository.finde(kinokartenId).orElseThrow();
-    }
-
-    public Einlassentscheidung pruefeEinlass(KinokartenId kinokartenId, UUID vorstellungsUuid) {
+    public Einlassentscheidung pruefeEinlass(KinokartenId kinokartenId, VorstellungsId vorstellungsId) {
 
         // UNGUELTIGER_CODE: Es gibt keine Karte zu diesem Code
         Optional<Kinokarte> gefunden = kinokartenRepository.finde(kinokartenId);
@@ -61,15 +58,13 @@ public class EinlasskontrolleService {
         }
         Kinokarte kinokarte = gefunden.get();
 
-        // Die Vorstellung, an der der Gast gerade einlassen will
-        Vorstellung vorstellung = vorstellungenRepository.hole(vorstellungsUuid);
-        if (vorstellung == null) {
-            throw new IllegalStateException("Vorstellung wurde nicht gefunden.");
-        }
+        // Die Filmvorstellung, an der der Gast gerade einlassen will
+        Filmvorstellung filmvorstellung = filmvorstellungenRepository.hole(vorstellungsId)
+                .orElseThrow(() -> new IllegalStateException("Vorstellung wurde nicht gefunden."));
 
         // FALSCHE_VORSTELLUNG, BEREITS_ENTWERTET und ZU_FRUEH entscheidet die Domain
         Einlassentscheidung entscheidung =
-                kinokarte.entwerten(vorstellung, LocalDateTime.now(clock));
+                kinokarte.entwerten(filmvorstellung, LocalDateTime.now(clock));
 
         // Nur speichern, wenn die Karte wirklich entwertet wurde
         if (entscheidung instanceof Einlassentscheidung.Erlaubt) {
@@ -79,7 +74,7 @@ public class EinlasskontrolleService {
         return entscheidung;
     }
 
-    // Meldung für die Anzeige am Einlass 
+    // Meldung für die Anzeige am Einlass
     public String meldungFuer(Einlassentscheidung entscheidung) {
         if (entscheidung instanceof Einlassentscheidung.Erlaubt erlaubt) {
             return "Einlass erlaubt: Saal " + erlaubt.saal()

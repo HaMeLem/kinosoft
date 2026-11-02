@@ -4,14 +4,12 @@ import lombok.Getter;
 import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.jmolecules.ddd.annotation.Identity;
 
-import de.wps.ddd.kino.filmauswahl.data.Vorstellung;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @AggregateRoot
 @Getter
-public class Kinokarte
-{
+public class Kinokarte {
     @Identity
     private final KinokartenId id;
     private final Reihe reihe;
@@ -20,15 +18,12 @@ public class Kinokarte
     private final VorstellungsId filmvorstellung;
     private Entwertungszeitpunkt entwertungszeitpunkt;
 
-
     public Kinokarte(
             KinokartenId id,
             Reihe reihe,
             Sitzplatz sitzplatz,
             Saal saal,
-            VorstellungsId filmvorstellung
-    )
-    {
+            VorstellungsId filmvorstellung) {
         this.id = id;
         this.reihe = reihe;
         this.sitzplatz = sitzplatz;
@@ -37,47 +32,45 @@ public class Kinokarte
         this.entwertungszeitpunkt = null;
     }
 
-    // Baut eine bereits gespeicherte Karte wieder auf (nur für das Repository gedacht).
+    // Baut eine bereits gespeicherte Karte wieder auf (nur für das Repository
+    // gedacht).
     // Nötig, weil der Konstruktor eine Karte immer als "nicht entwertet" anlegt.
     public static Kinokarte rekonstruiere(KinokartenId id, Reihe reihe, Sitzplatz sitzplatz,
-                                          Saal saal, VorstellungsId vorstellung,
-                                          Entwertungszeitpunkt entwertungszeitpunkt) {
+            Saal saal, VorstellungsId vorstellung,
+            Entwertungszeitpunkt entwertungszeitpunkt) {
         Kinokarte karte = new Kinokarte(id, reihe, sitzplatz, saal, vorstellung);
         karte.entwertungszeitpunkt = entwertungszeitpunkt;
         return karte;
     }
 
-    public Einlassentscheidung entwerten(Vorstellung vorstellung, LocalDateTime jetzt)
-    {
-    // Regel 1: Karte gehört zu einer anderen Vorstellung
-    if (!gehoertZu(vorstellung)) {
-        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG);
-    }
+    public Einlassentscheidung entwerten(Filmvorstellung filmvorstellung2, LocalDateTime jetzt) {
+        // Regel 1: Karte gehört zu einer anderen Vorstellung
+        if (!gehoertZu(filmvorstellung2)) {
+            return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG);
+        }
 
-    // Regel 2: Karte wurde schon benutzt
-    if (entwertungszeitpunkt != null) {
-        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.BEREITS_ENTWERTET);
-    }
+        // Regel 2: Karte wurde schon benutzt
+        if (entwertungszeitpunkt != null) {
+            return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.BEREITS_ENTWERTET);
+        }
 
-    // Regel 3: Einlass ist noch nicht offen (30 Minuten vor Beginn)
-    if (jetzt.isBefore(vorstellung.getBeginn().minus(
-            EinlassVorlauf.EINLASS_VORLAUF_MINUTEN.wert(), ChronoUnit.MINUTES))) {
-        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ZU_FRUEH);
-    }
+        // Regel 3: Einlass ist noch nicht offen (30 Minuten vor Beginn)
+        if (jetzt.isBefore(filmvorstellung2.getStart().start().minus(
+                filmvorstellung2.getEinlassVorlauf().wert(), ChronoUnit.MINUTES))) {
+            return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ZU_FRUEH);
+        }
 
-    // Alles in Ordnung: Karte entwerten und Platz mitteilen
-    this.entwertungszeitpunkt = new Entwertungszeitpunkt(jetzt);
+        // Alles in Ordnung: Karte entwerten und Platz mitteilen
+        this.entwertungszeitpunkt = new Entwertungszeitpunkt(jetzt);
         return new Einlassentscheidung.Erlaubt(saal, reihe, sitzplatz);
     }
 
     /**
-    * Prüft, ob die Karte zur übergebenen Vorstellung gehört.
-    *
-    * Verglichen wird über die fachliche UUID (getUuid), nicht über die technische
-    * Datenbank-ID (getId, Long) der Vorstellung.
-    */
-    private boolean gehoertZu(Vorstellung vorstellung)
-    {
-        return filmvorstellung.id().equals(vorstellung.getUuid());
+     * Prüft, ob die Karte zur übergebenen Filmvorstellung gehört.
+     *
+     * Verglichen wird über die VorstellungsId.
+     */
+    private boolean gehoertZu(Filmvorstellung filmvorstellung2) {
+        return this.filmvorstellung.equals(filmvorstellung2.getId());
     }
 }
