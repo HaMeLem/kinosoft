@@ -37,12 +37,8 @@ public class Kinokarte
         this.entwertungszeitpunkt = null;
     }
 
-    // Baut eine bereits existierende Kinokarte aus ihrem gespeicherten Zustand wieder auf.
-    // Diese Methode ist ausschließlich für die Persistenzschicht gedacht (z. B. das Repository, das eine Karte aus der Datenbank lädt). Sie ist nötig, weil der normale
-    // Konstruktor eine Karte immer als "noch nicht entwertet" anlegt. Eine Karte, die
-    // bereits benutzt wurde, könnte man damit nicht wiederherstellen, und die Regel
-    // BEREITS_ENTWERTET würde nie greifen.
-    // Nur für die Rekonstruktion aus der Persistenz (z. B. aus der Datenbank)
+    // Baut eine bereits gespeicherte Karte wieder auf (nur für das Repository gedacht).
+    // Nötig, weil der Konstruktor eine Karte immer als "nicht entwertet" anlegt.
     public static Kinokarte rekonstruiere(KinokartenId id, Reihe reihe, Sitzplatz sitzplatz,
                                           Saal saal, VorstellungsId vorstellung,
                                           Entwertungszeitpunkt entwertungszeitpunkt) {
