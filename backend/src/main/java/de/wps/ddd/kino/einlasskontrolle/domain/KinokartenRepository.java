@@ -1,7 +1,11 @@
 package de.wps.ddd.kino.einlasskontrolle.domain;
 
+import java.util.Optional;
+
 public interface KinokartenRepository {
 
-    Kinokarte hole(KinokartenId id);
-    void speichere(Kinokarte kinokarten);
+    Optional<Kinokarte> finde(KinokartenId id);
+
+    void speichere(Kinokarte kinokarte);
 }
+

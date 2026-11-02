@@ -1,5 +1,6 @@
 package de.wps.ddd.kino.einlasskontrolle.infrastructure.web;
 
+import de.wps.ddd.kino.einlasskontrolle.application.EinlasskontrolleService;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,12 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/api/intern/einlass")
 @RequiredArgsConstructor
 public class EinlassController {
 
-    private final EinlassService service;
+    private final EinlasskontrolleService service;
 
     @PostMapping("/kinokarte-validieren-und-entwerten")
     public KinokartenDTO kinokarteValidierenUndEntwerten(
@@ -23,4 +25,6 @@ public class EinlassController {
                 kinokarte.getReihe().wert(),
                 kinokarte.getSitzplatz().wert());
     }
+
+
 }
