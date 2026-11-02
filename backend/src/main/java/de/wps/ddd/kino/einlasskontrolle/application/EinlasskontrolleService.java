@@ -28,6 +28,30 @@ public class EinlasskontrolleService {
         this.clock = clock;
     }
 
+    public Kinokarte kinokarteValidierenUndEntwerten(KinokartenId kinokartenId) {
+
+    // Kinokarte suchen
+    Optional<Kinokarte> gefunden = kinokartenRepository.finde(kinokartenId);
+
+    if (gefunden.isEmpty()) {
+        throw new IllegalStateException("Kinokarte wurde nicht gefunden.");
+    }
+
+    Kinokarte kinokarte = gefunden.get();
+
+    // Vorstellung der Kinokarte ermitteln
+    UUID vorstellungsUuid = kinokarte.getFilmvorstellung().id();
+    // Einlass prüfen
+    Einlassentscheidung entscheidung = pruefeEinlass(kinokartenId, vorstellungsUuid);
+
+    if (entscheidung instanceof Einlassentscheidung.Abgelehnt abgelehnt) {
+        throw new IllegalStateException(abgelehnt.grund().meldung());
+    }
+
+    // Entwertete Kinokarte zurückgeben
+    return kinokartenRepository.finde(kinokartenId).orElseThrow();
+    }
+
     public Einlassentscheidung pruefeEinlass(KinokartenId kinokartenId, UUID vorstellungsUuid) {
 
         // UNGUELTIGER_CODE: Es gibt keine Karte zu diesem Code

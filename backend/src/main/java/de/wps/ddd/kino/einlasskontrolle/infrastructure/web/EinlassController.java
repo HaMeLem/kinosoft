@@ -1,3 +1,4 @@
+
 package de.wps.ddd.kino.einlasskontrolle.infrastructure.web;
 
 import de.wps.ddd.kino.einlasskontrolle.application.EinlasskontrolleService;
@@ -28,5 +29,3 @@ public class EinlassController {
 
 
 }
-
-
