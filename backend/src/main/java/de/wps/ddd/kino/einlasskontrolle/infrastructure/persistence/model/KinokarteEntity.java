@@ -7,7 +7,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -16,6 +19,8 @@ import java.util.UUID;
 @Entity(name = "Einlasskontrolle_KinokarteEntity")
 @Table(name = "kinokarten", schema = "einlasskontrolle")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class KinokarteEntity {
     @Id
     @Column(name = "kinokarten_id", nullable = false, updatable = false)
