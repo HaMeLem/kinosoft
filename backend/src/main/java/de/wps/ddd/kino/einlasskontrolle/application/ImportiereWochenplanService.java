@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ImportiereWochenplanService {
 
     private final Wochenplanauskunft wochenplanauskunft;
-    private final Wochenplan wochenplan;
+    private final FilmvorstellungenRepository filmvorstellungenRepository;
 
     @Transactional
     public void importiere(int jahr, int kalenderwoche) {
@@ -32,7 +32,7 @@ public class ImportiereWochenplanService {
                     new GeplanteEndzeit(vorstellung.geplantesEnde())
             );
              // Die Filmvorstellung zum Speichern an die Schnittstelle Wochenplan weitergeben.
-             wochenplan.fuegeVorstellungHinzu(filmvorstellung);
+            filmvorstellungenRepository.fuegeVorstellungHinzu(filmvorstellung);
         }
     }
 }
