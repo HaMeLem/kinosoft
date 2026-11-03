@@ -43,9 +43,9 @@ public class Kinokarte {
         return karte;
     }
 
-    public Einlassentscheidung entwerten(Filmvorstellung filmvorstellung2, LocalDateTime jetzt) {
+    public Einlassentscheidung entwerten(Filmvorstellung filmvorstellung, LocalDateTime jetzt) {
         // Regel 1: Karte gehört zu einer anderen Vorstellung
-        if (!gehoertZu(filmvorstellung2)) {
+        if (!gehoertZu(filmvorstellung)) {
             return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG);
         }
 
@@ -55,8 +55,8 @@ public class Kinokarte {
         }
 
         // Regel 3: Einlass ist noch nicht offen (30 Minuten vor Beginn)
-        if (jetzt.isBefore(filmvorstellung2.getStart().start().minus(
-                filmvorstellung2.getEinlassVorlauf().wert(), ChronoUnit.MINUTES))) {
+        if (jetzt.isBefore(filmvorstellung.getStart().start().minus(
+                filmvorstellung.getEinlassVorlauf().wert(), ChronoUnit.MINUTES))) {
             return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ZU_FRUEH);
         }
 
@@ -70,7 +70,7 @@ public class Kinokarte {
      *
      * Verglichen wird über die VorstellungsId.
      */
-    private boolean gehoertZu(Filmvorstellung filmvorstellung2) {
-        return this.filmvorstellung.equals(filmvorstellung2.getId());
+    private boolean gehoertZu(Filmvorstellung filmvorstellung) {
+        return this.filmvorstellung.equals(filmvorstellung.getId());
     }
 }
