@@ -13,17 +13,17 @@ public class FilmvorstellungEntityMapper {
     public FilmvorstellungEntity toEntity(Filmvorstellung filmvorstellung) {
         var entity = new FilmvorstellungEntity();
         entity.setVorstellungsId(filmvorstellung.getId().id());
-        entity.setStart(filmvorstellung.getStart().start());
-        entity.setEnde(filmvorstellung.getEnde().ende());
-        entity.setEinlassVorlaufMinuten(filmvorstellung.getEinlassVorlauf().wert());
+        entity.setGeplanterStart(filmvorstellung.getStart().start());
+        entity.setGeplantesEnde(filmvorstellung.getEnde().ende());
+        //entity.setEinlassVorlaufMinuten(filmvorstellung.getEinlassVorlauf().wert()); //wegen fehler auskommentiert bis fix erfolgt
         return entity;
     }
 
     public Filmvorstellung toDomain(FilmvorstellungEntity entity) {
         var filmvorstellung = new Filmvorstellung(
                 new VorstellungsId(entity.getVorstellungsId()),
-                new GeplanteStartzeit(entity.getStart()),
-                new GeplanteEndzeit(entity.getEnde())
+                new GeplanteStartzeit(entity.getGeplanterStart()),
+                new GeplanteEndzeit(entity.getGeplantesEnde())
         );
         return filmvorstellung;
     }

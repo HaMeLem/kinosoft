@@ -36,7 +36,7 @@ public class WochenplanungGateway implements de.wps.ddd.kino.kartenverkauf.appli
         return new Vorstellung(
                 new VorstellungId(dto.id()),
                 new Saal(dto.saalName()),
-                new Beginn(dto.beginn()),
+                new Beginn(dto.geplanterStart()),
                 new Film(dto.filmTitel()),
                 VorstellungKategorie.valueOf(dto.kategorie()));
     }

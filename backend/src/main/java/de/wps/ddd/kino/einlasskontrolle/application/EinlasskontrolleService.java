@@ -59,7 +59,7 @@ public class EinlasskontrolleService {
         Kinokarte kinokarte = gefunden.get();
 
         // Die Filmvorstellung, an der der Gast gerade einlassen will
-        Filmvorstellung filmvorstellung = filmvorstellungenRepository.hole(vorstellungsId)
+        Filmvorstellung filmvorstellung = filmvorstellungenRepository.holeVorstellung(vorstellungsId)
                 .orElseThrow(() -> new IllegalStateException("Vorstellung wurde nicht gefunden."));
 
         // FALSCHE_VORSTELLUNG, BEREITS_ENTWERTET und ZU_FRUEH entscheidet die Domain

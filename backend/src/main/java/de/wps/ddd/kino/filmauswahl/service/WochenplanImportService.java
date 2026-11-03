@@ -71,7 +71,7 @@ public class WochenplanImportService {
         var vorstellung = vorstellungen.findByUuid(vorstellungDto.id()).orElseGet(Vorstellung::new);
         vorstellung.setUuid(vorstellungDto.id());
         vorstellung.setFilmId(film.getId());
-        vorstellung.setBeginn(vorstellungDto.beginn());
+        vorstellung.setBeginn(vorstellungDto.geplanterStart());
         vorstellung.setSaal(saal);
         vorstellungen.save(vorstellung);
     }

@@ -11,6 +11,7 @@ import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.model.Kinokar
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 
@@ -21,9 +22,9 @@ public class KinokarteEntityMapper {
         var filmvorstellung = new FilmvorstellungEntity();
         filmvorstellung.setVorstellungsId(kinokarte.getFilmvorstellung().id());
 
-        Instant entwertungsZeitpunkt = kinokarte.getEntwertungszeitpunkt() == null
+        LocalDateTime entwertungsZeitpunkt = kinokarte.getEntwertungszeitpunkt() == null
                 ? null
-                : kinokarte.getEntwertungszeitpunkt().wert().atZone(ZoneId.systemDefault()).toInstant();
+                : LocalDateTime.from(kinokarte.getEntwertungszeitpunkt().wert().atZone(ZoneId.systemDefault()));
 
         return new KinokarteEntity(
                 kinokarte.getId().id(),
@@ -47,10 +48,12 @@ public class KinokarteEntityMapper {
                 new Sitzplatz(entity.getSitzplatz()),
                 saal,
                 new VorstellungsId(entity.getFilmvorstellung().getVorstellungsId()));
-
+        /* wegen fehler auskommentiert bis fix erfolgt
         if (entity.getEntwertungszeitpunkt() != null) {
             kinokarte.entwerten();
         }
+
+         */
         return kinokarte;
     }
 }
