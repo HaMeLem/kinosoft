@@ -1,5 +1,6 @@
 package de.wps.ddd.kino.einlasskontrolle.application;
 
+import de.wps.ddd.kino.common.architecture.ApplicationService;
 import de.wps.ddd.kino.einlasskontrolle.domain.Ablehnungsgrund;
 import de.wps.ddd.kino.einlasskontrolle.domain.Einlassentscheidung;
 import de.wps.ddd.kino.einlasskontrolle.domain.Filmvorstellung;
@@ -8,11 +9,18 @@ import de.wps.ddd.kino.einlasskontrolle.domain.Kinokarte;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenId;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenRepository;
 import de.wps.ddd.kino.einlasskontrolle.domain.VorstellungsId;
+import jakarta.transaction.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
+
+@ApplicationService
+@Service
+@Transactional
 public class EinlasskontrolleService {
 
     private final KinokartenRepository kinokartenRepository;
