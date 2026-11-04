@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.aspectj.bridge.MessageUtil.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ImportiereWochenplanServiceTest {
@@ -50,6 +50,7 @@ public class ImportiereWochenplanServiceTest {
         var gespeicherteVorstellungen =
                 new HashMap<VorstellungsId, Filmvorstellung>();
 
+        // Fake Repo für den Test
         FilmvorstellungenRepository repository = new FilmvorstellungenRepository() {
 
             @Override
@@ -88,6 +89,40 @@ public class ImportiereWochenplanServiceTest {
         assertNotNull(importiert2);
         assertEquals(start2, importiert2.getStart().start());
         assertEquals(ende2, importiert2.getEnde().ende());
+    }
+
+    @Test
+    void erstelleNichtBeiFehlendemWochenplan() {
+        // Domäne Wochenplan liefert Fehler statt eines Wochenplans
+        Wochenplanauskunft auskunft = ((jahr, kalenderwoche) ->
+        { throw new IllegalArgumentException("Wochenplan existiert nicht")
+                ;}
+        );
+
+        // Repository darf bei einem fehlenden Wochenplan nichts speichern
+        FilmvorstellungenRepository repository = new FilmvorstellungenRepository() {
+
+            @Override
+            public void fuegeVorstellungHinzu(Filmvorstellung filmvorstellung) {
+                fail("Es darf keine Filmvorstellung gespeichert werden");
+            }
+
+            @Override
+            public Optional<Filmvorstellung> holeVorstellung(VorstellungsId id) {
+                return Optional.empty();
+            }
+        };
+
+        // ImportService erstellen
+        var service = new ImportiereWochenplanService(auskunft, repository);
+
+        // Überprüfen, ob der Import mit einer Exception fehlschlägt
+        var exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.importiere(2026, 45)
+        );
+
+        assertEquals("Wochenplan existiert nicht", exception.getMessage());
     }
 
 }
