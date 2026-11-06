@@ -1,6 +1,6 @@
 package de.wps.ddd.kino.einlasskontrolle.infrastructure.web;
 
-public record KinokartenDTO(
+public record EinlassErlaubtDTO(
         int saal,
         int reihe,
         int sitzplatz
