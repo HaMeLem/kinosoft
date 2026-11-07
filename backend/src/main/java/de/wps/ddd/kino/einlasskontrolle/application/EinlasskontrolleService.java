@@ -40,8 +40,12 @@ public class EinlasskontrolleService {
     public Kinokarte kinokarteValidierenUndEntwerten(KinokartenId kinokartenId) {
 
         // Kinokarte suchen
-        Kinokarte kinokarte = kinokartenRepository.finde(kinokartenId)
+        Kinokarte kinokarte = kinokartenRepository.hole(kinokartenId)
                 .orElseThrow(() -> new IllegalStateException("Kinokarte wurde nicht gefunden."));
+        //      if (gefunden.isEmpty()) {
+        //    return new Einlassentscheidung.Abgelehnt(
+        //            Ablehnungsgrund.UNGUELTIGER_CODE);
+        //      }
 
         // Vorstellung der Kinokarte ermitteln
         VorstellungsId vorstellungsId = kinokarte.getFilmvorstellung();
@@ -51,16 +55,17 @@ public class EinlasskontrolleService {
 
         if (entscheidung instanceof Einlassentscheidung.Abgelehnt abgelehnt) {
             throw new IllegalStateException(abgelehnt.grund().meldung());
+            // return new Einlassentscheidung.Abgelehnt(abgelehnt.grund());
         }
 
         // Entwertete Kinokarte zurückgeben
-        return kinokartenRepository.finde(kinokartenId).orElseThrow();
+        return kinokartenRepository.hole(kinokartenId).orElseThrow();
     }
 
     public Einlassentscheidung pruefeEinlass(KinokartenId kinokartenId, VorstellungsId vorstellungsId) {
 
         // UNGUELTIGER_CODE: Es gibt keine Karte zu diesem Code
-        Optional<Kinokarte> gefunden = kinokartenRepository.finde(kinokartenId);
+        Optional<Kinokarte> gefunden = kinokartenRepository.hole(kinokartenId);
         if (gefunden.isEmpty()) {
             return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.UNGUELTIGER_CODE);
         }
@@ -69,6 +74,7 @@ public class EinlasskontrolleService {
         // Die Filmvorstellung, an der der Gast gerade einlassen will
         Filmvorstellung filmvorstellung = filmvorstellungenRepository.hole(vorstellungsId)
                 .orElseThrow(() -> new IllegalStateException("Vorstellung wurde nicht gefunden."));
+        //                 new RessourceNichtGefunden("Vorstellung wurde nicht gefunden."));
 
         // FALSCHE_VORSTELLUNG, BEREITS_ENTWERTET und ZU_FRUEH entscheidet die Domain
         Einlassentscheidung entscheidung =
