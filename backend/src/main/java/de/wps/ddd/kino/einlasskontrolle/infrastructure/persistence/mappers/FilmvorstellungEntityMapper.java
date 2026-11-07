@@ -11,20 +11,18 @@ import org.springframework.stereotype.Component;
 public class FilmvorstellungEntityMapper {
 
     public FilmvorstellungEntity toEntity(Filmvorstellung filmvorstellung) {
-        var entity = new FilmvorstellungEntity();
-        entity.setVorstellungsId(filmvorstellung.getId().id());
-        entity.setStart(filmvorstellung.getStart().start());
-        entity.setEnde(filmvorstellung.getEnde().ende());
-        entity.setEinlassVorlaufMinuten(filmvorstellung.getEinlassVorlauf().wert());
-        return entity;
+        return new FilmvorstellungEntity(
+                filmvorstellung.getId().id(),
+                filmvorstellung.getStart().start(),
+                filmvorstellung.getEnde().ende()
+        );
     }
 
     public Filmvorstellung toDomain(FilmvorstellungEntity entity) {
-        var filmvorstellung = new Filmvorstellung(
+        return new Filmvorstellung(
                 new VorstellungsId(entity.getVorstellungsId()),
-                new GeplanteStartzeit(entity.getStart()),
-                new GeplanteEndzeit(entity.getEnde())
+                new GeplanteStartzeit(entity.getGeplanterStart()),
+                new GeplanteEndzeit(entity.getGeplantesEnde())
         );
-        return filmvorstellung;
     }
 }

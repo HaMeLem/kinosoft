@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface KinokartenRepository {
 
-    Optional<Kinokarte> finde(KinokartenId id);
+    Optional<Kinokarte> hole(KinokartenId id);
 
     void speichere(Kinokarte kinokarte);
 }
