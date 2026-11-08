@@ -25,13 +25,14 @@ public class EinlasskontrolleService {
 
     private final KinokartenRepository kinokartenRepository;
     private final FilmvorstellungenRepository filmvorstellungenRepository;
-    private final Clock clock;
+    private final Clock clock;                                                // Clock clock wird aus der Bean injected, die in der ApplicationConfig definiert ist.
 
     public EinlasskontrolleService(
             KinokartenRepository kinokartenRepository,
             FilmvorstellungenRepository filmvorstellungenRepository,
             Clock clock
-    ) {
+    ) 
+    {   
         this.kinokartenRepository = kinokartenRepository;
         this.filmvorstellungenRepository = filmvorstellungenRepository;
         this.clock = clock;
@@ -61,8 +62,9 @@ public class EinlasskontrolleService {
         // Entwertete Kinokarte zurückgeben
         return kinokartenRepository.hole(kinokartenId).orElseThrow();
     }
-
     public Einlassentscheidung pruefeEinlass(KinokartenId kinokartenId, VorstellungsId vorstellungsId) {
+
+        LocalDateTime jetzt = LocalDateTime.now(clock);
 
         // UNGUELTIGER_CODE: Es gibt keine Karte zu diesem Code
         Optional<Kinokarte> gefunden = kinokartenRepository.hole(kinokartenId);
@@ -78,7 +80,7 @@ public class EinlasskontrolleService {
 
         // FALSCHE_VORSTELLUNG, BEREITS_ENTWERTET und ZU_FRUEH entscheidet die Domain
         Einlassentscheidung entscheidung =
-                kinokarte.entwerten(filmvorstellung, LocalDateTime.now(clock));
+                kinokarte.entwerten(filmvorstellung, jetzt);
 
         // Nur speichern, wenn die Karte wirklich entwertet wurde
         if (entscheidung instanceof Einlassentscheidung.Erlaubt) {
@@ -87,6 +89,8 @@ public class EinlasskontrolleService {
 
         return entscheidung;
     }
+
+
 
     // Meldung für die Anzeige am Einlass
     public String meldungFuer(Einlassentscheidung entscheidung) {
