@@ -73,6 +73,7 @@ export interface Kinokarte {
   saal: string,
   reihe: number,
   platz: number,
+  id: string;
 }
 
 

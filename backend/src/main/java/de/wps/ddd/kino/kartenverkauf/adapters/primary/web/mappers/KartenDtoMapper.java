@@ -19,7 +19,8 @@ public class KartenDtoMapper {
                 kinokarte.getBeginn().zeitpunkt().toString(),
                 kinokarte.getSaal().name(),
                 kinokarte.getReihe().nummer(),
-                kinokarte.getPlatz().nummer()
+                kinokarte.getPlatz().nummer(),
+                kinokarte.getId().wert()
         );
     }
 }
