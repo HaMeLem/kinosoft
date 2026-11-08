@@ -5,7 +5,6 @@ import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.jmolecules.ddd.annotation.Identity;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @AggregateRoot
 @Getter
@@ -44,8 +43,9 @@ public class Kinokarte {
     }
 
     public Einlassentscheidung entwerten(Filmvorstellung filmvorstellung, LocalDateTime jetzt) {
+
         // Regel 1: Karte gehört zu einer anderen Vorstellung
-        if (!gehoertZu(filmvorstellung)) {
+        if (!this.filmvorstellung.equals(filmvorstellung.getId())) {
             return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG);
         }
 
@@ -54,23 +54,20 @@ public class Kinokarte {
             return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.BEREITS_ENTWERTET);
         }
 
-        // Regel 3: Einlass ist noch nicht offen (30 Minuten vor Beginn)
-        if (jetzt.isBefore(filmvorstellung.getStart().start().minus(
-                filmvorstellung.getEinlassVorlauf().wert(), ChronoUnit.MINUTES))) {
+        // Regel 3: Einlass ist noch nicht offen (erst 30 Minuten vor Beginn)
+        if (filmvorstellung.istEinlassNochNichtOffen(jetzt)) {
             return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ZU_FRUEH);
+        }
+
+        // Regel 4: Vorstellung ist schon vorbei.
+        // Maßgeblich ist das geplante Ende. Das tatsächliche Ende ist erst bekannt,
+        // wenn der Film vorbei ist, und damit für die Einlasskontrolle zu spät.
+        if (filmvorstellung.istEinlassVorbei(jetzt)) {
+            return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ZU_SPAET);
         }
 
         // Alles in Ordnung: Karte entwerten und Platz mitteilen
         this.entwertungszeitpunkt = new Entwertungszeitpunkt(jetzt);
         return new Einlassentscheidung.Erlaubt(saal, reihe, sitzplatz);
-    }
-
-    /**
-     * Prüft, ob die Karte zur übergebenen Filmvorstellung gehört.
-     *
-     * Verglichen wird über die VorstellungsId.
-     */
-    private boolean gehoertZu(Filmvorstellung filmvorstellung) {
-        return this.filmvorstellung.equals(filmvorstellung.getId());
     }
 }

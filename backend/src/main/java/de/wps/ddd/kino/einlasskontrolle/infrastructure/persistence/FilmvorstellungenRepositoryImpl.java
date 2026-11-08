@@ -7,10 +7,12 @@ import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.mappers.Filmv
 import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.repositories.FilmvorstellungJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.jmolecules.ddd.annotation.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Repository
+@Component 
 @RequiredArgsConstructor
 public class FilmvorstellungenRepositoryImpl implements FilmvorstellungenRepository
 {

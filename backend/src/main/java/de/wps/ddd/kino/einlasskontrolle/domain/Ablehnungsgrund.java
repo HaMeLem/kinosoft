@@ -5,7 +5,9 @@ public enum Ablehnungsgrund {
     UNGUELTIGER_CODE("Einlass nicht erlaubt: ungültiger Code"),
     FALSCHE_VORSTELLUNG("Einlass nicht erlaubt: falsche Vorstellung"),
     ZU_FRUEH("Einlass nicht erlaubt: zu früh"),
+    ZU_SPAET("Einlass nicht erlaubt: zu spät"),
     BEREITS_ENTWERTET("Einlass nicht erlaubt: Ticket bereits entwertet");
+
 
     private final String meldung;
 

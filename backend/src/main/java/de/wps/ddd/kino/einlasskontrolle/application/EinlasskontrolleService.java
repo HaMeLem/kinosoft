@@ -9,7 +9,7 @@ import de.wps.ddd.kino.einlasskontrolle.domain.Kinokarte;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenId;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenRepository;
 import de.wps.ddd.kino.einlasskontrolle.domain.VorstellungsId;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -20,12 +20,11 @@ import org.springframework.stereotype.Service;
 
 @ApplicationService
 @Service
-@Transactional
 public class EinlasskontrolleService {
 
     private final KinokartenRepository kinokartenRepository;
     private final FilmvorstellungenRepository filmvorstellungenRepository;
-    private final Clock clock;                                                // Clock clock wird aus der Bean injected, die in der ApplicationConfig definiert ist.
+    private final Clock clock;                                                // Wird als Bean aus der ApplicationConfig injiziert
 
     public EinlasskontrolleService(
             KinokartenRepository kinokartenRepository,
@@ -38,68 +37,35 @@ public class EinlasskontrolleService {
         this.clock = clock;
     }
 
-    public Kinokarte kinokarteValidierenUndEntwerten(KinokartenId kinokartenId) {
+    @Transactional
+    public Einlassentscheidung kinokarteValidierenUndEntwerten(
+        KinokartenId kinokartenId,
+        VorstellungsId vorstellungsId)
+    {
+    
+    // Aktuelle Zeit über die injizierte Clock (testbar)
+    LocalDateTime jetzt = LocalDateTime.now(clock);
 
-        // Kinokarte suchen
-        Kinokarte kinokarte = kinokartenRepository.hole(kinokartenId)
-                .orElseThrow(() -> new IllegalStateException("Kinokarte wurde nicht gefunden."));
-        //      if (gefunden.isEmpty()) {
-        //    return new Einlassentscheidung.Abgelehnt(
-        //            Ablehnungsgrund.UNGUELTIGER_CODE);
-        //      }
-
-        // Vorstellung der Kinokarte ermitteln
-        VorstellungsId vorstellungsId = kinokarte.getFilmvorstellung();
-
-        // Einlass prüfen
-        Einlassentscheidung entscheidung = pruefeEinlass(kinokartenId, vorstellungsId);
-
-        if (entscheidung instanceof Einlassentscheidung.Abgelehnt abgelehnt) {
-            throw new IllegalStateException(abgelehnt.grund().meldung());
-            // return new Einlassentscheidung.Abgelehnt(abgelehnt.grund());
-        }
-
-        // Entwertete Kinokarte zurückgeben
-        return kinokartenRepository.hole(kinokartenId).orElseThrow();
+    // Karte laden. Gibt es sie nicht, ist das eine fachliche Ablehnung und kein Fehler.
+    Optional<Kinokarte> gefunden = kinokartenRepository.hole(kinokartenId);
+    if (gefunden.isEmpty()) {
+        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.UNGUELTIGER_CODE);
     }
-    public Einlassentscheidung pruefeEinlass(KinokartenId kinokartenId, VorstellungsId vorstellungsId) {
+    Kinokarte kinokarte = gefunden.get();
 
-        LocalDateTime jetzt = LocalDateTime.now(clock);
+    // Vorstellung laden, an der der Gast einlassen will (aus dem Request).
+    // Fehlt sie, erscheint RessourceNichtGefunden (-> HTTP 404).
+    Filmvorstellung filmvorstellung = filmvorstellungenRepository.holeOderFehler(vorstellungsId);
 
-        // UNGUELTIGER_CODE: Es gibt keine Karte zu diesem Code
-        Optional<Kinokarte> gefunden = kinokartenRepository.hole(kinokartenId);
-        if (gefunden.isEmpty()) {
-            return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.UNGUELTIGER_CODE);
-        }
-        Kinokarte kinokarte = gefunden.get();
+    // Die Domain entscheidet und entwertet die Karte, wenn der Einlass erlaubt ist
+    Einlassentscheidung entscheidung = kinokarte.entwerten(filmvorstellung, jetzt);
 
-        // Die Filmvorstellung, an der der Gast gerade einlassen will
-        Filmvorstellung filmvorstellung = filmvorstellungenRepository.hole(vorstellungsId)
-                .orElseThrow(() -> new IllegalStateException("Vorstellung wurde nicht gefunden."));
-        //                 new RessourceNichtGefunden("Vorstellung wurde nicht gefunden."));
-
-        // FALSCHE_VORSTELLUNG, BEREITS_ENTWERTET und ZU_FRUEH entscheidet die Domain
-        Einlassentscheidung entscheidung =
-                kinokarte.entwerten(filmvorstellung, jetzt);
-
-        // Nur speichern, wenn die Karte wirklich entwertet wurde
-        if (entscheidung instanceof Einlassentscheidung.Erlaubt) {
-            kinokartenRepository.speichere(kinokarte);
-        }
-
-        return entscheidung;
+    // Nur speichern, wenn die Karte wirklich entwertet wurde
+    if (entscheidung instanceof Einlassentscheidung.Erlaubt) {
+        kinokartenRepository.speichere(kinokarte);
     }
 
-
-
-    // Meldung für die Anzeige am Einlass
-    public String meldungFuer(Einlassentscheidung entscheidung) {
-        if (entscheidung instanceof Einlassentscheidung.Erlaubt erlaubt) {
-            return "Einlass erlaubt: Saal " + erlaubt.saal()
-                    + ", Reihe " + erlaubt.reihe()
-                    + ", Platz " + erlaubt.sitzplatz();
-        }
-        Einlassentscheidung.Abgelehnt abgelehnt = (Einlassentscheidung.Abgelehnt) entscheidung;
-        return abgelehnt.grund().meldung();
+    return entscheidung;
     }
+  
 }

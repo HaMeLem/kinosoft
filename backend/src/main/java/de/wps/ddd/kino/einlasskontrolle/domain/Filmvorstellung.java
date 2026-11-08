@@ -1,6 +1,9 @@
 package de.wps.ddd.kino.einlasskontrolle.domain;
 
 import lombok.Getter;
+
+import java.time.LocalDateTime;
+
 import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.jmolecules.ddd.annotation.Identity;
 
@@ -24,5 +27,17 @@ public class Filmvorstellung
         this.start = start;
         this.ende = ende;
         this.einlassVorlauf = EinlassVorlauf.EINLASS_VORLAUF_MINUTEN;
+    }
+
+    public LocalDateTime einlassBeginn() {
+    return start.start().minusMinutes(einlassVorlauf.wert());
+    }
+
+    public boolean istEinlassNochNichtOffen(LocalDateTime jetzt) {
+    return jetzt.isBefore(einlassBeginn());
+    }
+
+    public boolean istEinlassVorbei(LocalDateTime jetzt) {
+    return jetzt.isAfter(ende.ende());   // Grenze fachlich klären
     }
 }
