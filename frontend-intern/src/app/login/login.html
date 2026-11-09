@@ -1,0 +1,47 @@
+<main class="login-page">
+  <section class="login-container">
+
+    <div class="login-header">
+      <h1>KinoSoft</h1>
+      <p>Intern</p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="anmelden()" novalidate>
+
+      <div class="form-field">
+        <label for="username">Benutzername</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          placeholder="Benutzername eingeben"
+          autocomplete="username"
+          [(ngModel)]="benutzername"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="password">Passwort</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Passwort eingeben"
+          autocomplete="current-password"
+          [(ngModel)]="passwort"
+        />
+      </div>
+
+      <button type="submit" class="login-button">
+        Anmelden
+      </button>
+
+      @if (fehlermeldung) {
+        <p class="error-message" role="alert">
+          {{ fehlermeldung }}
+        </p>
+      }
+
+    </form>
+  </section>
+</main>
