@@ -10,6 +10,8 @@ on:
       - reopened
     paths:
       - "backend/**"
+      - "database/**"
+      - "docker-compose.yml"
 
 permissions:
   contents: read
@@ -35,5 +37,12 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
+      - name: Start PostgreSQL
+        run: docker compose -f ../docker-compose.yml up --detach --wait postgres
+
       - name: Run Maven tests
         run: ./mvnw --batch-mode clean verify
+
+      - name: Stop PostgreSQL
+        if: always()
+        run: docker compose -f ../docker-compose.yml down --volumes
