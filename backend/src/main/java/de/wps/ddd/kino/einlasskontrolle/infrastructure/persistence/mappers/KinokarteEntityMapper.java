@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 
-//@Component                                                            Vorher
-@Component("einlasskontrolleKinokarteEntityMapper")                  // Nacher
+@Component("einlasskontrolle_KinokarteEntityMapper")
 public class KinokarteEntityMapper {
 
     private final FilmvorstellungJpaRepository filmvorstellungRepository;

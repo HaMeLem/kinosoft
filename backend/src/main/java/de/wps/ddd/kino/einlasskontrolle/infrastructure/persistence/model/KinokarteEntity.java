@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "Einlasskontrolle_KinokarteEntity")
 @Table(name = "kinokarten", schema = "einlasskontrolle")
 @Getter
 public class KinokarteEntity {
