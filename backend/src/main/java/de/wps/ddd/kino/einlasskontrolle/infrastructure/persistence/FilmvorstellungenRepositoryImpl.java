@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Repository
-@Component 
+@Component
 @RequiredArgsConstructor
 public class FilmvorstellungenRepositoryImpl implements FilmvorstellungenRepository
 {

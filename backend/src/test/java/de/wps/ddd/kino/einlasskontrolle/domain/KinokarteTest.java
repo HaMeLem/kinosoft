@@ -34,7 +34,7 @@ public class KinokarteTest
         // then
         // erwarten, dass Saal, Reihe und Sitzplatz der Karte zurückgegeben werden
         assertThat(entscheidung).isEqualTo(
-                new Einlassentscheidung.Erlaubt(Saal.SAAL_1, new Reihe(5), new Sitzplatz(12)));
+                new Einlassentscheidung.Erlaubt(Saal.KLEINER_SAAL, new Reihe(5), new Sitzplatz(12)));
         // die Karte merkt sich, wann sie entwertet wurde
         assertThat(karte.getEntwertungszeitpunkt()).isEqualTo(new Entwertungszeitpunkt(jetzt));
     }
@@ -126,13 +126,13 @@ public class KinokarteTest
     // ---------- Hilfsmethoden ----------
 
     private Kinokarte neueKarteFuer(VorstellungsId id) {
-        return new Kinokarte(new KinokartenId(UUID.randomUUID()), new Reihe(5), new Sitzplatz(12), Saal.SAAL_1, id);
+        return new Kinokarte(new KinokartenId(UUID.randomUUID()), new Reihe(5), new Sitzplatz(12), Saal.KLEINER_SAAL, id);
     }
 
     // "rekonstruiere" baut eine Karte mit gesetztem Entwertungszeitpunkt, so wie sie aus der Datenbank käme
     private Kinokarte bereitsEntwerteteKarte(VorstellungsId id, LocalDateTime entwertetUm) {
         return Kinokarte.rekonstruiere(
-                new KinokartenId(UUID.randomUUID()), new Reihe(5), new Sitzplatz(12), Saal.SAAL_1, id,
+                new KinokartenId(UUID.randomUUID()), new Reihe(5), new Sitzplatz(12), Saal.KLEINER_SAAL, id,
                 new Entwertungszeitpunkt(entwertetUm));
     }
 }

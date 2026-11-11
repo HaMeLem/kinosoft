@@ -45,7 +45,7 @@ class EinlasskontrolleServiceTest {
                 KARTEN_ID,
                 new Reihe(5),
                 new Sitzplatz(12),
-                Saal.SAAL_1,
+                Saal.KLEINER_SAAL,
                 VORSTELLUNGS_ID);
 
     }
@@ -93,7 +93,7 @@ class EinlasskontrolleServiceTest {
                 KARTEN_ID,
                 new Reihe(5),
                 new Sitzplatz(12),
-                Saal.SAAL_1,
+                Saal.KLEINER_SAAL,
                 VORSTELLUNGS_ID,
                 vorher);
 

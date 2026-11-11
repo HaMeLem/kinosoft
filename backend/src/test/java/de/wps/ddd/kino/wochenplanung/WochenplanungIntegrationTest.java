@@ -66,7 +66,7 @@ class WochenplanungIntegrationTest {
             assertThat(v.filmTitel()).isEqualTo("Star Boars");
             assertThat(v.saalName()).isEqualTo("großer Saal");
             assertThat(v.kategorie()).isEqualTo("Standard");
-            assertThat(v.beginn()).isEqualTo(LocalDateTime.of(2025, 3, 17, 14, 30));
+            assertThat(v.geplanterStart()).isEqualTo(LocalDateTime.of(2025, 3, 17, 14, 30));
         });
     }
 }

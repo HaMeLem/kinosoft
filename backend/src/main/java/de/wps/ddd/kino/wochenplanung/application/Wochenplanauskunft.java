@@ -17,7 +17,7 @@ import java.util.Optional;
 
 /**
  * Beantwortet Abfragen auf den (in der Fixture erstellten) Wochenplan und liefert die neutrale,
- * für beide Consumer gemeinsame {@link WochenplanDto}-Sicht (ohne planungsinterne Details). Das
+ * für alle Consumer gemeinsame {@link WochenplanDto}-Sicht (ohne planungsinterne Details). Das
  * Erstellen des Wochenplans erfolgt nicht hier, sondern direkt in der Fixture.
  */
 @Service
@@ -42,9 +42,13 @@ public class Wochenplanauskunft implements de.wps.ddd.kino.wochenplanung.Wochenp
                 .toList();
 
         var vorstellungen = wochenplan.getVorstellungen().stream()
-                .map(vorstellung -> new WochenplanDto.VorstellungDto(vorstellung.id().wert(),
-                        vorstellung.film().wert(), vorstellung.saal().wert(),
-                        vorstellung.kategorie().name(), vorstellung.zeiten().vorstellungsbeginn()))
+                .map(vorstellung -> new WochenplanDto.VorstellungDto(
+                        vorstellung.id().wert(),
+                        vorstellung.film().wert(),
+                        vorstellung.saal().wert(),
+                        vorstellung.kategorie().name(),
+                        vorstellung.zeiten().geplanterStart(),
+                        vorstellung.zeiten().geplantesEnde()))
                 .toList();
 
         return new WochenplanDto(filme, vorstellungen);

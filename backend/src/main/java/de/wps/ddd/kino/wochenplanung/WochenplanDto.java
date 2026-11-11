@@ -28,6 +28,12 @@ public record WochenplanDto(List<FilmDto> filme, List<VorstellungDto> vorstellun
             String sprache) {
     }
 
-    public record VorstellungDto(UUID id, String filmTitel, String saalName, String kategorie, LocalDateTime beginn) {
+    public record VorstellungDto(
+            UUID id,
+            String filmTitel,
+            String saalName,
+            String kategorie,
+            LocalDateTime geplanterStart,
+            LocalDateTime geplantesEnde) {
     }
 }
