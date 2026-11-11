@@ -168,10 +168,11 @@
                         <id>reset-test-database</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>java</goal>
                         </goals>
                         <configuration>
-                            <executable>../scripts/reset-test-database.sh</executable>
+                            <mainClass>de.wps.ddd.kino.TestDatabaseReset</mainClass>
+                            <classpathScope>test</classpathScope>
                         </configuration>
                     </execution>
                 </executions>
