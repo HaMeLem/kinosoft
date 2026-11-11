@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +65,7 @@ class KinokartenVerkauftEventListenerTest {
 
         // muss implementiert sein, brauche ich aber gar nicht
         @Override
-        public Kinokarte hole(KinokartenId id) {
+        public Optional<Kinokarte> hole(KinokartenId id) {
             throw new UnsupportedOperationException("hole() wird in diesem Test nicht benötigt");
         }
 

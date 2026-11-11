@@ -7,6 +7,7 @@ import de.wps.ddd.kino.einlasskontrolle.domain.Saal;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -127,7 +128,7 @@ public class ImportiereKinokartenVerkauftServiceTest
         private final List<Kinokarte> gespeicherteKarten = new ArrayList<>();
 
         @Override
-        public Kinokarte hole(KinokartenId id) {
+        public Optional<Kinokarte> hole(KinokartenId id) {
             throw new UnsupportedOperationException("hole() wird in diesen Tests nicht benötigt");
         }
 
