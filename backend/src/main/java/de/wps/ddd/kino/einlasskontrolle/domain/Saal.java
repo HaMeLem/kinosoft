@@ -5,12 +5,13 @@ import org.jmolecules.ddd.annotation.ValueObject;
 @ValueObject
 public enum Saal
 {
+
     KLEINER_SAAL(1),
     GROSSER_SAAL(2);
 
     private final int wert;
 
-    Saal(int wert)
+    Saal( int wert)
     {
         this.wert = wert;
     }
@@ -19,4 +20,5 @@ public enum Saal
     {
         return wert;
     }
+
 }
