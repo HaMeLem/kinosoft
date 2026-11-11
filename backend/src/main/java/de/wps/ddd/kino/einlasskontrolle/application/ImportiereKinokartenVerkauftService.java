@@ -21,24 +21,20 @@ um die verkauften Kinokarten zu importieren.
 public class ImportiereKinokartenVerkauftService {
 
     private final KinokartenRepository kinokartenRepository;
-    // Implementierung von KinoKartenRepo fehlt noch
 
-    @Transactional
+    @Transactional // alles oder nichts Prinzip
     public void importiere(VerkaufteKinokarten verkauf) {
-        /*wandelt die VorstellungsId aus einer UUID in das Value Object VorstellungsId um*/
-        var vorstellungId = new VorstellungsId(verkauf.vorstellungId());
-        var saal = mapSaal(verkauf.saal());
-/* für jede verkaufte Karte wird ein Kinokarte-Aggregat erstellt, dabei werden 
-KartenId, Reihe, Sitzplatz in Value Objekte umgewandelt */
-        for (var karte : verkauf.karten()) {
-            var kinokarte = new Kinokarte(
+        VorstellungsId  vorstellungId = new VorstellungsId(verkauf.vorstellungId());
+        Saal saal = mapSaal(verkauf.saal());
+        // iterieren durch die Liste
+        for (VerkaufteKinokarten.Karte karte : verkauf.karten()) {
+            Kinokarte kinokarte = new Kinokarte(
                     new KinokartenId(karte.kartenId()),
                     new Reihe(karte.reihe()),
                     new Sitzplatz(karte.platz()),
                     saal,
                     vorstellungId);
-/* jedes Aggregat wird an kinokartenRepository übergeben, da noch keine Implementierung von kinokartenRepository existiert, passiert das
-SPEICHERN AKTUELL NOCH NICHT*/
+        // jede einzelne Kinokarte wird an kinokartenRepository übergeben
             kinokartenRepository.speichere(kinokarte);
         }
     }
