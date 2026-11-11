@@ -34,8 +34,8 @@ public class ImportiereWochenplanServiceTest {
         var start2 = LocalDateTime.of(2026, 11, 3, 20, 0);
         var ende2 = LocalDateTime.of(2026, 11, 3, 22, 30);
 
-        var vorstellung1 = new WochenplanDto.VorstellungDto(id1, "Film 1", "Saal 1", "Comedy", start1, ende1);
-        var vorstellung2 = new WochenplanDto.VorstellungDto(id2, "Film 2", "Saal 2", "Thriller", start2, ende2);
+        var vorstellung1 = new WochenplanDto.VorstellungDto(id1, "Film 1", "KLEINER_SAAL", "Comedy", start1, ende1);
+        var vorstellung2 = new WochenplanDto.VorstellungDto(id2, "Film 2", "GROSSER_SAAL", "Thriller", start2, ende2);
 
         // Testwochenplan erstellen
         var testWochenplan = new WochenplanDto(List.of(), List.of(vorstellung1, vorstellung2));
@@ -60,7 +60,7 @@ public class ImportiereWochenplanServiceTest {
             }
 
             @Override
-            public Optional<Filmvorstellung> holeVorstellung(VorstellungsId id) {
+            public Optional<Filmvorstellung> hole(VorstellungsId id) {
                 return Optional.ofNullable(gespeicherteVorstellungen.get(id));
             }
 
@@ -108,7 +108,7 @@ public class ImportiereWochenplanServiceTest {
             }
 
             @Override
-            public Optional<Filmvorstellung> holeVorstellung(VorstellungsId id) {
+            public Optional<Filmvorstellung> hole(VorstellungsId id) {
                 return Optional.empty();
             }
         };

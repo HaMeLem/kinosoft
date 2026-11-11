@@ -19,8 +19,6 @@ import java.util.UUID;
 @Entity(name = "Einlasskontrolle_KinokarteEntity")
 @Table(name = "kinokarten", schema = "einlasskontrolle")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class KinokarteEntity {
     @Id
     @Column(name = "kinokarten_id", nullable = false, updatable = false)
