@@ -5,6 +5,7 @@ import de.wps.ddd.kino.filmauswahl.data.AktuelleFilme;
 import de.wps.ddd.kino.filmauswahl.data.Film;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @ApplicationService
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProgrammService {
 
