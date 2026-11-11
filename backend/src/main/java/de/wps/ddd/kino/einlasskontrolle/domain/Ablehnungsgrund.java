@@ -3,7 +3,7 @@ package de.wps.ddd.kino.einlasskontrolle.domain;
 // Sammlung der möglichen Ablehnungsgründe für den Einlass in den Kinosaal. 
 // Jeder Ablehnungsgrund hat eine zugehörige Meldung, die dem Benutzer angezeigt werden kann.
 public enum Ablehnungsgrund {
-    UNGUELTIGER_CODE("Einlass nicht erlaubt: ungültiger Code"),
+    ID_UNGUELTIG("Einlass nicht erlaubt: ungültige ID"),
     FALSCHE_VORSTELLUNG("Einlass nicht erlaubt: falsche Vorstellung"),
     ZU_FRUEH("Einlass nicht erlaubt: zu früh"),
     ZU_SPAET("Einlass nicht erlaubt: zu spät"),

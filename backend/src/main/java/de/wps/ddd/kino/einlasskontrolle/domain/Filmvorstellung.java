@@ -38,6 +38,6 @@ public class Filmvorstellung
     }
 
     public boolean istEinlassVorbei(LocalDateTime jetzt) {
-    return jetzt.isAfter(ende.ende());   // Grenze fachlich klären
+    return jetzt.isAfter(ende.ende());
     }
 }

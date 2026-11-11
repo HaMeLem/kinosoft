@@ -6,9 +6,6 @@ import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.model.Kinokar
 import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.repositories.FilmvorstellungJpaRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 
 @Component("einlasskontrolle_KinokarteEntityMapper")
@@ -46,14 +43,14 @@ public class KinokarteEntityMapper {
     }
 
     public Kinokarte toDomain(KinokarteEntity entity) {
-        var saal = Arrays.stream(Saal.values())
-                .filter(value -> value.wert() == entity.getSaal())
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unbekannter Saal: " + entity.getSaal()));
-
         var entwertungszeitpunkt = entity.getEntwertungszeitpunkt() == null
                 ? null
                 : new Entwertungszeitpunkt(entity.getEntwertungszeitpunkt());
+
+        var saal = Arrays.stream(Saal.values())
+                .filter(möglicherSaal -> möglicherSaal.wert() == entity.getSaal())
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unbekannter Saalwert: " + entity.getSaal()));
 
         // Im regulären Konstruktur wird der entwertungszeitpunkt per default auf null gesetzt.
         // Über die Methode "rekonstruiere" kann der entwertungszeitpunkt gesetzt werden, der in der Datenbank persistiert ist.

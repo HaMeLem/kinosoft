@@ -8,7 +8,6 @@ import de.wps.ddd.kino.einlasskontrolle.domain.FilmvorstellungenRepository;
 import de.wps.ddd.kino.einlasskontrolle.domain.Kinokarte;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenId;
 import de.wps.ddd.kino.einlasskontrolle.domain.KinokartenRepository;
-import de.wps.ddd.kino.einlasskontrolle.domain.VorstellungsId;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
@@ -39,8 +38,7 @@ public class EinlasskontrolleService {
 
     @Transactional
     public Einlassentscheidung kinokarteValidierenUndEntwerten(
-        KinokartenId kinokartenId,
-        VorstellungsId vorstellungsId)
+        KinokartenId kinokartenId)
     {
     
     // Aktuelle Zeit über die injizierte Clock (testbar)
@@ -49,13 +47,17 @@ public class EinlasskontrolleService {
     // Karte laden. Gibt es sie nicht, ist das eine fachliche Ablehnung und kein Fehler.
     Optional<Kinokarte> gefunden = kinokartenRepository.hole(kinokartenId);
     if (gefunden.isEmpty()) {
-        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.UNGUELTIGER_CODE);
+        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ID_UNGUELTIG);
     }
     Kinokarte kinokarte = gefunden.get();
 
-    // Vorstellung laden, an der der Gast einlassen will (aus dem Request).
-    // Fehlt sie, erscheint RessourceNichtGefunden (-> HTTP 404).
-    Filmvorstellung filmvorstellung = filmvorstellungenRepository.holeOderFehler(vorstellungsId);
+    // Vorstellung laden, an der der Gast einlassen will (aus der Karte).
+    Optional<Filmvorstellung> filmvorstellungOptional = filmvorstellungenRepository.hole(kinokarte.getFilmvorstellung());
+    if(filmvorstellungOptional.isEmpty()) {
+        return new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.ID_UNGUELTIG);
+    }
+
+    Filmvorstellung filmvorstellung = filmvorstellungOptional.get();
 
     // Die Domain entscheidet und entwertet die Karte, wenn der Einlass erlaubt ist
     Einlassentscheidung entscheidung = kinokarte.entwerten(filmvorstellung, jetzt);
