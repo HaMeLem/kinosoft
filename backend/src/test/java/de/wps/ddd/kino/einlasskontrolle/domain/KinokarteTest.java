@@ -72,38 +72,6 @@ public class KinokarteTest
         assertThat(karte.getEntwertungszeitpunkt()).isEqualTo(new Entwertungszeitpunkt(ersterEinlass));
     }
 
-    // ---------- Falsche Vorstellung ----------
-
-    @Test
-    /* Test prüft: Karte gehört zu einer anderen Vorstellung
-     */
-    void entwerten_lehntKarteFuerAndereVorstellungAbUndEntwertetNicht() {
-        // given
-        Kinokarte karte = neueKarteFuer(new VorstellungsId(UUID.randomUUID()));
-
-        // when
-        Einlassentscheidung entscheidung = karte.entwerten(vorstellung, START.minusMinutes(10));
-
-        // then
-        assertThat(entscheidung).isEqualTo(new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG));
-        // eine abgelehnte Karte bleibt unentwertet
-        assertThat(karte.getEntwertungszeitpunkt()).isNull();
-    }
-
-    @Test
-    /* Test prüft: Falsche Vorstellung geht auch vor "bereits entwertet"
-     */
-    void entwerten_meldetFalscheVorstellungVorBereitsEntwertet() {
-        // given
-        Kinokarte karte = bereitsEntwerteteKarte(new VorstellungsId(UUID.randomUUID()), START.minusMinutes(40));
-
-        // when
-        Einlassentscheidung entscheidung = karte.entwerten(vorstellung, START.minusMinutes(10));
-
-        // then
-        assertThat(entscheidung).isEqualTo(new Einlassentscheidung.Abgelehnt(Ablehnungsgrund.FALSCHE_VORSTELLUNG));
-    }
-
     // ---------- Einlassfenster: zu früh ----------
 
     @Test

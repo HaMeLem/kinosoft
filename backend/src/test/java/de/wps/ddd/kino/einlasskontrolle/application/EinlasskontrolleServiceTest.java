@@ -48,11 +48,6 @@ class EinlasskontrolleServiceTest {
                 Saal.SAAL_1,
                 VORSTELLUNGS_ID);
 
-        doReturn(Optional.of(karte))
-                .when(kinokartenRepository).hole(KARTEN_ID);
-
-        doReturn(Optional.of(vorstellung))
-                .when(filmvorstellungenRepository).hole(VORSTELLUNGS_ID);
     }
 
     private EinlasskontrolleService service(LocalTime uhrzeit) {
@@ -68,8 +63,14 @@ class EinlasskontrolleServiceTest {
     // 1. HAPPY PATH -> Gültige Karte: Einlass erlaubt und Karte gespeichert
     @Test
     void erlaubtEinlassUndEntwertetKarte() {
+        doReturn(Optional.of(karte))
+                .when(kinokartenRepository).hole(KARTEN_ID);
+
+        doReturn(Optional.of(vorstellung))
+                .when(filmvorstellungenRepository).hole(VORSTELLUNGS_ID);
+
         Einlassentscheidung entscheidung = service(LocalTime.of(19, 45))
-                .kinokarteValidierenUndEntwerten(KARTEN_ID, VORSTELLUNGS_ID);
+                .kinokarteValidierenUndEntwerten(KARTEN_ID);
 
         assertThat(entscheidung)
                 .isInstanceOf(Einlassentscheidung.Erlaubt.class);
@@ -85,6 +86,9 @@ class EinlasskontrolleServiceTest {
     void lehntBereitsEntwerteteKarteAb() {
         Entwertungszeitpunkt vorher = new Entwertungszeitpunkt(TAG.atTime(19, 40));
 
+        doReturn(Optional.of(vorstellung))
+                .when(filmvorstellungenRepository).hole(VORSTELLUNGS_ID);
+
         karte = Kinokarte.rekonstruiere(
                 KARTEN_ID,
                 new Reihe(5),
@@ -97,7 +101,7 @@ class EinlasskontrolleServiceTest {
                 .when(kinokartenRepository).hole(KARTEN_ID);
 
         Einlassentscheidung entscheidung = service(LocalTime.of(19, 45))
-                .kinokarteValidierenUndEntwerten(KARTEN_ID, VORSTELLUNGS_ID);
+                .kinokarteValidierenUndEntwerten(KARTEN_ID);
 
         assertThat(entscheidung).isEqualTo(
                 new Einlassentscheidung.Abgelehnt(
@@ -109,8 +113,14 @@ class EinlasskontrolleServiceTest {
     // 3. Außerhalb des Einlassfensters: Einlass abgelehnt
     @Test
     void lehntEinlassZuFruehAb() {
+        doReturn(Optional.of(karte))
+                .when(kinokartenRepository).hole(KARTEN_ID);
+
+        doReturn(Optional.of(vorstellung))
+                .when(filmvorstellungenRepository).hole(VORSTELLUNGS_ID);
+
         Einlassentscheidung entscheidung = service(LocalTime.of(19, 29, 59))
-                .kinokarteValidierenUndEntwerten(KARTEN_ID, VORSTELLUNGS_ID);
+                .kinokarteValidierenUndEntwerten(KARTEN_ID);
 
         assertThat(entscheidung).isEqualTo(
                 new Einlassentscheidung.Abgelehnt(
