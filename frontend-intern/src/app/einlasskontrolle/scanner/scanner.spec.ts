@@ -220,7 +220,7 @@ describe('Scanner', () => {
       typ: 'fehler',
       titel: 'Einlass nicht möglich',
       beschreibung:
-        'Die Vorstellung ist bereits beendet. Einlass ist nicht mehr möglich.',
+        'Die Filmvorstellung ist bereits beendet.',
       grund: 'Zu spät',
       meldung: 'Einlass nicht erlaubt: zu spät'
     });

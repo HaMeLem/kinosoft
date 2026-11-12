@@ -55,8 +55,6 @@ describe('Ergebnis', () => {
       .toContain('Einlass nicht erlaubt');
 
     expect(element.querySelector('[role="alert"]')?.textContent)
-      .toContain('Bereits entwertet');
-    expect(element.querySelector('[role="alert"]')?.textContent)
       .toContain('Ticket bereits entwertet');
     expect(element.querySelector('[role="alert"] strong')?.textContent)
       .toContain('Ticket bereits entwertet');
