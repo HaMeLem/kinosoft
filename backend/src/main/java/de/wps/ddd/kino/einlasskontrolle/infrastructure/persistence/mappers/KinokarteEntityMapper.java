@@ -1,9 +1,7 @@
 package de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.mappers;
 
 import de.wps.ddd.kino.einlasskontrolle.domain.*;
-import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.model.FilmvorstellungEntity;
 import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.model.KinokarteEntity;
-import de.wps.ddd.kino.einlasskontrolle.infrastructure.persistence.repositories.FilmvorstellungJpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -11,21 +9,7 @@ import java.util.Arrays;
 @Component("einlasskontrolle_KinokarteEntityMapper")
 public class KinokarteEntityMapper {
 
-    private final FilmvorstellungJpaRepository filmvorstellungRepository;
-
-    public KinokarteEntityMapper(
-            FilmvorstellungJpaRepository filmvorstellungRepository) {
-        this.filmvorstellungRepository = filmvorstellungRepository;
-    }
-
     public KinokarteEntity toEntity(Kinokarte kinokarte) {
-        var vorstellungsId = kinokarte.getFilmvorstellung().id();
-
-        // VorstellungsId kann null sein, wenn die Kinokarte gespeichert wurde, bevor die Vorstellung hinzugefügt wurde.
-        // In diesem Fall wird die Kinokarte nur mit der VorstellungsId gespeichert, die später zugeordnet werden kann.
-        var filmvorstellung = filmvorstellungRepository
-                .findById(vorstellungsId)
-                .orElse(null);
 
         var entwertungszeitpunkt = kinokarte.getEntwertungszeitpunkt() == null
                 ? null
@@ -33,8 +17,7 @@ public class KinokarteEntityMapper {
 
         return new KinokarteEntity(
                 kinokarte.getId().id(),
-                vorstellungsId,
-                filmvorstellung,
+                kinokarte.getFilmvorstellung().id(),
                 kinokarte.getSaal().wert(),
                 kinokarte.getReihe().wert(),
                 kinokarte.getSitzplatz().wert(),
