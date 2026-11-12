@@ -4,7 +4,6 @@ package de.wps.ddd.kino.einlasskontrolle.domain;
 // Jeder Ablehnungsgrund hat eine zugehörige Meldung, die dem Benutzer angezeigt werden kann.
 public enum Ablehnungsgrund {
     ID_UNGUELTIG("Einlass nicht erlaubt: ungültige ID"),
-    FALSCHE_VORSTELLUNG("Einlass nicht erlaubt: falsche Vorstellung"),
     ZU_FRUEH("Einlass nicht erlaubt: zu früh"),
     ZU_SPAET("Einlass nicht erlaubt: zu spät"),
     BEREITS_ENTWERTET("Einlass nicht erlaubt: Ticket bereits entwertet");
