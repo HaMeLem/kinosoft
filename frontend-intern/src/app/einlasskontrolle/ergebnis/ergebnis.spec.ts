@@ -42,7 +42,9 @@ describe('Ergebnis', () => {
     ergebnisZustand.setzeErgebnis({
       typ: 'fehler',
       titel: 'Bereits entwertet',
-      beschreibung: 'Diese Kinokarte wurde bereits entwertet.',
+      beschreibung:
+        'Diese Kinokarte wurde bereits entwertet und kann nicht erneut verwendet werden.',
+      grund: 'Ticket bereits entwertet',
     });
 
     fixture.detectChanges();
@@ -54,7 +56,10 @@ describe('Ergebnis', () => {
 
     expect(element.querySelector('[role="alert"]')?.textContent)
       .toContain('Bereits entwertet');
-
+    expect(element.querySelector('[role="alert"]')?.textContent)
+      .toContain('Ticket bereits entwertet');
+    expect(element.querySelector('[role="alert"] strong')?.textContent)
+      .toContain('Ticket bereits entwertet');
     expect(element.querySelector('.ticket-details')).toBeNull();
   });
 

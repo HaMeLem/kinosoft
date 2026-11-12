@@ -83,7 +83,7 @@
           </h1>
 
           <div class="fehlermeldung" role="alert">
-            <strong>{{ daten.titel }}</strong>
+            <strong>{{ daten.grund ?? daten.titel }}</strong>
 
             @if (daten.beschreibung) {
               <p>{{ daten.beschreibung }}</p>

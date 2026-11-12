@@ -12,6 +12,8 @@ export type EinlassErgebnis =
   typ: 'fehler';
   titel: string;
   beschreibung?: string;
+  grund?: string;
+  meldung?: string;
 };
 
 @Component({
