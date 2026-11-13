@@ -203,16 +203,26 @@ describe('Scanner', () => {
     qrCodeErkennen(testId);
 
     const anfrage = httpTesting.expectOne(apiUrl);
+    const consoleErrorSpy = spyOn(console, 'error');
 
     anfrage.flush(
-      { message: 'Ticket abgelehnt' },
-      { status: 400, statusText: 'Bad Request' }
+      {
+        grund: 'ZU_SPAET',
+        meldung: 'Einlass nicht erlaubt: zu spät'
+      },
+      { status: 409, statusText: 'Conflict' }
     );
 
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Einlass abgelehnt: ZU_SPAET - Einlass nicht erlaubt: zu spät'
+    );
     expect(ergebnisZustand.ergebnis()).toEqual({
       typ: 'fehler',
       titel: 'Einlass nicht möglich',
-      beschreibung: 'Die Kinokarte wurde nicht akzeptiert.'
+      beschreibung:
+        'Die Filmvorstellung ist bereits beendet.',
+      grund: 'Zu spät',
+      meldung: 'Einlass nicht erlaubt: zu spät'
     });
 
     expect(navigationSpy).toHaveBeenCalledWith(['/ergebnis']);

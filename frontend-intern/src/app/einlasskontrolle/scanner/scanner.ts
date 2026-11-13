@@ -16,6 +16,11 @@ import { BrowserQRCodeReader, IScannerControls } from '@zxing/browser';
 import { Einlass } from '../services/einlass';
 import { ErgebnisZustand } from '../services/ergebnis-zustand';
 
+interface EinlassAblehnung {
+  grund: string;
+  meldung: string;
+}
+
 @Component({
   selector: 'app-scanner',
   imports: [],
@@ -138,8 +143,17 @@ export class Scanner implements AfterViewInit, OnDestroy {
         },
         error: (fehler: HttpErrorResponse) => {
           this.pruefungLaeuft.set(false);
-          // Bis das Backend konkrete Ablehnungsgründe liefert,
-          // unterscheiden wir nur technische Fehler und fachliche Ablehnungen.
+          const ablehnung =
+            fehler.status === 409 && this.istEinlassAblehnung(fehler.error)
+              ? fehler.error
+              : undefined;
+
+          if (ablehnung) {
+            console.error(
+              `Einlass abgelehnt: ${ablehnung.grund} - ${ablehnung.meldung}`
+            );
+          }
+
           const technischerFehler =
             fehler.status === 0 || fehler.status >= 500;
 
@@ -150,12 +164,60 @@ export class Scanner implements AfterViewInit, OnDestroy {
               : 'Einlass nicht möglich',
             beschreibung: technischerFehler
               ? 'Die Einlassprüfung konnte nicht abgeschlossen werden. Bitte versuche es erneut.'
-              : 'Die Kinokarte wurde nicht akzeptiert.'
+              : ablehnung
+                ? this.ablehnungsbeschreibung(ablehnung.grund)
+                : 'Die Kinokarte wurde nicht akzeptiert.',
+            ...(ablehnung
+              ? {
+                  grund: this.ablehnungsgrundAnzeigen(ablehnung.grund),
+                  meldung: ablehnung.meldung
+                }
+              : {})
           });
 
           void this.router.navigate(['/ergebnis']);
         }
       });
+  }
+
+  private istEinlassAblehnung(
+    fehler: unknown
+  ): fehler is EinlassAblehnung {
+    if (typeof fehler !== 'object' || fehler === null) {
+      return false;
+    }
+
+    const ablehnung = fehler as Record<string, unknown>;
+    return typeof ablehnung['grund'] === 'string'
+      && typeof ablehnung['meldung'] === 'string';
+  }
+
+  private ablehnungsgrundAnzeigen(grund: string): string {
+    const anzeigetexte: Record<string, string> = {
+      ID_UNGUELTIG: 'Ungültige Ticket-ID',
+      FALSCHE_VORSTELLUNG: 'Ungültige Vorstellung',
+      ZU_FRUEH: 'Zu früh',
+      ZU_SPAET: 'Zu spät',
+      BEREITS_ENTWERTET: 'Bereits entwertet'
+    };
+
+    return anzeigetexte[grund] ?? grund;
+  }
+
+  private ablehnungsbeschreibung(grund: string): string {
+    const beschreibungen: Record<string, string> = {
+      ID_UNGUELTIG: 'Die Ticket-ID bzw. die verbundene Filmvorstellung ist unbekannt.',
+      FALSCHE_VORSTELLUNG:
+        'Diese Kinokarte gehört nicht zu dieser Filmvorstellung.',
+      ZU_FRUEH:
+        'Der Einlass ist noch nicht geöffnet.',
+      ZU_SPAET:
+        'Die Filmvorstellung ist bereits beendet.',
+      BEREITS_ENTWERTET:
+        'Diese Kinokarte wurde bereits entwertet und kann nicht erneut verwendet werden.'
+    };
+
+    return beschreibungen[grund] ?? 'Die Kinokarte wurde nicht akzeptiert.';
   }
 
   private kameraStoppen(): void {
