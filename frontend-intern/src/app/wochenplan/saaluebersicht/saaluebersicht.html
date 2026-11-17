@@ -1,1 +1,24 @@
-<p>saaluebersicht works!</p>
+<main class="saaluebersicht">
+  <header>
+    <h1>Saalübersicht</h1>
+  </header>
+
+  <section class="zeitplan" aria-label="Zeitplan der Kinosäle">
+    <div class="zeitachse">
+      <span>Saal</span>
+      <span>18:00</span>
+      <span>19:00</span>
+      <span>20:00</span>
+      <span>21:00</span>
+      <span>22:00</span>
+      <span>23:00</span>
+    </div>
+
+    @for (saal of saele; track saal.id) {
+      <div class="saalzeile">
+        <h2>{{ saal.name }}</h2>
+        <div class="zeitbereich"></div>
+      </div>
+    }
+  </section>
+</main>
