@@ -15,13 +15,14 @@ export class Saaluebersicht {
     { id: 2, name: 'Saal 2' },
   ];
 
-  // Vorläufige Uhrzeiten für die horizontale Zeitachse.
-  readonly uhrzeiten = [
-    '18:00',
-    '19:00',
-    '20:00',
-    '21:00',
-    '22:00',
-    '23:00',
-  ];
+  // Einstellungen für die horizontale Zeitachse.
+  readonly startStunde = 18;
+  readonly anzahlStunden = 6;
+
+// Erzeugt die Uhrzeiten automatisch ab der Startstunde.
+  readonly uhrzeiten = Array.from(
+    { length: this.anzahlStunden },
+    (_, index) =>
+      `${String((this.startStunde + index) % 24).padStart(2, '0')}:00`
+  );
 }
