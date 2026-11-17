@@ -3,7 +3,11 @@
     <h1>Saalübersicht</h1>
   </header>
 
-  <section class="zeitplan" aria-label="Zeitplan der Kinosäle">
+  <section
+    class="zeitplan"
+    aria-label="Zeitplan der Kinosäle"
+    [style.--anzahl-stunden]="anzahlStunden"
+  >
     <div class="zeitachse">
       <span>Saal</span>
 
