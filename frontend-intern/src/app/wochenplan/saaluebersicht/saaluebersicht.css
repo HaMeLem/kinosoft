@@ -1,0 +1,68 @@
+.saaluebersicht {
+  padding: 32px;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: Arial, sans-serif;
+}
+
+.saaluebersicht h1 {
+  margin: 0 0 24px;
+  font-size: 28px;
+  color: #1e293b;
+}
+
+/* Gemeinsamer Zeitplan für alle Kinosäle */
+.zeitplan {
+  overflow-x: auto;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+/* Zeitachse und Saalreihen nutzen dieselben Spaltenbreiten. */
+.zeitachse,
+.saalzeile {
+  display: grid;
+  grid-template-columns: 120px repeat(6, 140px);
+  min-width: 960px;
+}
+
+.zeitachse {
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.zeitachse span {
+  padding: 16px 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.saalzeile {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.saalzeile:last-child {
+  border-bottom: none;
+}
+
+.saalzeile h2 {
+  margin: 0;
+  padding: 24px 12px;
+  font-size: 17px;
+  color: #334155;
+  background-color: #f8fafc;
+}
+
+/* Freier Zeitbereich für die späteren Filmkacheln */
+.zeitbereich {
+  grid-column: 2 / -1;
+  min-height: 150px;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent 139px,
+    #e2e8f0 139px,
+    #e2e8f0 140px
+  );
+}
