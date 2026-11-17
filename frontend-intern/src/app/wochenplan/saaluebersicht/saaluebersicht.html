@@ -6,12 +6,10 @@
   <section class="zeitplan" aria-label="Zeitplan der Kinosäle">
     <div class="zeitachse">
       <span>Saal</span>
-      <span>18:00</span>
-      <span>19:00</span>
-      <span>20:00</span>
-      <span>21:00</span>
-      <span>22:00</span>
-      <span>23:00</span>
+
+      @for (uhrzeit of uhrzeiten; track uhrzeit) {
+        <span>{{ uhrzeit }}</span>
+      }
     </div>
 
     @for (saal of saele; track saal.id) {
