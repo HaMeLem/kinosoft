@@ -46,15 +46,32 @@
   border-bottom: none;
 }
 
+/* Fixierte Saalspalte beim horizontalen Scrollen. */
+.zeitachse span:first-child,
 .saalzeile h2 {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
   margin: 0;
-  padding: 24px 12px;
-  font-size: 17px;
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.zeitachse span:first-child {
+  color: #334155;
+  background-color: #f1f5f9;
+}
+
+.saalzeile h2 {
   color: #334155;
   background-color: #f8fafc;
 }
 
-/* Freier Zeitbereich für die späteren Filmkacheln */
+/* Freier Zeitbereich für die späteren Filmkacheln. */
 .zeitbereich {
   grid-column: 2 / -1;
   min-height: 150px;
@@ -65,27 +82,6 @@
     #e2e8f0 139px,
     #e2e8f0 140px
   );
-}
-
-/* Saalnamen bleiben beim horizontalen Scrollen sichtbar. */
-.zeitachse span:first-child,
-.saalzeile h2 {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-}
-
-.zeitachse span:first-child {
-  background-color: #f1f5f9;
-}
-
-.saalzeile h2 {
-  margin: 0;
-  padding: 24px 8px;
-  font-size: 14px;
-  color: #334155;
-  background-color: #f8fafc;
-  white-space: nowrap;
 }
 
 /* Gemeinsamer Bereich für Zeitachse, Säle und Jetzt-Linie. */
@@ -104,19 +100,6 @@
   background-color: #dc2626;
   pointer-events: none;
   z-index: 1;
-}
-
-.zeitachse span:first-child,
-.saalzeile h2 {
-  margin: 0;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: #334155;
-  background-color: #f8fafc;
-  white-space: nowrap;
 }
 
 /* Zeigt die aktuelle Uhrzeit über der roten Linie an. */
