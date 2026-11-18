@@ -39,7 +39,7 @@ export class Saaluebersicht implements OnDestroy {
     (this.jetzt().getHours() - 3 + 24) % 24;
 
   // Anzahl der angezeigten Stunden.
-  readonly anzahlStunden = 6;
+  readonly anzahlStunden = 9;
 
   readonly uhrzeiten = Array.from(
     { length: this.anzahlStunden },
@@ -65,4 +65,8 @@ export class Saaluebersicht implements OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.timer);
   }
+
+  // Berechnet die Endzeit des angezeigten Zeitraums.
+  readonly endUhrzeit =
+    `${String((this.startStunde + this.anzahlStunden) % 24).padStart(2, '0')}:00`;
 }
