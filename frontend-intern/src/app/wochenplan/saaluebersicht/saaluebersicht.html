@@ -17,7 +17,7 @@
         }
       </div>
 
-      @for (saal of saele; track saal.id) {
+      @for (saal of saele(); track saal.id) {
         <div class="saalzeile">
           <h2>{{ saal.name }}</h2>
           <div class="zeitbereich"></div>
