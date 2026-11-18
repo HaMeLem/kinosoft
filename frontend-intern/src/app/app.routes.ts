@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './login/login';
 import { Scanner } from './einlasskontrolle/scanner/scanner';
 import { Ergebnis } from './einlasskontrolle/ergebnis/ergebnis';
-import { Saaluebersicht } from './wochenplan/saaluebersicht/saaluebersicht';
+import { Saaluebersicht } from './filmvorfuehrung/saaluebersicht/saaluebersicht';
 
 export const routes: Routes = [
   { path: '', component: Login },
