@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-
-export interface Saal {
-  id: number;
-  name: string;
-}
+import { Saal } from '../dtos/saal';
 
 @Injectable({
   providedIn: 'root',

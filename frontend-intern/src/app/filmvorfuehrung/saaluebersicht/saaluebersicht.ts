@@ -2,7 +2,8 @@ import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { Saal, SaalService } from '../services/saal';
+import { Saal } from '../dtos/saal';
+import { SaalService } from '../services/saal';
 
 @Component({
   selector: 'app-saaluebersicht',
