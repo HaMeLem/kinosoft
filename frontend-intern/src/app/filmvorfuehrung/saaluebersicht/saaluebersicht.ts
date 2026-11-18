@@ -58,7 +58,7 @@ export class Saaluebersicht implements OnDestroy {
     const stundenSeitBeginn =
       (aktuell.getHours() - this.startStunde() + 24) % 24;
 
-    return 120 + (stundenSeitBeginn + aktuell.getMinutes() / 60) * 140;
+    return 100 + (stundenSeitBeginn + aktuell.getMinutes() / 60) * 140;
   });
 
   // Berechnet die Endzeit des angezeigten Zeitraums.
