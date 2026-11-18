@@ -2,7 +2,6 @@ import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-
 import { Saaluebersicht } from './saaluebersicht';
 
 registerLocaleData(localeDe);
