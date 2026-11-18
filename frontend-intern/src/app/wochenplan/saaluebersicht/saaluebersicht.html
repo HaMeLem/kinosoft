@@ -49,7 +49,18 @@
     </nav>
   }
 
-  <h1>Saalübersicht</h1>
+  <div class="saaluebersicht-info">
+    <div>
+      <h1>Saalübersicht</h1>
+      <p>Alle Vorstellungen im zeitlichen Verlauf</p>
+    </div>
+
+    <div class="zeitinfo">
+      <span>{{ jetzt() | date:'EEEE, dd. MMMM yyyy':'':'de' }}</span>
+      <strong>Aktuelle Uhrzeit: {{ jetzt() | date:'HH:mm' }} Uhr</strong>
+      <span>Zeitraum: {{ uhrzeiten[0] }}–{{ endUhrzeit }} Uhr</span>
+    </div>
+  </div>
 
   <section
     class="zeitplan"
