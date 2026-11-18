@@ -1,5 +1,8 @@
 import { Component, OnDestroy, computed, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Saal, SaalService } from '../services/saal';
 
 @Component({
   selector: 'app-saaluebersicht',
@@ -9,11 +12,11 @@ import { DatePipe } from '@angular/common';
 })
 export class Saaluebersicht implements OnDestroy {
 
-  // Vorläufige Saaldaten. Später werden die Säle aus dem Backend geladen.
-  readonly saele = [
-    { id: 1, name: 'Saal 1' },
-    { id: 2, name: 'Saal 2' },
-  ];
+  // Lädt die vorläufigen Saaldaten über den Service.
+  readonly saele = toSignal(
+    inject(SaalService).holeSaele(),
+    { initialValue: [] as Saal[] }
+  );
 
   readonly jetzt = signal(new Date());
 
