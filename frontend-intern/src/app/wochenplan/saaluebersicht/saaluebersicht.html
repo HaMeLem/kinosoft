@@ -8,19 +8,30 @@
     aria-label="Zeitplan der Kinosäle"
     [style.--anzahl-stunden]="anzahlStunden"
   >
-    <div class="zeitachse">
-      <span>Saal</span>
+    <div class="zeitplan-inhalt">
+      <div class="zeitachse">
+        <span>Saal</span>
 
-      @for (uhrzeit of uhrzeiten; track uhrzeit) {
-        <span>{{ uhrzeit }}</span>
-      }
-    </div>
-
-    @for (saal of saele; track saal.id) {
-      <div class="saalzeile">
-        <h2>{{ saal.name }}</h2>
-        <div class="zeitbereich"></div>
+        @for (uhrzeit of uhrzeiten; track uhrzeit) {
+          <span>{{ uhrzeit }}</span>
+        }
       </div>
-    }
+
+      @for (saal of saele; track saal.id) {
+        <div class="saalzeile">
+          <h2>{{ saal.name }}</h2>
+          <div class="zeitbereich"></div>
+        </div>
+      }
+
+      <div
+        class="jetzt-linie"
+        [style.left.px]="jetztPositionPx()"
+      >
+    <span class="jetzt-label">
+    Jetzt · {{ jetzt() | date:'HH:mm' }}
+    </span>
+      </div>
+    </div>
   </section>
 </main>
