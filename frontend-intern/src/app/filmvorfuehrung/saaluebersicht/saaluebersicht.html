@@ -58,7 +58,7 @@
     <div class="zeitinfo">
       <span>{{ jetzt() | date:'EEEE, dd. MMMM yyyy':'':'de' }}</span>
       <strong>Aktuelle Uhrzeit: {{ jetzt() | date:'HH:mm' }} Uhr</strong>
-      <span>Zeitraum: {{ uhrzeiten[0] }}–{{ endUhrzeit }} Uhr</span>
+      <span>Zeitraum: {{ uhrzeiten()[0] }}–{{ endUhrzeit() }} Uhr</span>
     </div>
   </div>
 
@@ -71,7 +71,7 @@
       <div class="zeitachse">
         <span>Saal</span>
 
-        @for (uhrzeit of uhrzeiten; track uhrzeit) {
+        @for (uhrzeit of uhrzeiten(); track uhrzeit) {
           <span>{{ uhrzeit }}</span>
         }
       </div>

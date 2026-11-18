@@ -1,9 +1,8 @@
-import { Component, OnDestroy, computed, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { inject } from '@angular/core';
+import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Saal, SaalService } from '../services/saal';
 import { RouterLink } from '@angular/router';
+import { Saal, SaalService } from '../services/saal';
 
 @Component({
   selector: 'app-saaluebersicht',
@@ -13,7 +12,6 @@ import { RouterLink } from '@angular/router';
 })
 export class Saaluebersicht implements OnDestroy {
 
-  // Steuert die Anzeige des Ausloggen-Dialogs.
   readonly abmeldungOffen = signal(false);
 
   abmeldungAnzeigen(): void {
@@ -32,19 +30,24 @@ export class Saaluebersicht implements OnDestroy {
     { initialValue: [] as Saal[] }
   );
 
+  // Aktuelle Uhrzeit.
   readonly jetzt = signal(new Date());
 
-  // Die Zeitachse beginnt drei Stunden vor der aktuellen Stunde.
-  readonly startStunde =
-    (this.jetzt().getHours() - 3 + 24) % 24;
+  // Passt die Startstunde automatisch an die aktuelle Uhrzeit an.
+  readonly startStunde = computed(() =>
+    (this.jetzt().getHours() - 3 + 24) % 24
+  );
 
   // Anzahl der angezeigten Stunden.
   readonly anzahlStunden = 9;
 
-  readonly uhrzeiten = Array.from(
-    { length: this.anzahlStunden },
-    (_, index) =>
-      `${String((this.startStunde + index) % 24).padStart(2, '0')}:00`
+  // Aktualisiert die Zeitbeschriftungen beim Stundenwechsel.
+  readonly uhrzeiten = computed(() =>
+    Array.from(
+      { length: this.anzahlStunden },
+      (_, index) =>
+        `${String((this.startStunde() + index) % 24).padStart(2, '0')}:00`
+    )
   );
 
   // Berechnet die Position der roten Jetzt-Linie.
@@ -52,10 +55,15 @@ export class Saaluebersicht implements OnDestroy {
     const aktuell = this.jetzt();
 
     const stundenSeitBeginn =
-      (aktuell.getHours() - this.startStunde + 24) % 24;
+      (aktuell.getHours() - this.startStunde() + 24) % 24;
 
     return 120 + (stundenSeitBeginn + aktuell.getMinutes() / 60) * 140;
   });
+
+  // Berechnet die Endzeit des angezeigten Zeitraums.
+  readonly endUhrzeit = computed(() =>
+    `${String((this.startStunde() + this.anzahlStunden) % 24).padStart(2, '0')}:00`
+  );
 
   // Aktualisiert die aktuelle Uhrzeit alle 30 Sekunden.
   private readonly timer = setInterval(() => {
@@ -65,8 +73,4 @@ export class Saaluebersicht implements OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.timer);
   }
-
-  // Berechnet die Endzeit des angezeigten Zeitraums.
-  readonly endUhrzeit =
-    `${String((this.startStunde + this.anzahlStunden) % 24).padStart(2, '0')}:00`;
 }

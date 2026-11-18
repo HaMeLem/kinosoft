@@ -19,6 +19,7 @@ describe('Saaluebersicht', () => {
     fixture = TestBed.createComponent(Saaluebersicht);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
   });
 
   it('soll die Saaluebersicht erstellen', () => {
@@ -50,5 +51,23 @@ describe('Saaluebersicht', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.logout-dialog')).toBeNull();
+  });
+
+  it('soll die Zeitachse beim Stundenwechsel aktualisieren', () => {
+    // Simuliert 14:59 Uhr.
+    component.jetzt.set(new Date(2026, 10, 18, 14, 59));
+    fixture.detectChanges();
+
+    expect(component.startStunde()).toBe(11);
+    expect(component.uhrzeiten()[0]).toBe('11:00');
+    expect(component.endUhrzeit()).toBe('20:00');
+
+    // Simuliert den Stundenwechsel auf 15:00 Uhr.
+    component.jetzt.set(new Date(2026, 10, 18, 15, 0));
+    fixture.detectChanges();
+
+    expect(component.startStunde()).toBe(12);
+    expect(component.uhrzeiten()[0]).toBe('12:00');
+    expect(component.endUhrzeit()).toBe('21:00');
   });
 });
