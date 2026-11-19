@@ -1,6 +1,6 @@
 .saaluebersicht {
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: #f8fafc;
   font-family: Arial, sans-serif;
 }
@@ -14,9 +14,10 @@
 /* Gemeinsamer Zeitplan für alle Kinosäle */
 .zeitplan {
   overflow-x: auto;
+  max-width: 85rem;
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 0.75rem;
 }
 
 .zeitachse,
@@ -33,17 +34,13 @@
 }
 
 .zeitachse span {
-  padding: 24px 12px 4px;
+  padding: 1.5rem 0.75rem 0.25rem;
   font-weight: 600;
   color: #475569;
 }
 
-.saalzeile {
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.saalzeile:last-child {
-  border-bottom: none;
+.saalzeile + .saalzeile {
+  border-top: 2px solid #cbd5e1;
 }
 
 /* Fixierte Saalspalte beim horizontalen Scrollen. */
@@ -74,7 +71,7 @@
 /* Freier Zeitbereich für die späteren Filmkacheln. */
 .zeitbereich {
   grid-column: 2 / -1;
-  min-height: 150px;
+  min-height: 9.375rem;
   background-image: repeating-linear-gradient(
     to right,
     transparent 0,
@@ -319,44 +316,42 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 24px 32px 18px;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem 1.125rem;
 }
 
 .saaluebersicht-info h1 {
-  margin: 0 0 6px;
-  font-size: 24px;
+  margin: 0 0 0.375rem;
+  font-size: 1.5rem;
   color: #202326;
 }
 
 .saaluebersicht-info p {
   margin: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: #8a8a8a;
 }
 
-/* Datum, aktuelle Uhrzeit und Zeitraum rechts. */
 .zeitinfo {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 0.25rem;
   text-align: right;
 }
 
 .zeitinfo span {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #8a8a8a;
 }
 
 .zeitinfo strong {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #202326;
 }
 
 /* Anpassung für kleinere Bildschirme. */
-
 @media (max-width: 700px) {
   .saaluebersicht-info {
     flex-direction: column;
