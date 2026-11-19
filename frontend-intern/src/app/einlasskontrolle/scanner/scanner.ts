@@ -15,6 +15,8 @@ import { BrowserQRCodeReader, IScannerControls } from '@zxing/browser';
 
 import { Einlass } from '../services/einlass';
 import { ErgebnisZustand } from '../services/ergebnis-zustand';
+import { Header } from '../../shared/header/header';
+import { LogoutDialog } from '../../shared/logout-dialog/logout-dialog';
 
 interface EinlassAblehnung {
   grund: string;
@@ -23,7 +25,7 @@ interface EinlassAblehnung {
 
 @Component({
   selector: 'app-scanner',
-  imports: [],
+  imports: [Header, LogoutDialog],
   templateUrl: './scanner.html',
   styleUrl: './scanner.css',
 })

@@ -1,35 +1,6 @@
 <main class="ergebnis-page">
 
-  <header class="ergebnis-header">
-    <div class="ergebnis-logo">
-      <strong>KinoSoft</strong>
-      <span>Intern</span>
-    </div>
-
-    <button
-      class="logout-button"
-      type="button"
-      aria-label="Abmelden"
-      title="Abmelden"
-      (click)="abmeldungAnzeigen()"
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M10 17l5-5-5-5" />
-        <path d="M15 12H3" />
-        <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
-      </svg>
-    </button>
-  </header>
+  <app-header (abmelden)="abmeldungAnzeigen()"></app-header>
 
   @if (angezeigtesErgebnis(); as daten) {
     @if (daten.typ === 'erfolg') {
@@ -101,45 +72,9 @@
   }
 
   @if (abmeldungOffen()) {
-    <div class="logout-overlay">
-      <section
-        class="logout-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="logout-title"
-      >
-        <button
-          type="button"
-          class="logout-close"
-          aria-label="Fenster schließen"
-          (click)="abmeldungSchliessen()"
-        >
-          ×
-        </button>
-
-        <div class="logout-icon" aria-hidden="true">
-          ⇥
-        </div>
-
-        <h2 id="logout-title">
-          Möchtest du dich wirklich ausloggen?
-        </h2>
-
-        <div class="logout-actions">
-          <button
-            type="button"
-            class="logout-cancel"
-            (click)="abmeldungSchliessen()"
-          >
-            Nein, abbrechen
-          </button>
-
-          <a href="/" class="logout-confirm">
-            Ja, ausloggen
-          </a>
-        </div>
-      </section>
-    </div>
+    <app-logout-dialog
+      (schliessen)="abmeldungSchliessen()"
+    ></app-logout-dialog>
   }
 
 </main>
