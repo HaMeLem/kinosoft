@@ -1,0 +1,371 @@
+.saaluebersicht {
+  padding: 0;
+  min-height: 100dvh;
+  background-color: #f8fafc;
+  font-family: Arial, sans-serif;
+}
+
+.saaluebersicht h1 {
+  margin: 0 0 24px;
+  font-size: 28px;
+  color: #1e293b;
+}
+
+/* Gemeinsamer Zeitplan für alle Kinosäle */
+.zeitplan {
+  overflow-x: auto;
+  max-width: 85rem;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+}
+
+.zeitachse,
+.saalzeile {
+  display: grid;
+  grid-template-columns: 100px repeat(var(--anzahl-stunden, 6), 140px);
+  width: max-content;
+  min-width: 100%;
+}
+
+.zeitachse {
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.zeitachse span {
+  padding: 1.5rem 0 0.25rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.saalzeile + .saalzeile {
+  border-top: 2px solid #cbd5e1;
+}
+
+/* Fixierte Saalspalte beim horizontalen Scrollen. */
+.zeitachse span:first-child,
+.saalzeile h2 {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.zeitachse span:first-child {
+  color: #334155;
+  background-color: #f1f5f9;
+}
+
+.saalzeile h2 {
+  color: #334155;
+  background-color: #f8fafc;
+}
+
+/* Freier Zeitbereich für die späteren Filmkacheln. */
+.zeitbereich {
+  grid-column: 2 / -1;
+  min-height: 9.375rem;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent 139px,
+    #e2e8f0 139px,
+    #e2e8f0 140px
+  );
+}
+
+/* Gemeinsamer Bereich für Zeitachse, Säle und Jetzt-Linie. */
+.zeitplan-inhalt {
+  position: relative;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* Rote Linie zur Markierung der aktuellen Uhrzeit. */
+.jetzt-linie {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #dc2626;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Zeigt die aktuelle Uhrzeit über der roten Linie an. */
+.jetzt-label {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background-color: #dc2626;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Header der internen KinoSoft-Anwendung. */
+.saaluebersicht-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e8e8e8;
+  box-sizing: border-box;
+}
+
+/* KinoSoft-Logo mittig im Header. */
+.saaluebersicht-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.saaluebersicht-logo strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.saaluebersicht-logo span {
+  font-size: 11px;
+  color: #8a8a8a;
+}
+
+/* Menü- und Ausloggen-Button. */
+.menue-button,
+.logout-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 7px;
+  color: #202326;
+  cursor: pointer;
+}
+
+.menue-button {
+  left: 16px;
+  font-size: 20px;
+}
+
+.logout-button {
+  right: 16px;
+}
+
+.menue-button:hover,
+.logout-button:hover {
+  background-color: #f5f5f5;
+}
+
+.menue-button:focus-visible,
+.logout-button:focus-visible {
+  outline: 2px solid #202326;
+  outline-offset: 2px;
+}
+
+/* Navigation, die über den Menü-Button geöffnet wird. */
+.saaluebersicht-menue {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 7px;
+  margin-bottom: 16px;
+}
+
+.saaluebersicht-menue a {
+  color: #202326;
+  text-decoration: none;
+}
+
+.saaluebersicht-menue a:hover {
+  text-decoration: underline;
+}
+
+/* Abstände für den Inhalt unter dem Header. */
+.saaluebersicht > h1 {
+  margin: 24px 32px;
+}
+
+.saaluebersicht > .zeitplan {
+  margin: 0 32px 32px;
+}
+
+/* Dunkler Hintergrund des Ausloggen-Dialogs. */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+/* Bestätigungsfenster. */
+.logout-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Schließen-Button. */
+.logout-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  color: #888888;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Rotes Logout-Symbol. */
+.logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  background-color: #fce8e8;
+  color: #d64c4c;
+  border-radius: 12px;
+  font-size: 26px;
+}
+
+.logout-dialog h2 {
+  margin: 0 0 24px;
+  color: #202326;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Aktionen im Dialog. */
+.logout-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.logout-cancel,
+.logout-confirm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.logout-cancel {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #202326;
+}
+
+.logout-confirm {
+  background-color: #d94b4b;
+  border: 1px solid #d94b4b;
+  color: #ffffff;
+}
+
+.logout-cancel:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-confirm:hover {
+  background-color: #bd3838;
+}
+
+/* Überschrift und aktuelle Zeitinformationen. */
+.saaluebersicht-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem 1.125rem;
+}
+
+.saaluebersicht-info h1 {
+  margin: 0 0 0.375rem;
+  font-size: 1.5rem;
+  color: #202326;
+}
+
+.saaluebersicht-info p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #8a8a8a;
+}
+
+.zeitinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.zeitinfo span {
+  font-size: 0.75rem;
+  color: #8a8a8a;
+}
+
+.zeitinfo strong {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #202326;
+}
+
+/* Anpassung für kleinere Bildschirme. */
+@media (max-width: 700px) {
+  .saaluebersicht-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1.25rem 0.5rem 1rem;
+  }
+
+  .zeitinfo {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .saaluebersicht > .zeitplan {
+    margin: 0 0.5rem 1.5rem;
+  }
+}
