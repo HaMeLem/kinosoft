@@ -5,10 +5,13 @@ import { Saal } from '../dtos/saal';
 import { SaalService } from '../services/saal';
 import { Header } from '../../shared/header/header';
 import { LogoutDialog } from '../../shared/logout-dialog/logout-dialog';
+import { FilmvorfuehrungDto } from '../dtos/filmvorfuehrungDto';
+import { MockDatenService } from '../services/mockDatenService';
+import { FilmvorfuehrungKachel } from '../filmvorfuehrung-kachel/filmvorfuehrung-kachel';
 
 @Component({
   selector: 'app-saaluebersicht',
-  imports: [DatePipe, Header, LogoutDialog],
+  imports: [DatePipe, Header, LogoutDialog, FilmvorfuehrungKachel],
   templateUrl: './saaluebersicht.html',
   styleUrl: './saaluebersicht.css',
 })
@@ -34,6 +37,12 @@ export class Saaluebersicht implements AfterViewInit, OnDestroy {
     inject(SaalService).holeSaele(),
     { initialValue: [] as Saal[] }
   );
+
+  readonly filmvorfuehrungen = inject(MockDatenService).getFilmvorfuehrungen();
+
+  vorfuehrungenFuerSaal(saalName: string): FilmvorfuehrungDto[] {
+    return this.filmvorfuehrungen.filter(vorfuehrung => vorfuehrung.saal === saalName);
+  }
 
   // Aktuelle Uhrzeit.
   readonly jetzt = signal(new Date());
