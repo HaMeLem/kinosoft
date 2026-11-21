@@ -1,13 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { Saal } from '../dtos/saal';
 import { SaalService } from '../services/saal';
+import { Header } from '../../shared/header/header';
+import { LogoutDialog } from '../../shared/logout-dialog/logout-dialog';
 
 @Component({
   selector: 'app-saaluebersicht',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, Header, LogoutDialog],
   templateUrl: './saaluebersicht.html',
   styleUrl: './saaluebersicht.css',
 })

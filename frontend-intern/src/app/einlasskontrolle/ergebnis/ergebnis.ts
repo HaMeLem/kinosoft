@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ErgebnisZustand } from '../services/ergebnis-zustand';
+import { Header } from '../../shared/header/header';
+import { LogoutDialog } from '../../shared/logout-dialog/logout-dialog';
 
 export type EinlassErgebnis =
   | {
@@ -18,13 +20,14 @@ export type EinlassErgebnis =
 
 @Component({
   selector: 'app-ergebnis',
-  imports: [],
+  imports: [Header, LogoutDialog],
   templateUrl: './ergebnis.html',
   styleUrl: './ergebnis.css',
 })
 export class Ergebnis {
   readonly angezeigtesErgebnis = inject(ErgebnisZustand).ergebnis;
 
+  readonly menueOffen = signal(false);
   readonly abmeldungOffen = signal(false);
 
   abmeldungAnzeigen(): void {
