@@ -1,6 +1,11 @@
 <main class="ergebnis-page">
 
-  <app-header (abmelden)="abmeldungAnzeigen()"></app-header>
+  <app-header
+    [menueAnzeigen]="true"
+    [menueOffen]="menueOffen()"
+    (menueOeffnen)="menueOffen.set(!menueOffen())"
+    (abmelden)="abmeldungAnzeigen()"
+  ></app-header>
 
   @if (angezeigtesErgebnis(); as daten) {
     @if (daten.typ === 'erfolg') {

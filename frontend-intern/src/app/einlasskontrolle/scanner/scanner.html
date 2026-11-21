@@ -1,6 +1,11 @@
 <main class="scanner-page">
 
-  <app-header (abmelden)="abmeldungAnzeigen()"></app-header>
+  <app-header
+    [menueAnzeigen]="true"
+    [menueOffen]="menueOffen()"
+    (menueOeffnen)="menueOffen.set(!menueOffen())"
+    (abmelden)="abmeldungAnzeigen()"
+  ></app-header>
 
   <section class="scanner-content">
     <h1>QR-Code scannen</h1>

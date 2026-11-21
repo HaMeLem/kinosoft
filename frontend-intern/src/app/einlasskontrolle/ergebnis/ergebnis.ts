@@ -27,6 +27,7 @@ export type EinlassErgebnis =
 export class Ergebnis {
   readonly angezeigtesErgebnis = inject(ErgebnisZustand).ergebnis;
 
+  readonly menueOffen = signal(false);
   readonly abmeldungOffen = signal(false);
 
   abmeldungAnzeigen(): void {

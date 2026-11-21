@@ -38,6 +38,7 @@ export class Scanner implements AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
+  readonly menueOffen = signal(false);
   readonly abmeldungOffen = signal(false);
   readonly kameraLaeuft = signal(false);
   readonly kameraFehler = signal('');
