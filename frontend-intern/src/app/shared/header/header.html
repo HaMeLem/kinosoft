@@ -5,6 +5,8 @@
       type="button"
       aria-label="Menü öffnen"
       title="Menü öffnen"
+      [attr.aria-expanded]="menueOffen()"
+      aria-controls="hauptmenue"
       (click)="menueOeffnen.emit()"
     >
       ☰
@@ -15,6 +17,17 @@
     <strong>KinoSoft</strong>
     <span>Intern</span>
   </div>
+
+  @if (menueAnzeigen() && menueOffen()) {
+    <nav id="hauptmenue" class="hauptmenue" aria-label="Hauptmenü">
+      @if (!routeIstAktiv('/scanner')) {
+        <a routerLink="/scanner">Einlasskontrolle</a>
+      }
+      @if (!routeIstAktiv('/saaluebersicht')) {
+        <a routerLink="/saaluebersicht">Filmvorführungen verwalten</a>
+      }
+    </nav>
+  }
 
   <button
     class="logout-button"
