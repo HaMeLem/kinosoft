@@ -1,4 +1,4 @@
-package de.wps.ddd.kino.filmvorfuehrung.domain.filmvorstellung;
+package de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung;
 
 import org.jmolecules.ddd.annotation.ValueObject;
 
