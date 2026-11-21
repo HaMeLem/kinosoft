@@ -34,11 +34,13 @@ describe('Saaluebersicht', () => {
     expect(saele[1].textContent).toContain('Großer Saal');
   });
 
-  it('soll neun Stunden in der Zeitachse anzeigen', () => {
+  it('soll den ganzen Tag von 00 bis 24 Uhr anzeigen', () => {
     const uhrzeiten = fixture.nativeElement.querySelectorAll('.zeitachse span');
 
-    // Neun Uhrzeiten plus die Spaltenüberschrift "Saal".
-    expect(uhrzeiten.length).toBe(10);
+    // 25 Uhrzeiten plus die Spaltenüberschrift "Saal".
+    expect(uhrzeiten.length).toBe(26);
+    expect(uhrzeiten[1].textContent).toBe('00:00');
+    expect(uhrzeiten[25].textContent).toBe('24:00');
   });
 
   it('soll den Ausloggen-Dialog öffnen und schließen', () => {
@@ -53,21 +55,17 @@ describe('Saaluebersicht', () => {
     expect(fixture.nativeElement.querySelector('.logout-dialog')).toBeNull();
   });
 
-  it('soll die Zeitachse beim Stundenwechsel aktualisieren', () => {
-    // Simuliert 14:59 Uhr.
-    component.jetzt.set(new Date(2026, 10, 18, 14, 59));
+  it('soll die aktuelle Position auf der 24-Stunden-Achse aktualisieren', () => {
+    component.jetzt.set(new Date(2026, 10, 18, 14, 30));
     fixture.detectChanges();
 
-    expect(component.startStunde()).toBe(11);
-    expect(component.uhrzeiten()[0]).toBe('11:00');
-    expect(component.endUhrzeit()).toBe('20:00');
+    expect(component.uhrzeiten()[0]).toBe('00:00');
+    expect(component.endUhrzeit()).toBe('24:00');
+    expect(component.jetztPositionPx()).toBe(2420);
 
-    // Simuliert den Stundenwechsel auf 15:00 Uhr.
     component.jetzt.set(new Date(2026, 10, 18, 15, 0));
     fixture.detectChanges();
 
-    expect(component.startStunde()).toBe(12);
-    expect(component.uhrzeiten()[0]).toBe('12:00');
-    expect(component.endUhrzeit()).toBe('21:00');
+    expect(component.jetztPositionPx()).toBe(2500);
   });
 });

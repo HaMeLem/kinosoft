@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { Saal } from '../dtos/saal';
@@ -11,7 +11,10 @@ import { SaalService } from '../services/saal';
   templateUrl: './saaluebersicht.html',
   styleUrl: './saaluebersicht.css',
 })
-export class Saaluebersicht implements OnDestroy {
+export class Saaluebersicht implements AfterViewInit, OnDestroy {
+
+  @ViewChild('zeitplan', { static: true })
+  private zeitplan?: ElementRef<HTMLElement>;
 
   readonly abmeldungOffen = signal(false);
 
@@ -34,20 +37,19 @@ export class Saaluebersicht implements OnDestroy {
   // Aktuelle Uhrzeit.
   readonly jetzt = signal(new Date());
 
-  // Passt die Startstunde automatisch an die aktuelle Uhrzeit an.
-  readonly startStunde = computed(() =>
-    (this.jetzt().getHours() - 3 + 24) % 24
-  );
+  // Der Zeitplan beginnt immer am Anfang des Tages.
+  readonly startStunde = 0;
 
-  // Anzahl der angezeigten Stunden.
-  readonly anzahlStunden = 9;
+  // 25 Uhrzeiten bilden den gesamten Bereich von 00:00 bis 24:00.
+  readonly anzahlStunden = 25;
+  readonly stundenBlockBreitePx = 160;
 
   // Aktualisiert die Zeitbeschriftungen beim Stundenwechsel.
   readonly uhrzeiten = computed(() =>
     Array.from(
       { length: this.anzahlStunden },
       (_, index) =>
-        `${String((this.startStunde() + index) % 24).padStart(2, '0')}:00`
+        `${String(index).padStart(2, '0')}:00`
     )
   );
 
@@ -55,16 +57,26 @@ export class Saaluebersicht implements OnDestroy {
   readonly jetztPositionPx = computed(() => {
     const aktuell = this.jetzt();
 
-    const stundenSeitBeginn =
-      (aktuell.getHours() - this.startStunde() + 24) % 24;
+    const stundenSeitBeginn = aktuell.getHours() + aktuell.getMinutes() / 60;
 
-    return 100 + (stundenSeitBeginn + aktuell.getMinutes() / 60) * 140;
+    return 100 + stundenSeitBeginn * this.stundenBlockBreitePx;
   });
 
   // Berechnet die Endzeit des angezeigten Zeitraums.
-  readonly endUhrzeit = computed(() =>
-    `${String((this.startStunde() + this.anzahlStunden) % 24).padStart(2, '0')}:00`
-  );
+  readonly endUhrzeit = computed(() => '24:00');
+
+  ngAfterViewInit(): void {
+    const element = this.zeitplan?.nativeElement;
+    if (!element) {
+      return;
+    }
+
+    const aktuell = this.jetzt();
+    const stundeJetzt = aktuell.getHours() + aktuell.getMinutes() / 60;
+    const startPosition = Math.max(0, stundeJetzt - 2.5) * this.stundenBlockBreitePx;
+
+    element.scrollLeft = startPosition;
+  }
 
   // Aktualisiert die aktuelle Uhrzeit alle 30 Sekunden.
   private readonly timer = setInterval(() => {

@@ -58,11 +58,11 @@
     <div class="zeitinfo">
       <span>{{ jetzt() | date:'EEEE, dd. MMMM yyyy':'':'de' }}</span>
       <strong>Aktuelle Uhrzeit: {{ jetzt() | date:'HH:mm' }} Uhr</strong>
-      <span>Zeitraum: {{ uhrzeiten()[0] }}–{{ endUhrzeit() }} Uhr</span>
     </div>
   </div>
 
   <section
+    #zeitplan
     class="zeitplan"
     aria-label="Zeitplan der Kinosäle"
     [style.--anzahl-stunden]="anzahlStunden"

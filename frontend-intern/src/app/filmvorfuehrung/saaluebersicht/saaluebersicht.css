@@ -13,8 +13,10 @@
 
 /* Gemeinsamer Zeitplan für alle Kinosäle */
 .zeitplan {
-  overflow-x: auto;
-  max-width: 85rem;
+  overflow: auto;
+  width: calc(100% - 64px);
+  max-height: 70vh;
+  box-sizing: border-box;
   background-color: white;
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
@@ -23,7 +25,7 @@
 .zeitachse,
 .saalzeile {
   display: grid;
-  grid-template-columns: 100px repeat(var(--anzahl-stunden, 6), 140px);
+  grid-template-columns: 100px repeat(var(--anzahl-stunden, 25), 160px);
   width: max-content;
   min-width: 100%;
 }
@@ -34,7 +36,8 @@
 }
 
 .zeitachse span {
-  padding: 1.5rem 0 0.25rem;
+  padding: 1.5rem 0px 0.25rem;
+  text-align: left;
   font-weight: 600;
   color: #475569;
 }
@@ -61,6 +64,7 @@
 .zeitachse span:first-child {
   color: #334155;
   background-color: #f1f5f9;
+  text-align: left;
 }
 
 .saalzeile h2 {
@@ -71,13 +75,13 @@
 /* Freier Zeitbereich für die späteren Filmkacheln. */
 .zeitbereich {
   grid-column: 2 / -1;
-  min-height: 9.375rem;
+  min-height: clamp(12rem, 20vh, 15rem);
   background-image: repeating-linear-gradient(
     to right,
     transparent 0,
-    transparent 139px,
-    #e2e8f0 139px,
-    #e2e8f0 140px
+    transparent 159px,
+    #e2e8f0 159px,
+    #e2e8f0 160px
   );
 }
 
@@ -366,6 +370,7 @@
   }
 
   .saaluebersicht > .zeitplan {
+    width: calc(100% - 1rem);
     margin: 0 0.5rem 1.5rem;
   }
 }
