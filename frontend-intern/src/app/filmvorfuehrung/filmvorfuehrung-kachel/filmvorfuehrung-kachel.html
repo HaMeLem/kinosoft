@@ -1,1 +1,7 @@
-<p>filmvorfuehrung-kachel works!</p>
+@if (filmvorfuehrung) {
+  <strong class="kachel-titel">{{ filmvorfuehrung.filmtitel }}</strong>
+  <span class="kachel-zeit">
+    {{ filmvorfuehrung.geplanterBeginn | date:'HH:mm' }}–{{ filmvorfuehrung.geplantesEnde | date:'HH:mm' }} Uhr
+  </span>
+  <span class="kachel-status">{{ statusAnzeige }}</span>
+}
