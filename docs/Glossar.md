@@ -11,6 +11,24 @@ Die Begriffsdefinitionen können sich je Subdomäne unterscheiden.
 | **Saal**         | Ein Vorführraum im Kino, in dem Filme gezeigt werden.                                   |
 | **Vorstellung**  | Eine konkrete Aufführung eines Films zu einer bestimmten Zeit in einem bestimmten Saal. |
 
+## Filmvorführung
+
+| Begriff                  | Definition                                                                                    |
+|--------------------------|-----------------------------------------------------------------------------------------------|
+| **Filmlaufzeit**         | Dauer des Films während der Filmvorführung in Sekunden.                                       |
+| **Filmtitel**            | Titel des Films.                                                                              |
+| **Filmvorführung**       | Vorführung eines Films mit Werbung zu einer bestimmten Zeit in einem bestimmten Saal.         |
+| **GeplanterBeginn**      | Datum und Uhrzeit, zu denen der Beginn einer Filmvorführung geplant ist.                      |
+| **GeplantesEnde**        | Datum und Uhrzeit, zu denen das Ende einer Filmvorführung geplant ist.                        |
+| **Phase**                | Phase, in der sich eine Filmvorführung befindet: *Werbung* oder *Film*.                       |
+| **Saal**                 | Saal, in dem die Filmvorführung stattfindet: *Kleiner\_Saal* oder *Großer\_Saal*.             |
+| **Status**               | Status der Filmvorführung: *Geplant*, *Unterbrochen*, *Laufend* oder *Beendet*.               |
+| **TatsächlicherBeginn**  | Datum und Uhrzeit, zu denen die Filmvorführung tatsächlich begonnen hat.                      |
+| **Unterbrechung**        | Unterbrechung einer Filmvorführung mit einem bestimmten Beginn und Ende.                      |
+| **Unterbrechungsbeginn** | Datum und Uhrzeit, zu denen eine Unterbrechung beginnt.                                       |
+| **Unterbrechungsende**   | Datum und Uhrzeit, zu denen eine Unterbrechung endet.                                         |
+| **Werbelaufzeit**        | Dauer der Werbung während der Filmvorführung in Sekunden.                                     |
+
 ## Kartenverkauf
 
 | Begriff                    | Definition                                                                                                                                    |
