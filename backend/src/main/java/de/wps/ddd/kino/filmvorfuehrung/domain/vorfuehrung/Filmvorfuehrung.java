@@ -23,7 +23,7 @@ public class Filmvorfuehrung {
     private Phase phase;
     private Saal saal;
     private Status status;
-    private final Werbelaufzeit werbelaufzeit = new Werbelaufzeit(900); // 900 = 15 Minuten in Sekunden
+    private final Werbelaufzeit werbelaufzeit = new Werbelaufzeit(15); // Die Werbung dauert immmer 15 Minuten
     private final FilmId film;
     private List<Unterbrechung> unterbrechungen;
     private LocalDateTime jetzt;
@@ -66,32 +66,32 @@ public class Filmvorfuehrung {
             this.unterbrechungen = unterbrechungen;
     } 
 
-    /* Dauer in Sekunden, sie die Filmvorführung während der Werbung insgesamt unterbrochen war.
+    /* Dauer in Minuten, die die Filmvorführung während der Werbung insgesamt unterbrochen war.
      * Es ist nur die Zeit während der Werbung relevant, weil sich nur dann Unterbrechungszeiten auf die
      * Vorführungsphase (Werbung oder Film) auswirken. */
     private long unterbrechungszeitWaehrendWerbung(){
-        long alleUnterbrechungssekundenSummiert = 0;
+        long alleUnterbrechungsminutenSummiert = 0;
         long dieseUnterbrechungslaufzeit;
         // Falls es Unterbrechungen gibt
         if(!(unterbrechungen.isEmpty())){
             for(Unterbrechung unterbrechung : unterbrechungen){
                 LocalDateTime unterbrechungsbeginn = unterbrechung.getUnterbrechungsbeginn().zeitpunkt();
                 LocalDateTime unterbrechungsende = unterbrechung.getUnterbrechungsende().zeitpunkt();
-                LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusSeconds(alleUnterbrechungssekundenSummiert);
+                LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusMinutes(alleUnterbrechungsminutenSummiert);
                 // Prüft, ob die Unterbrechung während der Werbung ist
                 if(unterbrechungsbeginn.isBefore(werbeende)){
-                    dieseUnterbrechungslaufzeit = unterbrechungsbeginn.until(unterbrechungsende, ChronoUnit.SECONDS);
-                    alleUnterbrechungssekundenSummiert = alleUnterbrechungssekundenSummiert + dieseUnterbrechungslaufzeit;
+                    dieseUnterbrechungslaufzeit = unterbrechungsbeginn.until(unterbrechungsende, ChronoUnit.MINUTES);
+                    alleUnterbrechungsminutenSummiert = alleUnterbrechungsminutenSummiert + dieseUnterbrechungslaufzeit;
                 }
             }
         }
-        return alleUnterbrechungssekundenSummiert;
+        return alleUnterbrechungsminutenSummiert;
     }
 
     // Gibt die Phase (Werbung oder Film) zurück, in der sich die Filmvorführung befindet
     private Phase istInPhase(){
         this.jetzt = LocalDateTime.now();
-        LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusSeconds(werbelaufzeit.sekunden()+unterbrechungszeitWaehrendWerbung());
+        LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusMinutes(werbelaufzeit.minuten()+unterbrechungszeitWaehrendWerbung());
         if(jetzt.isBefore(werbeende)) return Phase.WERBUNG;
         else return Phase.FILM;
     }
