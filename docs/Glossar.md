@@ -15,7 +15,7 @@ Die Begriffsdefinitionen können sich je Subdomäne unterscheiden.
 
 | Begriff                  | Definition                                                                                    |
 |--------------------------|-----------------------------------------------------------------------------------------------|
-| **Filmlaufzeit**         | Dauer des Films während der Filmvorführung in Sekunden.                                       |
+| **Filmlaufzeit**         | Dauer des Films während der Filmvorführung in Minuten.                                        |
 | **Filmtitel**            | Titel des Films.                                                                              |
 | **Filmvorführung**       | Vorführung eines Films mit Werbung zu einer bestimmten Zeit in einem bestimmten Saal.         |
 | **GeplanterBeginn**      | Datum und Uhrzeit, zu denen der Beginn einer Filmvorführung geplant ist.                      |
@@ -27,7 +27,7 @@ Die Begriffsdefinitionen können sich je Subdomäne unterscheiden.
 | **Unterbrechung**        | Unterbrechung einer Filmvorführung mit einem bestimmten Beginn und Ende.                      |
 | **Unterbrechungsbeginn** | Datum und Uhrzeit, zu denen eine Unterbrechung beginnt.                                       |
 | **Unterbrechungsende**   | Datum und Uhrzeit, zu denen eine Unterbrechung endet.                                         |
-| **Werbelaufzeit**        | Dauer der Werbung während der Filmvorführung in Sekunden.                                     |
+| **Werbelaufzeit**        | Dauer der Werbung während der Filmvorführung in Minuten.                                      |
 
 ## Kartenverkauf
 
