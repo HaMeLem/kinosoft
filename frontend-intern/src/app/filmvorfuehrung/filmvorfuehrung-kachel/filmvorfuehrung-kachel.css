@@ -16,6 +16,11 @@
   color: #20242a;
 }
 
+/* Gelbe Kachel bei bevorstehendem Start */
+:host(.baldiger-start) {
+  background-color: #FFF3CD;
+}
+
 .kachel-titel {
   margin: 0;
   font-size: 1.25rem;
