@@ -12,6 +12,7 @@ import { FilmvorfuehrungDto } from '../dtos/filmvorfuehrungDto';
     '[style.left.px]': 'positionPx',
     '[style.width.px]': 'breitePx',
     '[class.baldiger-start]': 'baldigerStart',
+    '[class.ueberfaellig]': 'ueberfaellig',
   },
 })
 export class FilmvorfuehrungKachel {
@@ -59,10 +60,9 @@ export class FilmvorfuehrungKachel {
    * als Countdown im Format MM:SS.
    */
   get countdown(): string {
-    const sekundenGesamt = Math.max(
-      0,
-      Math.ceil(this.verbleibendeZeitMs / 1000)
-    );
+    const differenzMs = this.verbleibendeZeitMs;
+
+    const sekundenGesamt = differenzMs > 0 ? Math.ceil(differenzMs/1000) : Math.floor(Math.abs(differenzMs) / 1000);
 
     const minuten = Math.floor(sekundenGesamt / 60);
     const sekunden = sekundenGesamt % 60;
@@ -78,6 +78,15 @@ export class FilmvorfuehrungKachel {
     return this.filmvorfuehrung?.status === 'GEPLANT'
       && this.verbleibendeZeitMs > 0
       && this.verbleibendeZeitMs <= 15 * 60_000;
+  }
+
+  /**
+   * Prüft, ob geplanter Beginn überschritten wurde,
+   * aber Filmvorführung noch Status "geplant" hat.
+   */
+  get ueberfaellig(): boolean {
+    return this.filmvorfuehrung?.status === 'GEPLANT'
+      && this.verbleibendeZeitMs <= 0;
   }
 
 

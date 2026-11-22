@@ -6,6 +6,8 @@
   <span class="kachel-status">
     @if (baldigerStart) {
       Beginnt in {{ countdown }}
+    } @else if (ueberfaellig) {
+      Überfällig seit {{ countdown }}
     } @else {
       {{ statusAnzeige }}
     }
