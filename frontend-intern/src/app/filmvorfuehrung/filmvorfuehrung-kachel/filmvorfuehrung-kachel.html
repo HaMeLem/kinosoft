@@ -3,5 +3,11 @@
   <span class="kachel-zeit">
     {{ filmvorfuehrung.geplanterBeginn | date:'HH:mm' }}–{{ filmvorfuehrung.geplantesEnde | date:'HH:mm' }} Uhr
   </span>
-  <span class="kachel-status">{{ statusAnzeige }}</span>
+  <span class="kachel-status">
+    @if (baldigerStart) {
+      Beginnt in {{ countdown }}
+    } @else {
+      {{ statusAnzeige }}
+    }
+  </span>
 }

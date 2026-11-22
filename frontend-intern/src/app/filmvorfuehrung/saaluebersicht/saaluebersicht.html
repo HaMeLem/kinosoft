@@ -41,6 +41,7 @@
             @for (vorfuehrung of vorfuehrungenFuerSaal(saal.name); track vorfuehrung.filmvorfuehrungId) {
               <app-filmvorfuehrung-kachel
                 [filmvorfuehrung]="vorfuehrung"
+                [aktuelleZeit]="jetzt()"
               ></app-filmvorfuehrung-kachel>
             }
           </div>

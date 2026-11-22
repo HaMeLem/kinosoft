@@ -91,7 +91,7 @@ export class Saaluebersicht implements AfterViewInit, OnDestroy {
   // Aktualisiert die aktuelle Uhrzeit alle 30 Sekunden.
   private readonly timer = setInterval(() => {
     this.jetzt.set(new Date());
-  }, 30000);
+  }, 1000);
 
   ngOnDestroy(): void {
     clearInterval(this.timer);

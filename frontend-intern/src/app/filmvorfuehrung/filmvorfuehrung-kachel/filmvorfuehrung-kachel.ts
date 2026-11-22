@@ -11,12 +11,15 @@ import { FilmvorfuehrungDto } from '../dtos/filmvorfuehrungDto';
     class: 'filmvorfuehrung-kachel',
     '[style.left.px]': 'positionPx',
     '[style.width.px]': 'breitePx',
+    '[class.baldiger-start]': 'baldigerStart',
   },
 })
 export class FilmvorfuehrungKachel {
   readonly stundenBlockBreitePx = 160;
 
   @Input() filmvorfuehrung?: FilmvorfuehrungDto;
+
+  @Input() aktuelleZeit?: Date;
 
   // Außerdem unterstützen, falls die Kachel an anderen Stellen
   // einfach mit dem allgemeineren Namen "vorfuehrung" verwendet wird.
@@ -35,6 +38,48 @@ export class FilmvorfuehrungKachel {
 
     return statusLabels[this.filmvorfuehrung.status] ?? this.filmvorfuehrung.status;
   }
+
+  /**
+   * Berechnet verbleibende Zeit bis zu Filmvorführung Beginn in ms.
+   * Negativer Wert bedeutet, Beginn ist überfällig.
+   */
+  get verbleibendeZeitMs(): number {
+    // falls Filmvorführung undefined ist
+    if (!this.filmvorfuehrung || !this.aktuelleZeit) {
+      return 0;
+    }
+
+    // Uhrzeit-Differenz berechnen
+    const beginn = new Date(this.filmvorfuehrung.geplanterBeginn).getTime();
+    return beginn - this.aktuelleZeit.getTime();
+  }
+
+  /**
+   * Formatiert die verbleibende Zeit bis zum geplanten Beginn
+   * als Countdown im Format MM:SS.
+   */
+  get countdown(): string {
+    const sekundenGesamt = Math.max(
+      0,
+      Math.ceil(this.verbleibendeZeitMs / 1000)
+    );
+
+    const minuten = Math.floor(sekundenGesamt / 60);
+    const sekunden = sekundenGesamt % 60;
+
+    return `${String(minuten).padStart(2, '0')}:${String(sekunden).padStart(2, '0')}`;
+  }
+
+  /**
+   * Prüft, ob Filmvorführung innerhalb der nächsten
+   * 15 Minuten beginnt und noch geplant ist.
+   */
+  get baldigerStart(): boolean {
+    return this.filmvorfuehrung?.status === 'GEPLANT'
+      && this.verbleibendeZeitMs > 0
+      && this.verbleibendeZeitMs <= 15 * 60_000;
+  }
+
 
   get positionPx(): number {
     if (!this.filmvorfuehrung) {
