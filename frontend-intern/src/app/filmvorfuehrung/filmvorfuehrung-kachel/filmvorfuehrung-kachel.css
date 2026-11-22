@@ -16,9 +16,18 @@
   color: #20242a;
 }
 
-/* Gelbe Kachel bei bevorstehendem Start */
+/* Bevorstehender Start */
 :host(.baldiger-start) {
-  background-color: #FFF3CD;
+  background-color: #FFF2C6;
+  border-color: #EFDA91;
+  color: #934B0B;
+}
+
+/* Überfällig */
+:host(.ueberfaellig) {
+  background-color: #FDE5E5;
+  border-color: #F2BFBF;
+  color: #A52424;
 }
 
 .kachel-titel {
@@ -33,12 +42,12 @@
 .kachel-zeit {
   font-size: 0.9375rem;
   line-height: 1.2;
-  color: #50555d;
+  color: inherit;
 }
 
 .kachel-status {
   margin-top: 0.125rem;
   font-size: 1rem;
   line-height: 1.2;
-  color: #50555d;
+  color: inherit;
 }

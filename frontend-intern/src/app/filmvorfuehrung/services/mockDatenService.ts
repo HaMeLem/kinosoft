@@ -35,32 +35,32 @@ export class MockDatenService {
       {
         filmvorfuehrungId: 1,
         filmtitel: 'Film A',
-        geplanterBeginn: zeitIn(10).toISOString(),
-        geplantesEnde: zeitIn(130).toISOString(),
+        geplanterBeginn: zeitIn(-10).toISOString(),
+        geplantesEnde: zeitIn(110).toISOString(),
         saal: 'Kleiner Saal',
         status: 'GEPLANT'
       },
       {
         filmvorfuehrungId: 2,
         filmtitel: 'Film B',
-        geplanterBeginn: zeitIn(190).toISOString(),
-        geplantesEnde: zeitIn(310).toISOString(),
+        geplanterBeginn: zeitIn(170).toISOString(),
+        geplantesEnde: zeitIn(290).toISOString(),
         saal: 'Kleiner Saal',
         status: 'GEPLANT'
       },
       {
         filmvorfuehrungId: 3,
         filmtitel: 'Film C',
-        geplanterBeginn: zeitIn(30).toISOString(),
-        geplantesEnde: zeitIn(150).toISOString(),
+        geplanterBeginn: zeitIn(1).toISOString(),
+        geplantesEnde: zeitIn(121).toISOString(),
         saal: 'Großer Saal',
         status: 'GEPLANT'
       },
       {
         filmvorfuehrungId: 4,
         filmtitel: 'Film D',
-        geplanterBeginn: zeitIn(210).toISOString(),
-        geplantesEnde: zeitIn(330).toISOString(),
+        geplanterBeginn: zeitIn(181).toISOString(),
+        geplantesEnde: zeitIn(301).toISOString(),
         saal: 'Großer Saal',
         status: 'GEPLANT'
       }
