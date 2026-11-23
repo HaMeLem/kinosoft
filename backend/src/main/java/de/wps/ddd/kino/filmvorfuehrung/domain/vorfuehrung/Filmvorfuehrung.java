@@ -92,7 +92,8 @@ public class Filmvorfuehrung {
     private Phase istInPhase(){
         this.jetzt = LocalDateTime.now();
         LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusMinutes(werbelaufzeit.minuten()+unterbrechungszeitWaehrendWerbung());
-        if(jetzt.isBefore(werbeende)) return Phase.WERBUNG;
+        if(jetzt.isBefore(werbeende) && jetzt.isAfter(this.tatsaechlicherBeginn.zeitpunkt())) return Phase.WERBUNG;
+        if(istGeplant() || istBeendet()) return null;
         else return Phase.FILM;
     }
 
