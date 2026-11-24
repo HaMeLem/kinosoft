@@ -42,9 +42,9 @@ jobs:
           # Lösung für #US1
           issue_key="$(
             printf '%s' "${PR_BODY:-}" \
-              | grep -oiE 'Lösung[[:space:]]+für[[:space:]]*:?[[:space:]]*#?[A-Za-z]+[0-9]+' \
+              | grep -oiE 'Lösung[[:space:]]+für[[:space:]]*:?[[:space:]]*#?[A-Za-z]+[0-9]+(\.[0-9]+)*' \
               | head -n 1 \
-              | grep -oEi '[A-Za-z]+[0-9]+$' \
+              | grep -oEi '[A-Za-z]+[0-9]+(\.[0-9]+)*$' \
               | tr '[:lower:]' '[:upper:]' \
               || true
           )"
