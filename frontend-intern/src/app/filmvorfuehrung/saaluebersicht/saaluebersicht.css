@@ -74,6 +74,7 @@
 
 /* Freier Zeitbereich für die späteren Filmkacheln. */
 .zeitbereich {
+  position: relative;
   grid-column: 2 / -1;
   min-height: clamp(12rem, 20vh, 15rem);
   background-image: repeating-linear-gradient(

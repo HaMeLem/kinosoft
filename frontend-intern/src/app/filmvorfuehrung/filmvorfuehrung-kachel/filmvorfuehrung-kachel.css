@@ -1,0 +1,53 @@
+:host {
+  position: absolute;
+  top: 12.5%;
+  min-width: 80px;
+  box-sizing: border-box;
+  height: 75%;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.625rem;
+  overflow: hidden;
+  border: 1px solid #c5d2e5;
+  border-radius: 0.25rem;
+  background: #f7f8fb;
+  color: #20242a;
+}
+
+/* Bevorstehender Start */
+:host(.baldiger-start) {
+  background-color: #FFF2C6;
+  border-color: #EFDA91;
+  color: #934B0B;
+}
+
+/* Überfällig */
+:host(.ueberfaellig) {
+  background-color: #FDE5E5;
+  border-color: #F2BFBF;
+  color: #A52424;
+}
+
+.kachel-titel {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kachel-zeit {
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.kachel-status {
+  margin-top: 0.125rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: inherit;
+}

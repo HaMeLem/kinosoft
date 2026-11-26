@@ -1,0 +1,15 @@
+@if (filmvorfuehrung) {
+  <strong class="kachel-titel">{{ filmvorfuehrung.filmtitel }}</strong>
+  <span class="kachel-zeit">
+    {{ filmvorfuehrung.geplanterBeginn | date:'HH:mm' }}–{{ filmvorfuehrung.geplantesEnde | date:'HH:mm' }} Uhr
+  </span>
+  <span class="kachel-status">
+    @if (baldigerStart) {
+      Beginnt in {{ countdown }}
+    } @else if (ueberfaellig) {
+      Überfällig seit {{ countdown }}
+    } @else {
+      {{ statusAnzeige }}
+    }
+  </span>
+}
