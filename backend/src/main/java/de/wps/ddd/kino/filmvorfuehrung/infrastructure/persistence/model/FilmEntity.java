@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Entity(name = "Filmvorfuehrung_FilmEntity")
-@Table(name = "film", schema = "filmvorfuehrung")
+@Table(name = "filme", schema = "filmvorfuehrung")
 @Getter
 public class FilmEntity {
 

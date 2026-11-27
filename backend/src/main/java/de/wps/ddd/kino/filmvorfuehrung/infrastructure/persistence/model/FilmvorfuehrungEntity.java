@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "filmvorfuehrung", schema = "filmvorfuehrung")
+@Table(name = "filmvorfuehrungen", schema = "filmvorfuehrung")
 @Getter
 public class FilmvorfuehrungEntity {
     /**

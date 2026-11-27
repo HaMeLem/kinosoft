@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "unterbrechung", schema = "filmvorfuehrung")
+@Table(name = "unterbrechungen", schema = "filmvorfuehrung")
 @Getter
 public class UnterbrechungEntity {
 
