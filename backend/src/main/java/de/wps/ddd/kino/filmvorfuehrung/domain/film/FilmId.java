@@ -5,4 +5,9 @@ import org.jmolecules.ddd.annotation.ValueObject;
 
 @ValueObject
 public record FilmId(UUID uuid) {
+    //Verwendung für die Filmobjekte die über das WochenplanDTO ohne ID kommen
+    public static FilmId neu()
+    {
+        return new FilmId(UUID.randomUUID());
+    }
 }

@@ -19,4 +19,9 @@ public class Film {
             this.filmlaufzeit = filmlaufzeit;
             this.filmtitel = filmtitel;
     }
+// Verwendung für die Filmobjekte die über das WochenplanDTO noch ohne ID kommen
+    public Film(Filmlaufzeit filmlaufzeit, Filmtitel filmtitel)
+    {
+        this(FilmId.neu(), filmlaufzeit, filmtitel);
+    }
 }

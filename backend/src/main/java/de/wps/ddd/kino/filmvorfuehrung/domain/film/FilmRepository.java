@@ -1,8 +1,8 @@
-package de.wps.ddd.kino.filmvorfuehrung.domain;
+package de.wps.ddd.kino.filmvorfuehrung.domain.film;
 
 
 
-import de.wps.ddd.kino.kartenverkauf.application.domain.vorstellungen.Film;
+
 
 import java.util.List;
 
