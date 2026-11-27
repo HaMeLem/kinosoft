@@ -1,5 +1,6 @@
 package de.wps.ddd.kino.filmvorfuehrung.infrastructure.persistence.model;
 
+import de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.jmolecules.ddd.annotation.Identity;
@@ -23,7 +24,7 @@ public class FilmvorfuehrungEntity {
     private UUID vorfuehrungId;
 
     // geplanter Beginn
-    @Column(name = "geplanter_beginn")
+    @Column(name = "geplanter_beginn", nullable = false)
     private LocalDateTime geplanterBeginn;
 
     // tatsaechlicher Beginn
@@ -38,13 +39,13 @@ public class FilmvorfuehrungEntity {
     @Column(name = "status", nullable = false)
     private Status status;
 
-    // Wollen wir die Werbung in der Datenbank speichern oder nicht,
-    // eigentlich gibt es nichts zu speichern und wir könnten es löschen, bin mir nicht sicher was wir machen wollen?
+    //
     @Column(name = "werbelaufzeit_minuten", nullable = false)
     private long werbelaufzeit;
 
-    @Column(name = "film_id", nullable = false, updatable = false)
-    private UUID filmId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "film_id", nullable = false, updatable = false)
+    private FilmEntity film;
 
     // Eine Filmvorführung kann mehrere Unterbrechungen besitzen.
     // CascadeType.ALL überträgt alle Entity-Operationen (z. B. Persistieren und Löschen)
@@ -53,19 +54,15 @@ public class FilmvorfuehrungEntity {
     // gelöscht werden, wenn sie aus der Liste entfernt werden.
     // Die Spalte vorfuehrung_id in der Tabelle der Unterbrechungen
     // stellt die Zuordnung zur jeweiligen Filmvorführung her.
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "vorfuehrung_id", nullable = false)
+    @OneToMany(
+            mappedBy = "filmvorfuehrung",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<UnterbrechungEntity> unterbrechungen = new ArrayList<>();
 
     // Nur für JPA
     protected FilmvorfuehrungEntity() {
     }
-
-    /* Warum sind die nicht mit aufgelistet?
-    @Identity
-    private Phase phase;
-    private LocalDateTime jetzt;
-    */
 
     public FilmvorfuehrungEntity(
             UUID vorfuehrungId,
@@ -74,7 +71,7 @@ public class FilmvorfuehrungEntity {
             int saal,
             Status status,
             long werbelaufzeit,
-            UUID filmId,
+            FilmEntity film,
             List<UnterbrechungEntity> unterbrechungen) {
         this.vorfuehrungId = vorfuehrungId;
         this.geplanterBeginn = geplanterBeginn;
@@ -82,7 +79,15 @@ public class FilmvorfuehrungEntity {
         this.saal = saal;
         this.status = status;
         this.werbelaufzeit = werbelaufzeit;
-        this.filmId = filmId;
-        this.unterbrechungen = unterbrechungen;
+        this.film = film;
+        aktualisiereUnterbrechungen(unterbrechungen);
+    }
+
+    public void aktualisiereUnterbrechungen(List<UnterbrechungEntity> unterbrechungen) {
+        this.unterbrechungen.clear();
+        for (UnterbrechungEntity unterbrechung : unterbrechungen) {
+            unterbrechung.setFilmvorfuehrung(this);
+            this.unterbrechungen.add(unterbrechung);
+        }
     }
 }

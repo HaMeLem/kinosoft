@@ -1,8 +1,5 @@
 package de.wps.ddd.kino.filmvorfuehrung.infrastructure.persistence.model;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -27,6 +24,9 @@ public class UnterbrechungEntity {
     @Column(name = "unterbrechungs_ende", nullable = true)
     private LocalDateTime unterbrechungsende;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "vorfuehrung_id", nullable = false)
+    private FilmvorfuehrungEntity filmvorfuehrung;
 
     // Nur für JPA
     protected UnterbrechungEntity() {
@@ -41,5 +41,9 @@ public class UnterbrechungEntity {
         this.unterbrechungId = unterbrechungId;
         this.unterbrechungsbeginn = unterbrechungsbeginn;
         this.unterbrechungsende = unterbrechungsende;
+    }
+
+    void setFilmvorfuehrung(FilmvorfuehrungEntity filmvorfuehrung) {
+        this.filmvorfuehrung = filmvorfuehrung;
     }
 }
