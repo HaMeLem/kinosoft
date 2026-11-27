@@ -44,6 +44,7 @@ describe('Einlass', () => {
     });
 
     request.flush({
+      typ: 'ERLAUBT',
       saal: 2,
       reihe: 5,
       sitzplatz: 8
@@ -54,6 +55,7 @@ describe('Einlass', () => {
     const kinokartenId = '550e8400-e29b-41d4-a716-446655440000';
 
     const erwarteteAntwort = {
+      typ: 'ERLAUBT',
       saal: 2,
       reihe: 5,
       sitzplatz: 8

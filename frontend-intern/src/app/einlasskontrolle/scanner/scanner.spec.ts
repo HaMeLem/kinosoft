@@ -143,6 +143,7 @@ describe('Scanner', () => {
     expect(kameraStoppenSpy).toHaveBeenCalled();
 
     anfrage.flush({
+      typ: 'ERLAUBT',
       saal: 2,
       reihe: 5,
       sitzplatz: 8
@@ -182,6 +183,7 @@ describe('Scanner', () => {
     expect(kameraStoppenSpy).toHaveBeenCalled();
 
     anfrage.flush({
+      typ: 'ERLAUBT',
       saal: 2,
       reihe: 5,
       sitzplatz: 8
@@ -197,25 +199,19 @@ describe('Scanner', () => {
     expect(navigationSpy).toHaveBeenCalledWith(['/ergebnis']);
   });
 
-  it('soll bei einer Backend-Ablehnung ein Fehlerergebnis speichern', async () => {
+  it('soll eine Backend-Ablehnung mit HTTP 200 als Fehlerergebnis speichern', async () => {
     await component.kameraStarten();
 
     qrCodeErkennen(testId);
 
     const anfrage = httpTesting.expectOne(apiUrl);
-    const consoleErrorSpy = spyOn(console, 'error');
 
-    anfrage.flush(
-      {
-        grund: 'ZU_SPAET',
-        meldung: 'Einlass nicht erlaubt: zu spät'
-      },
-      { status: 409, statusText: 'Conflict' }
-    );
+    anfrage.flush({
+      typ: 'ABGELEHNT',
+      grund: 'ZU_SPAET',
+      meldung: 'Einlass nicht erlaubt: zu spät'
+    });
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Einlass abgelehnt: ZU_SPAET - Einlass nicht erlaubt: zu spät'
-    );
     expect(ergebnisZustand.ergebnis()).toEqual({
       typ: 'fehler',
       titel: 'Einlass nicht möglich',
@@ -261,6 +257,7 @@ describe('Scanner', () => {
     expect(anfrage.request.method).toBe('POST');
 
     anfrage.flush({
+      typ: 'ERLAUBT',
       saal: 2,
       reihe: 5,
       sitzplatz: 8

@@ -18,11 +18,6 @@ import { ErgebnisZustand } from '../services/ergebnis-zustand';
 import { Header } from '../../shared/header/header';
 import { LogoutDialog } from '../../shared/logout-dialog/logout-dialog';
 
-interface EinlassAblehnung {
-  grund: string;
-  meldung: string;
-}
-
 @Component({
   selector: 'app-scanner',
   imports: [Header, LogoutDialog],
@@ -135,6 +130,19 @@ export class Scanner implements AfterViewInit, OnDestroy {
         next: (daten) => {
           this.pruefungLaeuft.set(false);
 
+          if (daten.typ === 'ABGELEHNT') {
+            this.ergebnisZustand.setzeErgebnis({
+              typ: 'fehler',
+              titel: 'Einlass nicht möglich',
+              beschreibung: this.ablehnungsbeschreibung(daten.grund),
+              grund: this.ablehnungsgrundAnzeigen(daten.grund),
+              meldung: daten.meldung
+            });
+
+            void this.router.navigate(['/ergebnis']);
+            return;
+          }
+
           this.ergebnisZustand.setzeErgebnis({
             typ: 'erfolg',
             saal: daten.saal,
@@ -146,17 +154,6 @@ export class Scanner implements AfterViewInit, OnDestroy {
         },
         error: (fehler: HttpErrorResponse) => {
           this.pruefungLaeuft.set(false);
-          const ablehnung =
-            fehler.status === 409 && this.istEinlassAblehnung(fehler.error)
-              ? fehler.error
-              : undefined;
-
-          if (ablehnung) {
-            console.error(
-              `Einlass abgelehnt: ${ablehnung.grund} - ${ablehnung.meldung}`
-            );
-          }
-
           const technischerFehler =
             fehler.status === 0 || fehler.status >= 500;
 
@@ -167,32 +164,12 @@ export class Scanner implements AfterViewInit, OnDestroy {
               : 'Einlass nicht möglich',
             beschreibung: technischerFehler
               ? 'Die Einlassprüfung konnte nicht abgeschlossen werden. Bitte versuche es erneut.'
-              : ablehnung
-                ? this.ablehnungsbeschreibung(ablehnung.grund)
-                : 'Die Kinokarte wurde nicht akzeptiert.',
-            ...(ablehnung
-              ? {
-                  grund: this.ablehnungsgrundAnzeigen(ablehnung.grund),
-                  meldung: ablehnung.meldung
-                }
-              : {})
+              : 'Die Kinokarte wurde nicht akzeptiert.'
           });
 
           void this.router.navigate(['/ergebnis']);
         }
       });
-  }
-
-  private istEinlassAblehnung(
-    fehler: unknown
-  ): fehler is EinlassAblehnung {
-    if (typeof fehler !== 'object' || fehler === null) {
-      return false;
-    }
-
-    const ablehnung = fehler as Record<string, unknown>;
-    return typeof ablehnung['grund'] === 'string'
-      && typeof ablehnung['meldung'] === 'string';
   }
 
   private ablehnungsgrundAnzeigen(grund: string): string {

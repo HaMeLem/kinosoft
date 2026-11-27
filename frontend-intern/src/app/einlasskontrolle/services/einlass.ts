@@ -2,11 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface KinokartenDTO {
-  saal: number;
-  reihe: number;
-  sitzplatz: number;
-}
+import type { EinlassAbgelehnt } from '../dtos/einlassabgelehnt';
+import type { Kinokarte } from '../dtos/kinokarte';
+
+export type EinlassAntwort = Kinokarte | EinlassAbgelehnt;
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +18,8 @@ export class Einlass {
 
   kinokarteValidierenUndEntwerten(
     kinokartenId: string
-  ): Observable<KinokartenDTO> {
-    return this.http.post<KinokartenDTO>(this.apiUrl, {
+  ): Observable<EinlassAntwort> {
+    return this.http.post<EinlassAntwort>(this.apiUrl, {
       kinokartenId,
     });
   }

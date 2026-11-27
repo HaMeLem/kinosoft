@@ -31,15 +31,15 @@ public class EinlassController {
 
         if (entscheidung instanceof Einlassentscheidung.Erlaubt erlaubt) {
             return ResponseEntity.ok(new EinlassErlaubtDTO(
+                    "ERLAUBT",
                     erlaubt.saal().wert(),
                     erlaubt.reihe().wert(),
                     erlaubt.sitzplatz().wert()));
         }
 
         if (entscheidung instanceof Einlassentscheidung.Abgelehnt abgelehnt) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body(new EinlassAbgelehntDTO(
+            return ResponseEntity.ok(new EinlassAbgelehntDTO(
+                            "ABGELEHNT",
                             abgelehnt.grund().name(),
                             abgelehnt.grund().meldung()));
         }
