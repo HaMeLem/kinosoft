@@ -43,7 +43,7 @@ public class FilmvorfuehrungEntity {
     @Column(name = "werbelaufzeit_minuten", nullable = false)
     private long werbelaufzeit;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "film_id", nullable = false, updatable = false)
     private FilmEntity film;
 

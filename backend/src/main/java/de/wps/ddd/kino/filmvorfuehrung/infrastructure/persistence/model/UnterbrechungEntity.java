@@ -24,7 +24,7 @@ public class UnterbrechungEntity {
     @Column(name = "unterbrechungs_ende", nullable = true)
     private LocalDateTime unterbrechungsende;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "vorfuehrung_id", nullable = false)
     private FilmvorfuehrungEntity filmvorfuehrung;
 
