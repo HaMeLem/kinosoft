@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Importiert die Filmvorstellungen eines Wochenplans in die Einlasskontrolle.
  * Wird vom WochenplanErstelltEventListener mit Jahr und KW des Wochenplans aufgerufen.
 */
-@Service
+@Service("einlasskontrolleImportiereWochenplanService")
 @ApplicationService
 @RequiredArgsConstructor
 public class ImportiereWochenplanService {
