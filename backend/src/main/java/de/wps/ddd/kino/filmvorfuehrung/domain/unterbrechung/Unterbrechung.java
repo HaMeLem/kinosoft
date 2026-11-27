@@ -9,23 +9,20 @@ import org.jmolecules.ddd.annotation.Identity;
 public class Unterbrechung {
     @Identity private final UnterbrechungId unterbrechungId;
     private final Unterbrechungsbeginn unterbrechungsbeginn;
-    private final Unterbrechungsende unterbrechungsende;
+    private Unterbrechungsende unterbrechungsende;
 
-    public Unterbrechung(
-        UnterbrechungId unterbrechungId,
-        Unterbrechungsbeginn unterbrechungsbeginn,
-        Unterbrechungsende unterbrechungsende) {
-            this.unterbrechungId = unterbrechungId;
-            this.unterbrechungsbeginn = unterbrechungsbeginn;
-            this.unterbrechungsende = unterbrechungsende;
-    }
-
-    // Unterbrechungsbeginn
+    // Beginnende Unterbrechung speichern
     public Unterbrechung(
         UnterbrechungId unterbrechungId,
         Unterbrechungsbeginn unterbrechungsbeginn) {
             this.unterbrechungId = unterbrechungId;
             this.unterbrechungsbeginn = unterbrechungsbeginn;
             this.unterbrechungsende = null;
+    }
+    
+    // Beendete Unterbrechung speichern
+    public void unterbrechungsendeSpeichern(
+        Unterbrechungsende unterbrechungsende) {
+            this.unterbrechungsende = unterbrechungsende;
     }
 }
