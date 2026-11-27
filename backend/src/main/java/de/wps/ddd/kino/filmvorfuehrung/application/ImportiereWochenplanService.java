@@ -8,6 +8,7 @@ import de.wps.ddd.kino.filmvorfuehrung.domain.film.Film;
 import de.wps.ddd.kino.filmvorfuehrung.domain.film.FilmId;
 import de.wps.ddd.kino.filmvorfuehrung.domain.film.Filmlaufzeit;
 import de.wps.ddd.kino.filmvorfuehrung.domain.film.Filmtitel;
+import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.Unterbrechung;
 import de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung.*;
 import de.wps.ddd.kino.wochenplanung.WochenplanDto;
 import de.wps.ddd.kino.wochenplanung.Wochenplanauskunft;
@@ -33,8 +34,7 @@ public class ImportiereWochenplanService {
         // Bei der Schnittstelle der Wochenplanung den vollständigen Wochenplan holen
         WochenplanDto wochenplanDto = wochenplanauskunft.holeWochenplan(jahr, kalenderwoche);
 
-        //1. zuerst Filme über wochenplanDto.vorstellungen() extrahieren und über das FilmRepo abspeichern
-        //mit for Schleife durchlaufen
+        // zuerst Filme über wochenplanDto.vorstellungen() extrahieren und über das FilmRepo abspeichern
         
             List <Film> filme = new ArrayList<>();
                for ( WochenplanDto.FilmDto filmDto : wochenplanDto.filme())
@@ -44,15 +44,14 @@ public class ImportiereWochenplanService {
                 }
             List<Film> gespeicherteFilme = filmRepository.fuegeFilmeHinzu(filme);
 
-            // filmtitel wir zu Schlüssel ID zum Wert
-            // Filmtitel im Film domain ist vom Typ String?
+            // Filmtitel wird zu Schlüssel, ID zum Wert
             Map<String, FilmId> filmIdsNachTitel = gespeicherteFilme.stream()
                 .collect(Collectors.toMap(film -> film.getFilmtitel().titel(), Film::getFilmId));
 
         // Alle Filmvorstellungen als eigene fachliche Objekte der Filmvorführung erstellen
-        // hier noch mit Jana abstimmen
         for (WochenplanDto.VorstellungDto vorstellung : wochenplanDto.vorstellungen())
         {
+            // passende FilmId setzen
             FilmId filmId = filmIdsNachTitel.get(vorstellung.filmTitel());
 
             if (filmId == null)
@@ -60,16 +59,15 @@ public class ImportiereWochenplanService {
                         throw new IllegalArgumentException(
                         "Kein importierter Film gefunden: " + vorstellung.filmTitel());
                     }
-
-            var filmvorfuehrung = new Filmvorfuehrung(
+            // Erstellen des Filmvorführung-Objektes -> tats. Beginn = null, leere Liste an Unterbrechungen
+            Filmvorfuehrung filmvorfuehrung = new Filmvorfuehrung(
                     new VorfuehrungId(vorstellung.id()),
                     new GeplanterBeginn(vorstellung.geplanterStart()),
-                    new GeplantesEnde(vorstellung.geplantesEnde()),
                     null,
                     mapSaal(vorstellung.saalName()),
                     Status.GEPLANT,
                     filmId,
-                    List.of() // immutable List ergibt das Sinn?? noch keine Unterbrechungen
+                    new ArrayList<>()//List.of()-> immutable List ergibt das Sinn??
                     );
 
             // Die Filmvorführung zum Speichern weitergeben.
