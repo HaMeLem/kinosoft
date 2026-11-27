@@ -1,15 +1,17 @@
 package de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung;
 
-import de.wps.ddd.kino.filmvorfuehrung.domain.film.FilmId;
-import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.Unterbrechung;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
-import lombok.Getter;
+import java.util.Map;
+
 import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.jmolecules.ddd.annotation.Entity;
 import org.jmolecules.ddd.annotation.Identity;
+
+import de.wps.ddd.kino.filmvorfuehrung.domain.film.FilmId;
+import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.Unterbrechung;
+import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.UnterbrechungId;
+import lombok.Getter;
 
 @AggregateRoot
 @Entity  
@@ -22,9 +24,8 @@ public class Filmvorfuehrung {
     private Saal saal;
     private Status status;
     private final Werbelaufzeit werbelaufzeit = new Werbelaufzeit(15); // Die Werbung dauert immmer 15 Minuten
-    private final FilmId film;
-    private List<Unterbrechung> unterbrechungen;
-    private LocalDateTime jetzt;
+    private final FilmId filmId;
+    private Map<UnterbrechungId,Unterbrechung> unterbrechungen = new HashMap<>();
 
     public Filmvorfuehrung(
         VorfuehrungId id,
@@ -32,14 +33,14 @@ public class Filmvorfuehrung {
         TatsaechlicherBeginn tatsaechlicherBeginn,
         Saal saal,
         Status status,
-        FilmId film,
-        List<Unterbrechung> unterbrechungen){
+        FilmId filmId,
+        Map<UnterbrechungId,Unterbrechung> unterbrechungen) {
             this.id = id;
             this.geplanterBeginn = geplanterBeginn;
             this.tatsaechlicherBeginn = tatsaechlicherBeginn;
             this.saal = saal;
             this.status = status;
-            this.film = film;
+            this.filmId = filmId;
             this.unterbrechungen = unterbrechungen;
     } 
     
@@ -48,14 +49,14 @@ public class Filmvorfuehrung {
         TatsaechlicherBeginn tatsaechlicherBeginn,
         Saal saal,
         Status status,
-        FilmId film,
-        List<Unterbrechung> unterbrechungen){
+        FilmId filmId,
+        Map<UnterbrechungId,Unterbrechung> unterbrechungen){
             this.id = id;
             this.geplanterBeginn = null;
             this.tatsaechlicherBeginn = tatsaechlicherBeginn;
             this.saal = saal;
             this.status = status;
-            this.film = film;
+            this.filmId = filmId;
             this.unterbrechungen = unterbrechungen;
     } 
 

@@ -9,6 +9,7 @@ import de.wps.ddd.kino.filmvorfuehrung.domain.film.FilmId;
 import de.wps.ddd.kino.filmvorfuehrung.domain.film.Filmlaufzeit;
 import de.wps.ddd.kino.filmvorfuehrung.domain.film.Filmtitel;
 import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.Unterbrechung;
+import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.UnterbrechungId;
 import de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung.*;
 import de.wps.ddd.kino.wochenplanung.WochenplanDto;
 import de.wps.ddd.kino.wochenplanung.Wochenplanauskunft;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,7 +69,7 @@ public class ImportiereWochenplanService {
                     mapSaal(vorstellung.saalName()),
                     Status.GEPLANT,
                     filmId,
-                    new ArrayList<>()//List.of()-> immutable List ergibt das Sinn??
+                    new HashMap<UnterbrechungId,Unterbrechung>()//List.of()-> immutable List ergibt das Sinn??
                     );
 
             // Die Filmvorführung zum Speichern weitergeben.
