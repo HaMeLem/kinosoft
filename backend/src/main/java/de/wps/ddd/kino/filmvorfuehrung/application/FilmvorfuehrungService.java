@@ -4,29 +4,56 @@ import org.springframework.stereotype.Service;
 
 import de.wps.ddd.kino.common.architecture.ApplicationService;
 import de.wps.ddd.kino.filmvorfuehrung.domain.FilmvorfuehrungRepository;
+import de.wps.ddd.kino.filmvorfuehrung.domain.film.Film;
+import de.wps.ddd.kino.filmvorfuehrung.domain.film.FilmId;
 import de.wps.ddd.kino.filmvorfuehrung.domain.film.FilmRepository;
-import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.Unterbrechungsbeginn;
-import de.wps.ddd.kino.filmvorfuehrung.domain.unterbrechung.Unterbrechungsende;
+import de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung.Filmvorfuehrung;
 import de.wps.ddd.kino.filmvorfuehrung.domain.vorfuehrung.VorfuehrungId;
-
+import de.wps.ddd.kino.filmvorfuehrung.dtos.FilmvorfuehrungResponseDto;
 
 @ApplicationService 
-@Service
+@Service 
 public class FilmvorfuehrungService {
 
-     private final FilmvorfuehrungRepository filmvorfuehrungRepository;
-     private final FilmRepository filmRepository;
+    private final FilmvorfuehrungRepository filmvorfuehrungRepository;
+    private final FilmRepository filmRepository;
 
-     private void beginneFilmvorfuehrung(VorfuehrungId vorfuehrungId) {
-        /* Ergänzen, wenn es ein Repository gibt:
-         * - Vorfuehrung mit der ID holen
-         * - Status auf Laufend setzen
-         * - für TatsaechlicherBeginn LocalDateTime.now() setzen */ 
-     }
+    public FilmvorfuehrungService(FilmvorfuehrungRepository filmvorfuehrungRepository, FilmRepository filmRepository) {
+        this.filmvorfuehrungRepository = filmvorfuehrungRepository;
+        this.filmRepository = filmRepository;
+    }
 
-     private void beendeFilmvorfuehrung(VorfuehrungId vorfuehrungId, Unterbrechungsende unterbrechungsende) {
-        /* Ergänzen, wenn es ein Repository gibt:
-         * - Vorfuehrung mit der ID holen
-         * - Status auf Beendet setzen */ 
-     }   
+    public FilmvorfuehrungResponseDto holeFilmvorfuehrungMitVorfuehrungId(VorfuehrungId vorfuehrungId) {
+        // Holt die Filmvorführung aus dem Filmvorführungsrepo
+        Filmvorfuehrung filmvorfuehrung = filmvorfuehrungRepository.hole(vorfuehrungId)
+            .orElseThrow(() -> new RuntimeException("Vorführung mit der ID " + vorfuehrungId + " nicht gefunden"));
+        
+        // Holt den Film aus dem Filmrepo
+        FilmId filmId = filmvorfuehrung.getFilmId();
+        Film film = filmRepository.hole(filmId)
+            .orElseThrow(() -> new RuntimeException("Film mit der ID " + filmId + " nicht gefunden"));
+        
+        // Gibt das Dto zurück
+        FilmvorfuehrungResponseDto dto = new FilmvorfuehrungResponseDto(
+            vorfuehrungId,
+            filmvorfuehrung.getGeplanterBeginn(),
+            filmvorfuehrung.getTatsaechlicherBeginn(),
+            filmvorfuehrung.getSaal(),
+            filmvorfuehrung.getStatus(),
+            film.getFilmtitel(),
+            film.getFilmlaufzeit(),
+            filmvorfuehrung.getUnterbrechungen()
+        );
+        return dto;
+    }
+
+    public Film holeFilmMitVorfuehrungId(VorfuehrungId vorfuehrungId) {
+        Filmvorfuehrung filmvorfuehrung = filmvorfuehrungRepository.hole(vorfuehrungId)
+            .orElseThrow(() -> new RuntimeException("Vorführung mit der ID " + vorfuehrungId + " nicht gefunden"));
+        
+        FilmId filmId = filmvorfuehrung.getFilmId();
+        Film film = filmRepository.hole(filmId)
+            .orElseThrow(() -> new RuntimeException("Film mit der ID " + filmId + " nicht gefunden"));
+        return film;
+    }
 }
