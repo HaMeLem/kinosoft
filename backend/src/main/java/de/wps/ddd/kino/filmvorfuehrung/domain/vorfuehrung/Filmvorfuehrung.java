@@ -18,9 +18,7 @@ public class Filmvorfuehrung {
 
     @Identity private final VorfuehrungId id;
     private final GeplanterBeginn geplanterBeginn;
-    private final GeplantesEnde geplantesEnde;
     private TatsaechlicherBeginn tatsaechlicherBeginn;
-    private Phase phase;
     private Saal saal;
     private Status status;
     private final Werbelaufzeit werbelaufzeit = new Werbelaufzeit(15); // Die Werbung dauert immmer 15 Minuten
@@ -31,7 +29,6 @@ public class Filmvorfuehrung {
     public Filmvorfuehrung(
         VorfuehrungId id,
         GeplanterBeginn geplanterBeginn,
-        GeplantesEnde geplantesEnde,
         TatsaechlicherBeginn tatsaechlicherBeginn,
         Saal saal,
         Status status,
@@ -39,9 +36,7 @@ public class Filmvorfuehrung {
         List<Unterbrechung> unterbrechungen){
             this.id = id;
             this.geplanterBeginn = geplanterBeginn;
-            this.geplantesEnde = geplantesEnde;
             this.tatsaechlicherBeginn = tatsaechlicherBeginn;
-            this.phase = istInPhase();
             this.saal = saal;
             this.status = status;
             this.film = film;
@@ -57,45 +52,12 @@ public class Filmvorfuehrung {
         List<Unterbrechung> unterbrechungen){
             this.id = id;
             this.geplanterBeginn = null;
-            this.geplantesEnde = null;
             this.tatsaechlicherBeginn = tatsaechlicherBeginn;
-            this.phase = istInPhase();
             this.saal = saal;
             this.status = status;
             this.film = film;
             this.unterbrechungen = unterbrechungen;
     } 
-
-    /* Dauer in Minuten, die die Filmvorführung während der Werbung insgesamt unterbrochen war.
-     * Es ist nur die Zeit während der Werbung relevant, weil sich nur dann Unterbrechungszeiten auf die
-     * Vorführungsphase (Werbung oder Film) auswirken. */
-    private long unterbrechungszeitWaehrendWerbung(){
-        long alleUnterbrechungsminutenSummiert = 0;
-        long dieseUnterbrechungslaufzeit;
-        // Falls es Unterbrechungen gibt
-        if(!(unterbrechungen.isEmpty())){
-            for(Unterbrechung unterbrechung : unterbrechungen){
-                LocalDateTime unterbrechungsbeginn = unterbrechung.getUnterbrechungsbeginn().zeitpunkt();
-                LocalDateTime unterbrechungsende = unterbrechung.getUnterbrechungsende().zeitpunkt();
-                LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusMinutes(alleUnterbrechungsminutenSummiert);
-                // Prüft, ob die Unterbrechung während der Werbung ist
-                if(unterbrechungsbeginn.isBefore(werbeende)){
-                    dieseUnterbrechungslaufzeit = unterbrechungsbeginn.until(unterbrechungsende, ChronoUnit.MINUTES);
-                    alleUnterbrechungsminutenSummiert = alleUnterbrechungsminutenSummiert + dieseUnterbrechungslaufzeit;
-                }
-            }
-        }
-        return alleUnterbrechungsminutenSummiert;
-    }
-
-    // Gibt die Phase (Werbung oder Film) zurück, in der sich die Filmvorführung befindet
-    private Phase istInPhase(){
-        this.jetzt = LocalDateTime.now();
-        LocalDateTime werbeende = (this.tatsaechlicherBeginn.zeitpunkt()).plusMinutes(werbelaufzeit.minuten()+unterbrechungszeitWaehrendWerbung());
-        if(jetzt.isBefore(werbeende) && jetzt.isAfter(this.tatsaechlicherBeginn.zeitpunkt())) return Phase.WERBUNG;
-        if(istGeplant() || istBeendet()) return null;
-        else return Phase.FILM;
-    }
 
     // Fragt Status der Filmvorführung ab
     public boolean istGeplant() {
